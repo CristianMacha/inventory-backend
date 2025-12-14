@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 import { UserEntity } from './src/contexts/users/infrastructure/persistence/typeorm/entities/user.entity';
+import { RefreshTokenEntity } from './src/contexts/auth/infrastructure/persistence/typeorm/entities/refresh-token.entity';
 
 dotenv.config();
 
@@ -12,7 +13,7 @@ const config: DataSourceOptions = {
   username: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
-  entities: [UserEntity],
+  entities: [UserEntity, RefreshTokenEntity],
   migrations: ['src/migrations/*.ts'],
   migrationsTableName: 'typeorm_migrations',
   synchronize: false,
