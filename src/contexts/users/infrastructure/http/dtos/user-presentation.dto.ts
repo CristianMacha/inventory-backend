@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { UserOutputDto } from "../../../application/dtos/user.output.dto";
+import { ApiProperty } from '@nestjs/swagger';
+import { UserOutputDto } from '../../../application/dtos/user.output.dto';
 
 export class UserPresentationDto extends UserOutputDto {
   @ApiProperty({

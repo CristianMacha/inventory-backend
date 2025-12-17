@@ -1,4 +1,4 @@
-import { DomainException } from "../../../../shared/domain/domain.exception";
+import { DomainException } from '../../../../shared/domain/domain.exception';
 
 export class UserNotFoundExeption extends DomainException {
   constructor(id: string) {

@@ -1,99 +1,145 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Backend DDD - Project Report & Developer Guide
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This repository contains a scalable backend application built with **NestJS**, structured according to **Domain-Driven Design (DDD)** and **Hexagonal Architecture** principles.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🏗️ Architecture
 
-## Description
+The project is organized into modular **Bounded Contexts** to ensure separation of concerns and scalability. Each context follows the Hexagonal Architecture pattern.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Layered Structure
+Each Context (e.g., `src/contexts/users`) is divided into three main layers:
 
-## Project setup
+1.  **Domain (`domain/`)**:
+    - **Purpose**: The core business logic. Independent of frameworks, databases, or external APIs.
+    - **Contains**: Entities, Value Objects, Domain Services, Repository Interfaces, Custom Errors (`DomainException`).
+    - **Rule**: *Dependencies point inward. The Domain depends on nothing.*
 
-```bash
-$ pnpm install
+2.  **Application (`application/`)**:
+    - **Purpose**: Orchestrates the business use cases.
+    - **Contains**: Services (`AuthService`), Command Handlers, Query Handlers, Uses Cases.
+    - **Rule**: *Depends only on the Domain.*
+
+3.  **Infrastructure (`infrastructure/`)**:
+    - **Purpose**: Implements interfaces defined in the Domain and handles external communication.
+    - **Contains**: Framework Controllers (HTTP), Repository Implementations (TypeORM), Strategies (Passport), DTOs (with Validation).
+    - **Rule**: *Depends on Domain and Application layers.*
+
+### Directory Layout
+```
+src/
+├── config/             # Global configuration (Database, Env Validation)
+├── contexts/           # Bounded Contexts (Modules)
+│   ├── auth/           # Auth Context (Login, JWT, Guards)
+│   └── users/          # Users Context (CRUD, Registration)
+│       ├── application/
+│       ├── domain/
+│       └── infrastructure/
+├── shared/             # Shared Kernel (Common code across contexts)
+│   ├── domain/         # Shared interfaces, base exceptions
+│   └── infrastructure/ # Shared filters, pipes
+└── main.ts             # Entry point
 ```
 
-## Compile and run the project
+---
 
+## 🛠️ Key Patterns & Practices
+
+### 1. CQRS (Command Query Responsibility Segregation)
+- We separate **Read** (Query) and **Write** (Command) operations.
+- **Commands**: Modify state. Handled by `CommandHandlers`.
+- **Queries**: Retrieve state. Handled by `QueryHandlers`.
+- **Benfit**: Allows optimizing reads and writes independently and keeps logic clean.
+
+### 2. Repository Pattern
+- All data access is abstracted behind an interface (e.g., `IUserRepository`).
+- **Domain** defines the interface.
+- **Infrastructure** implements it (using TypeORM).
+- **Benefit**: We can swap databases easily (e.g., for testing) without touching business logic.
+
+### 3. DTOs (Data Transfer Objects)
+- Used for incoming HTTP requests (Infrastructure layer).
+- Validated using `class-validator` decorators.
+- **Benefit**: Ensures data integrity at the entry point.
+
+### 4. Global Error Handling
+- Exceptions extend `DomainException` (in `@shared/domain`).
+- Caught by `DomainExceptionFilter` which formats the response uniformly.
+
+### 5. Path Aliases
+- Use `@contexts/*`, `@shared/*`, `@config/*` for imports.
+- **Benefit**: Eliminates `../../../../` hell.
+
+### 6. Configuration & Validation
+- Environment variables are validated on startup using `joi` (`src/config/env.validation.ts`).
+- App fails fast if configuration is invalid.
+
+### 7. Structured Logging
+- Uses `nestjs-pino` for high-performance JSON logs in production.
+- Auto-logs HTTP requests (method, URL, latency).
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js v20+
+- Docker & Docker Compose
+- pnpm
+
+### Running Locally (Hybrid Mode)
+For the best development experience (Hot Reload + Docker DB):
+
+1.  **Start Database**:
+    ```bash
+    docker-compose up db -d
+    ```
+2.  **Configure Env**:
+    Ensure your `.env` has:
+    ```bash
+    DATABASE_HOST=localhost
+    APP_PORT=3000
+    NODE_ENV=development
+    ```
+3.  **Run App**:
+    ```bash
+    pnpm start:dev
+    ```
+
+### Running with Docker (Production Simulation)
+To verify how it runs in production:
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+docker-compose up --build
 ```
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ pnpm run test
+## 👨‍💻 How to Develop (Workflow)
 
-# e2e tests
-$ pnpm run test:e2e
+**To add a new feature (e.g., "Create Product"):**
 
-# test coverage
-$ pnpm run test:cov
-```
+1.  **Domain**:
+    - Create `Product` Entity.
+    - Define `IProductRepository` interface.
+2.  **Application**:
+    - Create `CreateProductCommand`.
+    - Create `CreateProductHandler` (implements business logic).
+3.  **Infrastructure**:
+    - Implement `TypeOrmProductRepository`.
+    - Create `CreateProductDto` (with validation).
+    - Create `ProductController` (HTTP endpoint).
+4.  **Wiring**:
+    - Register everything in `ProductModule`.
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## ✅ Commands
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+| Command | Description |
+|Args|Desc|
+| `pnpm start:dev` | Runs app in watch mode (Local) |
+| `pnpm run build` | Builds app for production (uses `tsc-alias`) |
+| `pnpm test` | Runs unit tests |
+| `docker-compose up` | Runs app + db in containers |
 
-```bash
-$ pnpm install -g mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+*Built with ❤️ by Project X Team*

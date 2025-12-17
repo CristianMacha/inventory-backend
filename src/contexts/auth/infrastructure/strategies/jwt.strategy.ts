@@ -1,14 +1,16 @@
-import { Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { PassportStrategy } from "@nestjs/passport";
-import { ExtractJwt, Strategy } from "passport-jwt";
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { UserOutputDto } from "../../../users/application/dtos/user.output.dto";
+import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 
 interface JwtPayload {
   sub: string;
   email: string;
   name: string;
+  roles: string[];
+  permissions: string[];
 }
 
 @Injectable()
@@ -21,11 +23,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<UserOutputDto> {
+  async validate(payload: JwtPayload): Promise<AuthUserDto> {
     return {
       id: payload.sub,
       email: payload.email,
       name: payload.name,
-    }
+      roles: payload.roles,
+      permissions: payload.permissions,
+    };
   }
 }

@@ -1,7 +1,12 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from "@nestjs/common";
-import { DomainException } from "../../domain/domain.exception";
-import { UserAlreadyExistsException } from "../../../contexts/users/domain/exceptions/user-already-exists.exception";
-import { UserNotFoundExeption } from "../../../contexts/users/domain/exceptions/user-not-found.exception";
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+} from '@nestjs/common';
+import { DomainException } from '../../domain/domain.exception';
+import { UserAlreadyExistsException } from '../../../contexts/users/domain/exceptions/user-already-exists.exception';
+import { UserNotFoundExeption } from '../../../contexts/users/domain/exceptions/user-not-found.exception';
 
 @Catch(DomainException)
 export class DomainExceptionFilter implements ExceptionFilter {

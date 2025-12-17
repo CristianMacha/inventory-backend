@@ -1,8 +1,8 @@
-import { Repository } from "typeorm";
+import { Repository } from 'typeorm';
 
-import { GetUsersHandler } from "./get-users.handler";
-import { UserEntity } from "../../../infrastructure/persistence/typeorm/entities/user.entity";
-import { GetUsersQuery } from "./get-users.query";
+import { GetUsersHandler } from './get-users.handler';
+import { UserEntity } from '../../../infrastructure/persistence/typeorm/entities/user.entity';
+import { GetUsersQuery } from './get-users.query';
 
 describe('GetUsersHandler', () => {
   let handler: GetUsersHandler;
@@ -11,10 +11,10 @@ describe('GetUsersHandler', () => {
   beforeEach(() => {
     usersReadRepositoryMock = {
       find: jest.fn(),
-    } as unknown as jest.Mocked<Repository<UserEntity>>
+    } as unknown as jest.Mocked<Repository<UserEntity>>;
 
     handler = new GetUsersHandler(usersReadRepositoryMock);
-  })
+  });
 
   it('It should return a list of UserResponseDto', async () => {
     const entityList: UserEntity[] = [
@@ -23,6 +23,7 @@ describe('GetUsersHandler', () => {
         name: 'cristian',
         email: 'cristian@gmail.com',
         password: 'cristianmx10',
+        roles: [],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -31,9 +32,10 @@ describe('GetUsersHandler', () => {
         name: 'cristian',
         email: 'cristian@gmail.com',
         password: 'cristianmx10',
+        roles: [],
         createdAt: new Date(),
         updatedAt: new Date(),
-      }
+      },
     ];
     usersReadRepositoryMock.find.mockResolvedValue(entityList);
 
@@ -44,5 +46,5 @@ describe('GetUsersHandler', () => {
 
     expect(result[0]).toHaveProperty('email', 'cristian@gmail.com');
     expect(result[0]).not.toHaveProperty('password');
-  })
-})
+  });
+});

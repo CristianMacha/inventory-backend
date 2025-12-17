@@ -1,3 +1,3 @@
 export class GetUsersQuery {
-  constructor() { }
+  constructor() {}
 }

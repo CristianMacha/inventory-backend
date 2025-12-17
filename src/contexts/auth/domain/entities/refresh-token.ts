@@ -6,10 +6,22 @@ export class RefreshToken {
     private isRevoked: boolean,
     private readonly expiresAt: Date,
     private readonly createdAt: Date,
-  ) { }
+  ) {}
 
-  static create(id: string, userId: string, tokenHash: string, expiresAt: Date): RefreshToken {
-    return new RefreshToken(id, userId, tokenHash, false, expiresAt, new Date());
+  static create(
+    id: string,
+    userId: string,
+    tokenHash: string,
+    expiresAt: Date,
+  ): RefreshToken {
+    return new RefreshToken(
+      id,
+      userId,
+      tokenHash,
+      false,
+      expiresAt,
+      new Date(),
+    );
   }
 
   public revoke(): void {
@@ -47,5 +59,4 @@ export class RefreshToken {
   public getCreatedAt(): Date {
     return this.createdAt;
   }
-
 }

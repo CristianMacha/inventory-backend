@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
-import { IHasher } from "../../domain/hasher.interface";
+import { IHasher } from '../../domain/hasher.interface';
 
 @Injectable()
 export class BcryptHasherAdapter implements IHasher {

@@ -1,5 +1,5 @@
-import { RefreshToken } from "../../../../domain/entities/refresh-token";
-import { RefreshTokenEntity } from "../entities/refresh-token.entity";
+import { RefreshToken } from '../../../../domain/entities/refresh-token';
+import { RefreshTokenEntity } from '../entities/refresh-token.entity';
 
 export class RefreshTokenMapper {
   static toPersistence(refreshToken: RefreshToken): RefreshTokenEntity {
@@ -20,7 +20,7 @@ export class RefreshTokenMapper {
       entity.tokenHash,
       entity.isRevoked,
       entity.expiresAt,
-      entity.createdAt
+      entity.createdAt,
     );
   }
 }
