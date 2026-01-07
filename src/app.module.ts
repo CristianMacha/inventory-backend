@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-
-import { UsersModule } from './contexts/users/users.module';
-import { DatabaseModule } from './config/database/database.module';
-import { AuthModule } from './contexts/auth/auth.module';
-import { JwtAuthGuard } from './contexts/auth/infrastructure/guards/jwt-auth.guard';
-
 import { LoggerModule } from 'nestjs-pino';
 
+import { DatabaseModule } from './config/database/database.module';
 import { envValidation } from './config/env.validation';
+
+import { InventoryModule } from '@contexts/inventory/inventory.module';
+import { AuthModule } from '@contexts/auth/auth.module';
+import { UsersModule } from '@contexts/users/users.module';
+import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -30,6 +30,7 @@ import { envValidation } from './config/env.validation';
     DatabaseModule,
     UsersModule,
     AuthModule,
+    InventoryModule,
   ],
   controllers: [],
   providers: [
@@ -39,4 +40,4 @@ import { envValidation } from './config/env.validation';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

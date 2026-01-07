@@ -27,7 +27,7 @@ export class UpdateRoleHandler implements ICommandHandler<UpdateRoleCommand> {
       throw new NotFoundException(`Role with id ${id} not found`);
     }
 
-    if (name && name !== role.getName()) {
+    if (name && name !== role.name) {
       const existingRole = await this.roleRepository.findByName(name);
       if (existingRole) {
         throw new ConflictException(`Role with name ${name} already exists`);
@@ -39,7 +39,7 @@ export class UpdateRoleHandler implements ICommandHandler<UpdateRoleCommand> {
       const permissions =
         await this.permissionRepository.findByNames(permissionNames);
       if (permissions.length !== permissionNames.length) {
-        const foundNames = permissions.map((p) => p.getName());
+        const foundNames = permissions.map((p) => p.name);
         const missingNames = permissionNames.filter(
           (n) => !foundNames.includes(n),
         );

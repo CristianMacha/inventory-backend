@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 
 import { PERMISSIONS_KEY } from '../decorators/require-permissions.decorator';
-import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
+import { JwtPayload } from '@contexts/auth/infrastructure/strategies/jwt.strategy';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -23,15 +23,16 @@ export class PermissionsGuard implements CanActivate {
       return true;
     }
 
-    const { user } = context.switchToHttp().getRequest();
-    const userDto = user as AuthUserDto;
+    const { user } = context
+      .switchToHttp()
+      .getRequest<Request & { user: JwtPayload }>();
 
-    if (!userDto || !userDto.permissions) {
+    if (!user || !user.permissions) {
       throw new ForbiddenException('User permissions not found');
     }
 
     const hasPermission = requiredPermissions.some((permission) =>
-      userDto.permissions.includes(permission),
+      user.permissions.includes(permission),
     );
 
     if (!hasPermission) {

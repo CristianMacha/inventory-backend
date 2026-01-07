@@ -6,6 +6,7 @@ import { IUserRepository } from '../../../../domain/repositories/user.repository
 import { UserEntity } from '../entities/user.entity';
 import { User } from '../../../../domain/entities/user';
 import { UserMapper } from '../mappers/user.mapper';
+import { UserId } from '@contexts/users/domain/value-objects/user-id';
 
 @Injectable()
 export class TypeOrmUserRepository implements IUserRepository {
@@ -14,9 +15,9 @@ export class TypeOrmUserRepository implements IUserRepository {
     private readonly typeOrmRepository: Repository<UserEntity>,
   ) {}
 
-  async findById(id: string): Promise<User | null> {
+  async findById(id: UserId): Promise<User | null> {
     const user = await this.typeOrmRepository.findOne({
-      where: { id },
+      where: { id: id.getValue() },
       relations: ['roles', 'roles.permissions'],
     });
     return user ? UserMapper.toDomain(user) : null;
@@ -28,6 +29,14 @@ export class TypeOrmUserRepository implements IUserRepository {
       relations: ['roles', 'roles.permissions'],
     });
     return user ? UserMapper.toDomain(user) : null;
+  }
+
+  async findAllWithRolesPermissions(): Promise<User[]> {
+    const users = await this.typeOrmRepository.find({
+      relations: ['roles', 'roles.permissions'],
+    });
+
+    return users.map((e) => UserMapper.toDomain(e));
   }
 
   async save(user: User): Promise<void> {

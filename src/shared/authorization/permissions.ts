@@ -11,6 +11,30 @@ export const Permissions = {
     UPDATE: 'roles.update',
     DELETE: 'roles.delete',
   },
+  BRANDS: {
+    CREATE: 'brands.create',
+    READ: 'brands.read',
+    UPDATE: 'brands.update',
+    DELETE: 'brands.delete',
+  },
+  CATEGORIES: {
+    CREATE: 'categories.create',
+    READ: 'categories.read',
+    UPDATE: 'categories.update',
+    DELETE: 'categories.delete',
+  },
+  PRODUCTS: {
+    CREATE: 'products.create',
+    READ: 'products.read',
+    UPDATE: 'products.update',
+    DELETE: 'products.delete',
+  },
+  PERMISSIONS: {
+    CREATE: 'permissions.create',
+    READ: 'permissions.read',
+    UPDATE: 'permissions.update',
+    DELETE: 'permissions.delete',
+  },
 } as const;
 
 export type PermissionType =

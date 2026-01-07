@@ -1,29 +1,29 @@
-import { IHasher } from '../../../../shared/domain/hasher.interface';
+import { IHasher } from '@shared/domain/hasher.interface';
 import { Role } from './role';
+import { UserId } from '@contexts/users/domain/value-objects/user-id';
 
 export class User {
-  private id: string;
-  private name: string;
-  private email: string;
-  private password: string;
-  private roles: Role[];
+  private readonly _id: UserId;
+  private _name: string;
+  private _email: string;
+  private readonly _password: string;
+  private _roles: Role[];
 
   constructor(
-    id: string,
+    id: UserId,
     name: string,
     email: string,
     password: string,
     roles: Role[] = [],
   ) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-    this.password = password;
-    this.roles = roles;
+    this._id = id;
+    this._name = name;
+    this._email = email;
+    this._password = password;
+    this._roles = roles;
   }
 
   static async create(
-    id: string,
     name: string,
     email: string,
     password: string,
@@ -31,47 +31,47 @@ export class User {
     roles: Role[] = [],
   ): Promise<User> {
     const hashedPassword = await hasher.hash(password);
-    return new User(id, name, email, hashedPassword, roles);
+    return new User(UserId.generate(), name, email, hashedPassword, roles);
   }
 
   async comparePassword(password: string, hasher: IHasher): Promise<boolean> {
-    return await hasher.compare(password, this.password);
-  }
-
-  public getId(): string {
-    return this.id;
-  }
-
-  public getName(): string {
-    return this.name;
-  }
-
-  public getEmail(): string {
-    return this.email;
-  }
-
-  public getPassword(): string {
-    return this.password;
+    return await hasher.compare(password, this._password);
   }
 
   public updateName(name: string): void {
-    this.name = name;
+    this._name = name;
   }
 
   public updateEmail(email: string): void {
     if (email === this.email) return;
-    this.email = email;
-  }
-
-  public getRoles(): Role[] {
-    return this.roles;
+    this._email = email;
   }
 
   public updateRoles(roles: Role[]): void {
-    this.roles = roles;
+    this._roles = roles;
   }
 
   public hasPermission(permissionName: string): boolean {
     return this.roles.some((role) => role.hasPermission(permissionName));
+  }
+
+  get id(): UserId {
+    return this._id;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  get email(): string {
+    return this._email;
+  }
+
+  get password(): string {
+    return this._password;
+  }
+
+  get roles(): Role[] {
+    return this._roles;
   }
 }

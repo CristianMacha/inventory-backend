@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 
-interface JwtPayload {
+export interface JwtPayload {
   sub: string;
   email: string;
   name: string;
@@ -23,7 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<AuthUserDto> {
+  validate(payload: JwtPayload): AuthUserDto {
     return {
       id: payload.sub,
       email: payload.email,

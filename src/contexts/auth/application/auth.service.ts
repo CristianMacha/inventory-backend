@@ -10,6 +10,7 @@ import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 import { AuthResponseService } from './services/auth-response.service';
 import { InvalidRefreshTokenError } from '../domain/errors/invalid-refresh-token.error';
 import { UserNotFoundExeption } from '@contexts/users/domain/exceptions/user-not-found.exception';
+import { JwtPayload } from '@contexts/auth/infrastructure/strategies/jwt.strategy';
 
 @Injectable()
 export class AuthService {
@@ -35,15 +36,15 @@ export class AuthService {
     const isPasswordValid = await user.comparePassword(password, this.hasher);
     if (!isPasswordValid) return null;
 
-    const permissions = user
-      .getRoles()
-      .flatMap((r) => r.getPermissions().map((p) => p.getName()));
-    const roles = user.getRoles().map((r) => r.getName());
+    const permissions = user.roles.flatMap((r) =>
+      r.permissions.map((p) => p.name),
+    );
+    const roles = user.roles.map((r) => r.name);
 
     return new AuthUserDto(
-      user.getId(),
-      user.getName(),
-      user.getEmail(),
+      user.id.getValue(),
+      user.name,
+      user.email,
       roles,
       permissions,
     );
@@ -56,8 +57,8 @@ export class AuthService {
   }
 
   async refresh(oldRefreshToken: string) {
-    const payload = this.jwtService.verify(oldRefreshToken, {
-      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+    const payload = this.jwtService.verify<JwtPayload>(oldRefreshToken, {
+      secret: this.configService.get<string>('JWT_REFRESH_SECRET', 'no-token'),
     });
 
     const storedRefreshToken =
@@ -82,15 +83,15 @@ export class AuthService {
       throw new UserNotFoundExeption(payload.sub);
     }
 
-    const permissions = user
-      .getRoles()
-      .flatMap((r) => r.getPermissions().map((p) => p.getName()));
-    const roles = user.getRoles().map((r) => r.getName());
+    const permissions = user.roles.flatMap((r) =>
+      r.permissions.map((p) => p.name),
+    );
+    const roles = user.roles.map((r) => r.name);
 
     const userOutputDto = new AuthUserDto(
-      user.getId(),
-      user.getName(),
-      user.getEmail(),
+      user.id.getValue(),
+      user.name,
+      user.email,
       roles,
       permissions,
     );

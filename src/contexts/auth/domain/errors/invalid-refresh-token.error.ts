@@ -1,4 +1,4 @@
-import { DomainException } from '../../../../shared/domain/domain.exception';
+import { DomainException } from '@shared/domain/domain.exception';
 
 export class InvalidRefreshTokenError extends DomainException {
   constructor() {

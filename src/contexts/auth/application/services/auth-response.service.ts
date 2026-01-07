@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AuthUserDto } from '../../../users/application/dtos/user-types.dto';
-import { IHasher } from '../../../../shared/domain/hasher.interface';
-import { IUuidGenerator } from '../../../../shared/domain/uuid-generator.interface';
+import { IHasher } from '@shared/domain/hasher.interface';
+import { IUuidGenerator } from '@shared/domain/uuid-generator.interface';
 import { RefreshToken } from '../../domain/entities/refresh-token';
 import { IRefreshTokenRepository } from '../../domain/repositories/refresh-token.repository';
 

@@ -6,30 +6,20 @@ import { GetRolesQuery } from './get-roles.query';
 import { RoleEntity } from '../../../infrastructure/persistence/typeorm/entities/role.entity';
 import { RoleOutputDto } from '../../dtos/role.output.dto';
 import { PermissionOutputDto } from '../../dtos/permission.output.dto';
+import { RoleResponseMapper } from '@contexts/users/application/mappers/role-response.mapper';
+import { Inject } from '@nestjs/common';
+import { IRoleRepository } from '@contexts/users/domain/repositories/role.repository';
 
 @QueryHandler(GetRolesQuery)
 export class GetRolesHandler implements IQueryHandler<GetRolesQuery> {
   constructor(
-    @InjectRepository(RoleEntity)
-    private readonly roleRepository: Repository<RoleEntity>,
+    @Inject('RoleRepository')
+    private readonly roleRepository: IRoleRepository,
   ) {}
 
   async execute(query: GetRolesQuery): Promise<RoleOutputDto[]> {
-    const roles = await this.roleRepository.find({
-      relations: ['permissions'],
-    });
+    const roles = await this.roleRepository.findAll();
 
-    return roles.map(
-      (role) =>
-        new RoleOutputDto(
-          role.id,
-          role.name,
-          role.permissions
-            ? role.permissions.map(
-                (p) => new PermissionOutputDto(p.id, p.name, p.description),
-              )
-            : [],
-        ),
-    );
+    return roles.map((e) => RoleResponseMapper.toResponse(e));
   }
 }

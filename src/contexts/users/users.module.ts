@@ -24,6 +24,8 @@ import { UpdateRoleHandler } from './application/commands/update-role/update-rol
 import { UpdateRoleController } from './infrastructure/http/controllers/update-role.controller';
 
 import { SharedInfrastructureModule } from '../../shared/infrastructure/shared-infrastructure.module';
+import { GetPermissionsHandler } from './application/queries/get-permissions/get-permissions.handler';
+import { GetPermissionsController } from './infrastructure/http/controllers/get-permissions.controller';
 
 const CommandHandlers = [
   CreateUserHandler,
@@ -32,9 +34,7 @@ const CommandHandlers = [
   UpdateRoleHandler,
 ];
 
-const QueryHandlers = [GetUsersHandler, GetRolesHandler];
-
-const EventHandlers = [];
+const QueryHandlers = [GetUsersHandler, GetRolesHandler, GetPermissionsHandler];
 
 const PersistenceProviders: Provider[] = [
   {
@@ -64,13 +64,13 @@ const PersistenceProviders: Provider[] = [
     CreateRoleController,
     GetRolesController,
     UpdateRoleController,
+    GetPermissionsController,
   ],
   providers: [
     ...CommandHandlers,
     ...QueryHandlers,
-    ...EventHandlers,
     ...PersistenceProviders,
   ],
   exports: [...PersistenceProviders],
 })
-export class UsersModule {}
+export class UsersModule { }

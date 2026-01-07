@@ -1,33 +1,34 @@
 import { Permission } from './permission';
+import { RoleId } from '@contexts/users/domain/value-objects/role-id';
 
 export class Role {
   constructor(
-    private readonly id: string,
-    private name: string,
-    private permissions: Permission[],
+    private readonly _id: RoleId,
+    private _name: string,
+    private _permissions: Permission[],
   ) {}
 
-  getId(): string {
-    return this.id;
+  public hasPermission(permissionName: string): boolean {
+    return this.permissions.some((p) => p.name === permissionName);
   }
 
-  getName(): string {
-    return this.name;
+  public updateName(name: string): void {
+    this._name = name;
   }
 
-  getPermissions(): Permission[] {
-    return this.permissions;
+  public updatePermissions(permissions: Permission[]): void {
+    this._permissions = permissions;
   }
 
-  hasPermission(permissionName: string): boolean {
-    return this.permissions.some((p) => p.getName() === permissionName);
+  get id(): RoleId {
+    return this._id;
   }
 
-  updateName(name: string): void {
-    this.name = name;
+  get name(): string {
+    return this._name;
   }
 
-  updatePermissions(permissions: Permission[]): void {
-    this.permissions = permissions;
+  get permissions(): Permission[] {
+    return this._permissions;
   }
 }

@@ -1,16 +1,17 @@
 import { Role } from '../../../../domain/entities/role';
 import { RoleEntity } from '../entities/role.entity';
 import { PermissionMapper } from './permission.mapper';
+import { RoleId } from '@contexts/users/domain/value-objects/role-id';
 
 export class RoleMapper {
   static toPersistence(role: Role): RoleEntity {
     const entity = new RoleEntity();
-    entity.id = role.getId();
-    entity.name = role.getName();
-    if (role.getPermissions()) {
-      entity.permissions = role
-        .getPermissions()
-        .map((p) => PermissionMapper.toPersistence(p));
+    entity.id = role.id.getValue();
+    entity.name = role.name;
+    if (role.permissions) {
+      entity.permissions = role.permissions.map((p) =>
+        PermissionMapper.toPersistence(p),
+      );
     }
     return entity;
   }
@@ -20,6 +21,6 @@ export class RoleMapper {
       ? entity.permissions.map((p) => PermissionMapper.toDomain(p))
       : [];
 
-    return new Role(entity.id, entity.name, permissions);
+    return new Role(RoleId.create(entity.id), entity.name, permissions);
   }
 }

@@ -12,6 +12,27 @@ const PERMISSIONS = [
   { name: Permissions.ROLES.READ, description: 'View roles list' },
   { name: Permissions.ROLES.UPDATE, description: 'Update role details' },
   { name: Permissions.ROLES.DELETE, description: 'Delete roles' },
+  // Brands
+  { name: Permissions.BRANDS.CREATE, description: 'Create new brands' },
+  { name: Permissions.BRANDS.READ, description: 'View brands list' },
+  { name: Permissions.BRANDS.UPDATE, description: 'Update brand details' },
+  { name: Permissions.BRANDS.DELETE, description: 'Delete brands' },
+  // Categories
+  { name: Permissions.CATEGORIES.CREATE, description: 'Create new categories' },
+  { name: Permissions.CATEGORIES.READ, description: 'View categories list' },
+  { name: Permissions.CATEGORIES.UPDATE, description: 'Update category details' },
+  { name: Permissions.CATEGORIES.DELETE, description: 'Delete categories' },
+  // Products
+  { name: Permissions.PRODUCTS.CREATE, description: 'Create new products' },
+  { name: Permissions.PRODUCTS.READ, description: 'View products list' },
+  { name: Permissions.PRODUCTS.UPDATE, description: 'Update product details' },
+  { name: Permissions.PRODUCTS.DELETE, description: 'Delete products' },
+
+  // Permissions
+  { name: Permissions.PERMISSIONS.CREATE, description: 'Create new permissions' },
+  { name: Permissions.PERMISSIONS.READ, description: 'View permissions list' },
+  { name: Permissions.PERMISSIONS.UPDATE, description: 'Update permission details' },
+  { name: Permissions.PERMISSIONS.DELETE, description: 'Delete permissions' },
 ];
 
 async function seed() {

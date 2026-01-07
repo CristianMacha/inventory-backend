@@ -1,19 +1,21 @@
+import { PermissionId } from '@contexts/users/domain/value-objects/permission-id';
+
 export class Permission {
   constructor(
-    private readonly id: string,
-    private readonly name: string,
-    private readonly description?: string,
+    private readonly _id: PermissionId,
+    private readonly _name: string,
+    private _description?: string,
   ) {}
 
-  getId(): string {
-    return this.id;
+  get id(): PermissionId {
+    return this._id;
   }
 
-  getName(): string {
-    return this.name;
+  get name(): string {
+    return this._name;
   }
 
-  getDescription(): string | undefined {
-    return this.description;
+  get description(): string | undefined {
+    return this._description;
   }
 }

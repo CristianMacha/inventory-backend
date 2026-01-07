@@ -1,5 +1,5 @@
-import { IHasher } from '../../../../../shared/domain/hasher.interface';
-import { IUuidGenerator } from '../../../../../shared/domain/uuid-generator.interface';
+import { IHasher } from '@shared/domain/hasher.interface';
+import { IUuidGenerator } from '@shared/domain/uuid-generator.interface';
 import { UserAlreadyExistsException } from '../../../domain/exceptions/user-already-exists.exception';
 import { IUserRepository } from '../../../domain/repositories/user.repository';
 import { IRoleRepository } from '../../../domain/repositories/role.repository';

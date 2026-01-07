@@ -6,6 +6,7 @@ import { IPermissionRepository } from '../../../../domain/repositories/permissio
 import { Permission } from '../../../../domain/entities/permission';
 import { PermissionEntity } from '../entities/permission.entity';
 import { PermissionMapper } from '../mappers/permission.mapper';
+import { PermissionId } from '@contexts/users/domain/value-objects/permission-id';
 
 @Injectable()
 export class TypeOrmPermissionRepository implements IPermissionRepository {
@@ -24,8 +25,10 @@ export class TypeOrmPermissionRepository implements IPermissionRepository {
     return entity ? PermissionMapper.toDomain(entity) : null;
   }
 
-  async findByIds(ids: string[]): Promise<Permission[]> {
-    const entities = await this.typeOrmRepository.findBy({ id: In(ids) });
+  async findByIds(ids: PermissionId[]): Promise<Permission[]> {
+    const entities = await this.typeOrmRepository.findBy({
+      id: In(ids.map((i) => i.getValue())),
+    });
     return entities.map((entity) => PermissionMapper.toDomain(entity));
   }
 

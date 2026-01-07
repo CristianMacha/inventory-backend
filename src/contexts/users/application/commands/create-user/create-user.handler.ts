@@ -7,15 +7,13 @@ import { IRoleRepository } from '../../../domain/repositories/role.repository';
 import { User } from '../../../domain/entities/user';
 import { Role } from '@contexts/users/domain/entities/role';
 import { UserAlreadyExistsException } from '../../../domain/exceptions/user-already-exists.exception';
-import { IUuidGenerator } from '../../../../../shared/domain/uuid-generator.interface';
-import { IHasher } from '../../../../../shared/domain/hasher.interface';
+import { IHasher } from '@shared/domain/hasher.interface';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   constructor(
     @Inject('UserRepository') private readonly userRepository: IUserRepository,
     @Inject('RoleRepository') private readonly roleRepository: IRoleRepository,
-    @Inject('UuidGenerator') private readonly uuidGenerator: IUuidGenerator,
     @Inject('Hasher') private readonly hasher: IHasher,
   ) {}
 
@@ -38,15 +36,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
       }
     }
 
-    const userId = this.uuidGenerator.generate();
-    const user = await User.create(
-      userId,
-      name,
-      email,
-      password,
-      this.hasher,
-      roles,
-    );
+    const user = await User.create(name, email, password, this.hasher, roles);
     await this.userRepository.save(user);
   }
 }

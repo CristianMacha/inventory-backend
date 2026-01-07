@@ -4,8 +4,8 @@ import { Inject, BadRequestException, ConflictException } from '@nestjs/common';
 import { CreateRoleCommand } from './create-role.command';
 import { IRoleRepository } from '../../../domain/repositories/role.repository';
 import { IPermissionRepository } from '../../../domain/repositories/permission.repository';
-import { IUuidGenerator } from '../../../../../shared/domain/uuid-generator.interface';
 import { Role } from '../../../domain/entities/role';
+import { RoleId } from '@contexts/users/domain/value-objects/role-id';
 
 @CommandHandler(CreateRoleCommand)
 export class CreateRoleHandler implements ICommandHandler<CreateRoleCommand> {
@@ -14,8 +14,6 @@ export class CreateRoleHandler implements ICommandHandler<CreateRoleCommand> {
     private readonly roleRepository: IRoleRepository,
     @Inject('PermissionRepository')
     private readonly permissionRepository: IPermissionRepository,
-    @Inject('UuidGenerator')
-    private readonly uuidGenerator: IUuidGenerator,
   ) {}
 
   async execute(command: CreateRoleCommand): Promise<void> {
@@ -29,7 +27,7 @@ export class CreateRoleHandler implements ICommandHandler<CreateRoleCommand> {
     const permissions =
       await this.permissionRepository.findByNames(permissionNames);
     if (permissions.length !== permissionNames.length) {
-      const foundNames = permissions.map((p) => p.getName());
+      const foundNames = permissions.map((p) => p.name);
       const missingNames = permissionNames.filter(
         (n) => !foundNames.includes(n),
       );
@@ -38,7 +36,7 @@ export class CreateRoleHandler implements ICommandHandler<CreateRoleCommand> {
       );
     }
 
-    const role = new Role(this.uuidGenerator.generate(), name, permissions);
+    const role = new Role(RoleId.generate(), name, permissions);
 
     await this.roleRepository.save(role);
   }

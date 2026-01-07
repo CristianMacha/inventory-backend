@@ -19,7 +19,7 @@ import { Permissions } from '@shared/authorization/permissions';
 @Controller('roles')
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 export class GetRolesController {
-  constructor(private readonly queryBus: QueryBus) { }
+  constructor(private readonly queryBus: QueryBus) {}
 
   @Get()
   @RequirePermissions(Permissions.ROLES.READ)
@@ -29,8 +29,14 @@ export class GetRolesController {
     description: 'List of roles',
     type: [RoleOutputDto],
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized. Valid JWT token required.' })
-  @ApiResponse({ status: 403, description: 'Forbidden. User lacks required permissions.' })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized. Valid JWT token required.',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden. User lacks required permissions.',
+  })
   async run(): Promise<RoleOutputDto[]> {
     return this.queryBus.execute(new GetRolesQuery());
   }
