@@ -31,6 +31,17 @@ export class TypeOrmUserRepository implements IUserRepository {
     return user ? UserMapper.toDomain(user) : null;
   }
 
+  async findByExternalId(
+    provider: string,
+    externalId: string,
+  ): Promise<User | null> {
+    const user = await this.typeOrmRepository.findOne({
+      where: { provider, externalId },
+      relations: ['roles', 'roles.permissions'],
+    });
+    return user ? UserMapper.toDomain(user) : null;
+  }
+
   async findAllWithRolesPermissions(): Promise<User[]> {
     const users = await this.typeOrmRepository.find({
       relations: ['roles', 'roles.permissions'],

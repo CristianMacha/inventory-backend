@@ -10,6 +10,8 @@ export class UserMapper {
     entity.name = user.name;
     entity.email = user.email;
     entity.password = user.password;
+    entity.externalId = user.externalId;
+    entity.provider = user.provider;
     if (user.roles) {
       entity.roles = user.roles.map((role) => RoleMapper.toPersistence(role));
     }
@@ -22,6 +24,14 @@ export class UserMapper {
       ? entity.roles.map((role) => RoleMapper.toDomain(role))
       : [];
 
-    return new User(userId, entity.name, entity.email, entity.password, roles);
+    return new User(
+      userId,
+      entity.name,
+      entity.email,
+      entity.password,
+      roles,
+      entity.externalId ?? null,
+      entity.provider === 'firebase' ? 'firebase' : null,
+    );
   }
 }

@@ -12,8 +12,14 @@ export class UserEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column()
-  password: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  password: string | null;
+
+  @Column({ type: 'varchar', length: 255, name: 'external_id', nullable: true })
+  externalId: string | null;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  provider: string | null;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

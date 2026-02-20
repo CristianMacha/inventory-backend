@@ -8,13 +8,17 @@ import { User } from '../../../domain/entities/user';
 import { Role } from '@contexts/users/domain/entities/role';
 import { UserAlreadyExistsException } from '../../../domain/exceptions/user-already-exists.exception';
 import { IHasher } from '@shared/domain/hasher.interface';
+import { USERS_TOKENS } from '@contexts/users/users.tokens';
+import { SHARED_TOKENS } from '@shared/shared.tokens';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   constructor(
-    @Inject('UserRepository') private readonly userRepository: IUserRepository,
-    @Inject('RoleRepository') private readonly roleRepository: IRoleRepository,
-    @Inject('Hasher') private readonly hasher: IHasher,
+    @Inject(USERS_TOKENS.USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
+    @Inject(USERS_TOKENS.ROLE_REPOSITORY)
+    private readonly roleRepository: IRoleRepository,
+    @Inject(SHARED_TOKENS.HASHER) private readonly hasher: IHasher,
   ) {}
 
   async execute(command: CreateUserCommand): Promise<void> {

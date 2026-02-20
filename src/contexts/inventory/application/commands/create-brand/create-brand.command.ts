@@ -3,5 +3,5 @@ export class CreateBrandCommand {
     public readonly name: string,
     public readonly createdBy: string,
     public readonly description?: string,
-  ) { }
+  ) {}
 }

@@ -35,6 +35,29 @@ export const Permissions = {
     UPDATE: 'permissions.update',
     DELETE: 'permissions.delete',
   },
+  BUNDLES: {
+    CREATE: 'bundles.create',
+    READ: 'bundles.read',
+    UPDATE: 'bundles.update',
+    DELETE: 'bundles.delete',
+    LIST: 'bundles.list',
+  },
+  SLABS: {
+    CREATE: 'slabs.create',
+    READ: 'slabs.read',
+    UPDATE: 'slabs.update',
+    DELETE: 'slabs.delete',
+    LIST: 'slabs.list',
+  },
+  FINISHES: {
+    LIST: 'finishes.list',
+  },
+  LEVELS: {
+    LIST: 'levels.list',
+  },
+  SUPPLIERS: {
+    LIST: 'suppliers.list',
+  },
 } as const;
 
 export type PermissionType =

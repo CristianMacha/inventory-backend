@@ -2,24 +2,22 @@ import { Module, Provider } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { AUTH_TOKENS } from './auth.tokens';
 
 import { UsersModule } from '../users/users.module';
 
-import { AuthService } from './application/auth.service';
+import { AuthService } from './application/services/auth.service';
 
 import { SharedInfrastructureModule } from '../../shared/infrastructure/shared-infrastructure.module';
 import { AuthController } from './infrastructure/http/auth.controller';
-import { LocalStrategy } from './infrastructure/strategies/local.strategy';
 import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
-import { RefreshTokenEntity } from './infrastructure/persistence/typeorm/entities/refresh-token.entity';
-import { TypeOrmRefreshTokenRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-refresh-token.repository';
 import { AuthResponseService } from './application/services/auth-response.service';
+import { FirebaseIdentityVerifier } from './infrastructure/identity-providers/firebase-identity.verifier';
 
 const PersistenceProviders: Provider[] = [
   {
-    provide: 'RefreshTokenRepository',
-    useClass: TypeOrmRefreshTokenRepository,
+    provide: AUTH_TOKENS.IDENTITY_VERIFIER,
+    useClass: FirebaseIdentityVerifier,
   },
 ];
 
@@ -28,12 +26,13 @@ const PersistenceProviders: Provider[] = [
     UsersModule,
     SharedInfrastructureModule,
     PassportModule,
-    TypeOrmModule.forFeature([RefreshTokenEntity]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '15m' },
+        signOptions: {
+          expiresIn: configService.get<number>('JWT_EXPIRATION_TIME', 3600),
+        },
       }),
       inject: [ConfigService],
     }),
@@ -42,7 +41,6 @@ const PersistenceProviders: Provider[] = [
   providers: [
     AuthService,
     AuthResponseService,
-    LocalStrategy,
     JwtStrategy,
     ...PersistenceProviders,
   ],

@@ -1,69 +1,91 @@
-import { LevelId } from '@contexts/inventory/domain/value-objects/level-id';
+import { LevelId } from '../value-objects/level-id';
+import { InvalidEntityNameException } from '../errors/invalid-entity-name.exception';
 
 export class Level {
   private readonly _id: LevelId;
   private _name: string;
+  private _sortOrder: number;
   private _description: string;
-  private readonly _createdBy: string;
-  private _updatedBy: string;
+  private _isActive: boolean;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
   private constructor(
     id: LevelId,
     name: string,
+    sortOrder: number,
     description: string,
-    createdBy: string,
-    updatedBy: string,
+    isActive: boolean,
     createdAt: Date,
     updatedAt: Date,
   ) {
     this._id = id;
     this._name = name;
+    this._sortOrder = sortOrder;
     this._description = description;
-    this._createdBy = createdBy;
-    this._updatedBy = updatedBy;
+    this._isActive = isActive;
     this._createdAt = createdAt;
     this._updatedAt = updatedAt;
   }
 
-  static create(name: string, description: string, createdBy: string) {
+  private static validateName(name: string): void {
+    if (!name || name.trim().length === 0) {
+      throw new InvalidEntityNameException('Level');
+    }
+  }
+
+  static create(name: string, sortOrder: number, description: string): Level {
+    Level.validateName(name);
     const now = new Date();
     return new Level(
       LevelId.generate(),
       name,
+      sortOrder,
       description,
-      createdBy,
-      createdBy,
+      true,
       now,
       now,
     );
   }
 
-  public static reconstitute(
-    id: string,
+  static reconstitute(
+    id: LevelId,
     name: string,
+    sortOrder: number,
     description: string,
-    createdBy: string,
-    updatedBy: string,
+    isActive: boolean,
     createdAt: Date,
     updatedAt: Date,
-  ) {
+  ): Level {
     return new Level(
-      LevelId.create(id),
+      id,
       name,
+      sortOrder,
       description,
-      createdBy,
-      updatedBy,
+      isActive,
       createdAt,
       updatedAt,
     );
   }
 
-  public changeDetails(name: string, description: string, userId: string) {
+  updateName(name: string): void {
+    Level.validateName(name);
     this._name = name;
+    this._updatedAt = new Date();
+  }
+
+  updateSortOrder(sortOrder: number): void {
+    this._sortOrder = sortOrder;
+    this._updatedAt = new Date();
+  }
+
+  updateDescription(description: string): void {
     this._description = description;
-    this._updatedBy = userId;
+    this._updatedAt = new Date();
+  }
+
+  setActive(isActive: boolean): void {
+    this._isActive = isActive;
     this._updatedAt = new Date();
   }
 
@@ -75,16 +97,16 @@ export class Level {
     return this._name;
   }
 
+  get sortOrder(): number {
+    return this._sortOrder;
+  }
+
   get description(): string {
     return this._description;
   }
 
-  get createdBy(): string {
-    return this._createdBy;
-  }
-
-  get updatedBy(): string {
-    return this._updatedBy;
+  get isActive(): boolean {
+    return this._isActive;
   }
 
   get createdAt(): Date {

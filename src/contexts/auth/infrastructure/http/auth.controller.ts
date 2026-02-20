@@ -7,14 +7,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 
-import { AuthService } from '@contexts/auth/application/auth.service';
-import { LoginDto } from './dtos/login.dto';
-import { RefreshTokenDto } from './dtos/refresh-token.dto';
+import { AuthService } from '@contexts/auth/application/services/auth.service';
+import { FirebaseLoginDto } from './dtos/firebase-login.dto';
+
 import { Public } from '../decorators/public.decorator';
-import { GetUser } from '../decorators/get-user.decorator';
-import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -23,35 +21,19 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  @UseGuards(AuthGuard('local'))
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'User login with email and password' })
-  @ApiBody({ type: LoginDto })
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
+  @ApiOperation({ summary: 'Login with Firebase ID token' })
+  @ApiBody({ type: FirebaseLoginDto })
   @ApiResponse({
     status: 200,
-    description: 'Login successful. Returns access token and refresh token.',
+    description: 'Login successful. Returns access token and user.',
   })
-  @ApiResponse({ status: 401, description: 'Invalid credentials.' })
+  @ApiResponse({ status: 401, description: 'Invalid or expired ID token.' })
   @ApiResponse({ status: 400, description: 'Invalid request body.' })
-  async login(@GetUser() user: AuthUserDto) {
-    return this.authService.login(user);
-  }
-
-  @Public()
-  @Post('refresh')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Refresh access token using refresh token' })
-  @ApiBody({ type: RefreshTokenDto })
-  @ApiResponse({
-    status: 200,
-    description: 'Token refreshed successfully. Returns new access token.',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Invalid or expired refresh token.',
-  })
-  @ApiResponse({ status: 400, description: 'Invalid request body.' })
-  async refresh(@Body() refreshTokenDto: RefreshTokenDto) {
-    return this.authService.refresh(refreshTokenDto.refreshToken);
+  @ApiResponse({ status: 429, description: 'Too many requests.' })
+  async login(@Body() dto: FirebaseLoginDto) {
+    return this.authService.loginWithFirebase(dto.idToken);
   }
 }

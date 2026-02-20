@@ -1,16 +1,17 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { ConflictException, Inject } from "@nestjs/common";
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { ConflictException, Inject } from '@nestjs/common';
 
-import { CreateBrandCommand } from "./create-brand.command";
-import { IBrandRepository } from "@contexts/inventory/domain/repositories/brand.repository";
-import { Brand } from "@contexts/inventory/domain/entities/brand";
+import { CreateBrandCommand } from './create-brand.command';
+import { IBrandRepository } from '@contexts/inventory/domain/repositories/brand.repository';
+import { Brand } from '@contexts/inventory/domain/entities/brand';
+import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
 
 @CommandHandler(CreateBrandCommand)
 export class CreateBrandHandler implements ICommandHandler<CreateBrandCommand> {
   constructor(
-    @Inject('BrandRepository')
+    @Inject(INVENTORY_TOKENS.BRAND_REPOSITORY)
     private readonly brandRepository: IBrandRepository,
-  ) { }
+  ) {}
 
   async execute(command: CreateBrandCommand): Promise<void> {
     const { name, description, createdBy } = command;

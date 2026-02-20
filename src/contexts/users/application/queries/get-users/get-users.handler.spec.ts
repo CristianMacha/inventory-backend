@@ -3,45 +3,46 @@ import { Repository } from 'typeorm';
 import { GetUsersHandler } from './get-users.handler';
 import { UserEntity } from '../../../infrastructure/persistence/typeorm/entities/user.entity';
 import { GetUsersQuery } from './get-users.query';
+import { IUserRepository } from '@contexts/users/domain/repositories/user.repository';
+import { User } from '@contexts/users/domain/entities/user';
 
 describe('GetUsersHandler', () => {
   let handler: GetUsersHandler;
-  let usersReadRepositoryMock: jest.Mocked<Repository<UserEntity>>;
+  let usersReadRepositoryMock: jest.Mocked<IUserRepository>;
 
   beforeEach(() => {
     usersReadRepositoryMock = {
       find: jest.fn(),
-    } as unknown as jest.Mocked<Repository<UserEntity>>;
+      findAllWithRolesPermissions: jest.fn(),
+    } as unknown as jest.Mocked<IUserRepository>;
 
     handler = new GetUsersHandler(usersReadRepositoryMock);
   });
 
   it('It should return a list of UserResponseDto', async () => {
-    const entityList: UserEntity[] = [
+    const entityList: User[] = [
       {
-        id: '1',
+        id: { getValue: () => '1' },
         name: 'cristian',
         email: 'cristian@gmail.com',
-        password: 'cristianmx10',
         roles: [],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+      } as unknown as User,
       {
-        id: '2',
+        id: { getValue: () => '2' },
         name: 'cristian',
         email: 'cristian@gmail.com',
-        password: 'cristianmx10',
         roles: [],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+      } as unknown as User,
     ];
-    usersReadRepositoryMock.find.mockResolvedValue(entityList);
+    usersReadRepositoryMock.findAllWithRolesPermissions.mockResolvedValue(
+      entityList,
+    );
 
     const result = await handler.execute(new GetUsersQuery());
 
-    expect(usersReadRepositoryMock.find).toHaveBeenCalledTimes(1);
+    expect(
+      usersReadRepositoryMock.findAllWithRolesPermissions,
+    ).toHaveBeenCalledTimes(1);
     expect(result.length).toBe(entityList.length);
 
     expect(result[0]).toHaveProperty('email', 'cristian@gmail.com');

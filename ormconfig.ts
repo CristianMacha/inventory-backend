@@ -2,12 +2,17 @@ import * as dotenv from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 import { UserEntity } from './src/contexts/users/infrastructure/persistence/typeorm/entities/user.entity';
-import { RefreshTokenEntity } from './src/contexts/auth/infrastructure/persistence/typeorm/entities/refresh-token.entity';
 import { PermissionEntity } from './src/contexts/users/infrastructure/persistence/typeorm/entities/permission.entity';
 import { RoleEntity } from './src/contexts/users/infrastructure/persistence/typeorm/entities/role.entity';
 import { BrandEntity } from './src/contexts/inventory/infrastructure/persistence/typeorm/entities/brand.entity';
 import { CategoryEntity } from './src/contexts/inventory/infrastructure/persistence/typeorm/entities/category.entity';
 import { ProductEntity } from './src/contexts/inventory/infrastructure/persistence/typeorm/entities/product.entity';
+import { BundleEntity } from './src/contexts/inventory/infrastructure/persistence/typeorm/entities/bundle.entity';
+import { SlabEntity } from './src/contexts/inventory/infrastructure/persistence/typeorm/entities/slab.entity';
+import { LevelEntity } from './src/contexts/inventory/infrastructure/persistence/typeorm/entities/level.entity';
+import { FinishEntity } from './src/contexts/inventory/infrastructure/persistence/typeorm/entities/finish.entity';
+import { SupplierEntity } from './src/contexts/inventory/infrastructure/persistence/typeorm/entities/supplier.entity';
+import { ProductSupplierEntity } from './src/contexts/inventory/infrastructure/persistence/typeorm/entities/product-supplier.entity';
 
 dotenv.config();
 
@@ -18,7 +23,20 @@ const config: DataSourceOptions = {
   username: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
-  entities: [UserEntity, RefreshTokenEntity, RoleEntity, PermissionEntity, BrandEntity, CategoryEntity, ProductEntity],
+  entities: [
+    UserEntity,
+    RoleEntity,
+    PermissionEntity,
+    BrandEntity,
+    CategoryEntity,
+    ProductEntity,
+    BundleEntity,
+    SlabEntity,
+    LevelEntity,
+    FinishEntity,
+    SupplierEntity,
+    ProductSupplierEntity,
+  ],
   migrations: ['src/migrations/*.ts'],
   migrationsTableName: 'typeorm_migrations',
   synchronize: false,

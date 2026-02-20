@@ -1,27 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthUserDto } from '../../../users/application/dtos/user-types.dto';
-import { IHasher } from '@shared/domain/hasher.interface';
-import { IUuidGenerator } from '@shared/domain/uuid-generator.interface';
-import { RefreshToken } from '../../domain/entities/refresh-token';
-import { IRefreshTokenRepository } from '../../domain/repositories/refresh-token.repository';
 
 @Injectable()
 export class AuthResponseService {
-  constructor(
-    @Inject('RefreshTokenRepository')
-    private readonly refreshTokenRepository: IRefreshTokenRepository,
-    @Inject('Hasher')
-    private readonly hasher: IHasher,
-    @Inject('UuidGenerator') private readonly uuidGenerator: IUuidGenerator,
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly jwtService: JwtService) {}
 
-  async generateAuthResponse(
-    user: AuthUserDto,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  generateAccessToken(user: AuthUserDto): string {
     const payload = {
       email: user.email,
       sub: user.id,
@@ -29,28 +14,6 @@ export class AuthResponseService {
       roles: user.roles,
       permissions: user.permissions,
     };
-
-    const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-      expiresIn: '7d',
-    });
-
-    const hashRefreshToken = await this.hasher.hash(refreshToken);
-    const expiration = new Date();
-    expiration.setDate(expiration.getDate() + 7);
-
-    const newRefreshTokenEntity = RefreshToken.create(
-      this.uuidGenerator.generate(),
-      user.id,
-      hashRefreshToken,
-      expiration,
-    );
-
-    await this.refreshTokenRepository.save(newRefreshTokenEntity);
-    return {
-      accessToken,
-      refreshToken,
-    };
+    return this.jwtService.sign(payload);
   }
 }

@@ -3,26 +3,25 @@ import { ProductEntity } from '../entities/product.entity';
 import { ProductId } from '@contexts/inventory/domain/value-objects/product-id';
 import { BrandId } from '@contexts/inventory/domain/value-objects/brand-id';
 import { CategoryId } from '@contexts/inventory/domain/value-objects/category-id';
+import { LevelId } from '@contexts/inventory/domain/value-objects/level-id';
+import { FinishId } from '@contexts/inventory/domain/value-objects/finish-id';
 
 export class ProductMapper {
   static toDomain(entity: ProductEntity): Product {
-    const productId = ProductId.create(entity.id);
-    const brandId = BrandId.create(entity.brandId);
-    const categoryId = CategoryId.create(entity.categoryId);
-
-    const product = Product.reconstitute(
-      productId,
+    return Product.reconstitute(
+      ProductId.create(entity.id),
       entity.name,
       entity.description,
-      brandId,
-      categoryId,
-      entity.stock,
+      entity.isActive,
+      CategoryId.create(entity.categoryId),
+      LevelId.create(entity.levelId),
+      FinishId.create(entity.finishId),
+      entity.brandId ? BrandId.create(entity.brandId) : null,
       entity.createdBy,
       entity.updatedBy,
       entity.createdAt,
       entity.updatedAt,
     );
-    return product;
   }
 
   static toPersistence(domain: Product): ProductEntity {
@@ -30,9 +29,11 @@ export class ProductMapper {
     entity.id = domain.id.getValue();
     entity.name = domain.name;
     entity.description = domain.description;
-    entity.brandId = domain.brandId.getValue();
+    entity.isActive = domain.isActive;
     entity.categoryId = domain.categoryId.getValue();
-    entity.stock = domain.stock;
+    entity.levelId = domain.levelId.getValue();
+    entity.finishId = domain.finishId.getValue();
+    entity.brandId = domain.brandId ? domain.brandId.getValue() : null;
     entity.createdBy = domain.createdBy;
     entity.updatedBy = domain.updatedBy;
     entity.createdAt = domain.createdAt;

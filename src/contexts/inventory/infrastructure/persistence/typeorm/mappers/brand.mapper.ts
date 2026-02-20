@@ -4,17 +4,16 @@ import { BrandId } from '@contexts/inventory/domain/value-objects/brand-id';
 
 export class BrandMapper {
   static toDomain(entity: BrandEntity): Brand {
-    const brandId = BrandId.create(entity.id);
-    const brand = Brand.reconstitute(
-      brandId,
+    return Brand.reconstitute(
+      BrandId.create(entity.id),
       entity.name,
       entity.description,
+      entity.isActive,
       entity.createdBy,
       entity.updatedBy,
       entity.createdAt,
       entity.updatedAt,
     );
-    return brand;
   }
 
   static toPersistence(domain: Brand): BrandEntity {
@@ -22,6 +21,7 @@ export class BrandMapper {
     entity.id = domain.id.getValue();
     entity.name = domain.name;
     entity.description = domain.description;
+    entity.isActive = domain.isActive;
     entity.createdBy = domain.createdBy;
     entity.updatedBy = domain.updatedBy;
     entity.createdAt = domain.createdAt;

@@ -1,1 +1,1 @@
-export class GetCategoriesQuery { }
+export class GetCategoriesQuery {}

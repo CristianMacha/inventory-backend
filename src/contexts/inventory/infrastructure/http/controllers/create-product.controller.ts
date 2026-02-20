@@ -5,7 +5,7 @@ import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decor
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
 import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
-import { CreateProductCommand } from '@contexts/inventory/application/commands/create-product/create-product.comand';
+import { CreateProductCommand } from '@contexts/inventory/application/commands/create-product/create-product.command';
 import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 import {
   ApiBearerAuth,
@@ -29,27 +29,20 @@ export class CreateProductController {
   @ApiResponse({ status: 201, description: 'Product created successfully' })
   @ApiResponse({
     status: 400,
-    description: 'Invalid input or product name already exists',
+    description: 'Invalid input or name already exists',
   })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized. Valid JWT token required.',
-  })
-  @ApiResponse({
-    status: 403,
-    description: 'Forbidden. User lacks required permissions.',
-  })
-  async run(
-    @Body() createProductDto: CreateProductDto,
-    @GetUser() user: AuthUserDto,
-  ) {
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  async run(@Body() dto: CreateProductDto, @GetUser() user: AuthUserDto) {
     await this.commandBus.execute(
       new CreateProductCommand(
-        createProductDto.name,
+        dto.name,
         user.id,
-        createProductDto.brandId,
-        createProductDto.categoryId,
-        createProductDto.description,
+        dto.categoryId,
+        dto.levelId,
+        dto.finishId,
+        dto.description,
+        dto.brandId,
       ),
     );
   }

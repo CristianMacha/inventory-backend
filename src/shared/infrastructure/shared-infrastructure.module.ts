@@ -1,14 +1,15 @@
 import { Module, Provider } from '@nestjs/common';
 import { UuidGeneratorAdapter } from './uuid/uuid-generator.adapter';
 import { BcryptHasherAdapter } from './hasher/bcrypt-hasher.adapter';
+import { SHARED_TOKENS } from '@shared/shared.tokens';
 
 const UtilityProviders: Provider[] = [
   {
-    provide: 'UuidGenerator',
+    provide: SHARED_TOKENS.UUID_GENERATOR,
     useClass: UuidGeneratorAdapter,
   },
   {
-    provide: 'Hasher',
+    provide: SHARED_TOKENS.HASHER,
     useClass: BcryptHasherAdapter,
   },
 ];

@@ -1,30 +1,28 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import {
-  Inject,
-  NotFoundException,
-  BadRequestException,
-  ConflictException,
-} from '@nestjs/common';
+import { Inject, BadRequestException, ConflictException } from '@nestjs/common';
 
 import { UpdateRoleCommand } from './update-role.command';
 import { IRoleRepository } from '../../../domain/repositories/role.repository';
 import { IPermissionRepository } from '../../../domain/repositories/permission.repository';
+import { RoleId } from '@contexts/users/domain/value-objects/role-id';
+import { ResourceNotFoundException } from '@shared/domain/exceptions/resource-not-found.exception';
+import { USERS_TOKENS } from '@contexts/users/users.tokens';
 
 @CommandHandler(UpdateRoleCommand)
 export class UpdateRoleHandler implements ICommandHandler<UpdateRoleCommand> {
   constructor(
-    @Inject('RoleRepository')
+    @Inject(USERS_TOKENS.ROLE_REPOSITORY)
     private readonly roleRepository: IRoleRepository,
-    @Inject('PermissionRepository')
+    @Inject(USERS_TOKENS.PERMISSION_REPOSITORY)
     private readonly permissionRepository: IPermissionRepository,
   ) {}
 
   async execute(command: UpdateRoleCommand): Promise<void> {
     const { id, name, permissionNames } = command;
 
-    const role = await this.roleRepository.findById(id);
+    const role = await this.roleRepository.findById(RoleId.create(id));
     if (!role) {
-      throw new NotFoundException(`Role with id ${id} not found`);
+      throw new ResourceNotFoundException('Role', id);
     }
 
     if (name && name !== role.name) {

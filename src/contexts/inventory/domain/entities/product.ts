@@ -1,14 +1,21 @@
+import { AggregateRoot } from '@nestjs/cqrs';
 import { BrandId } from '../value-objects/brand-id';
 import { ProductId } from '../value-objects/product-id';
 import { CategoryId } from '../value-objects/category-id';
+import { LevelId } from '../value-objects/level-id';
+import { FinishId } from '../value-objects/finish-id';
+import { InvalidEntityNameException } from '../errors/invalid-entity-name.exception';
+import { ProductCreatedEvent } from '../events/product-created.event';
 
-export class Product {
+export class Product extends AggregateRoot {
   private readonly _id: ProductId;
   private _name: string;
   private _description: string;
-  private _brandId: BrandId;
+  private _isActive: boolean;
   private _categoryId: CategoryId;
-  private _stock: number;
+  private _levelId: LevelId;
+  private _finishId: FinishId;
+  private _brandId: BrandId | null;
   private readonly _createdBy: string;
   private _updatedBy: string;
   private readonly _createdAt: Date;
@@ -18,68 +25,97 @@ export class Product {
     id: ProductId,
     name: string,
     description: string,
-    brandId: BrandId,
+    isActive: boolean,
     categoryId: CategoryId,
-    stock: number,
+    levelId: LevelId,
+    finishId: FinishId,
+    brandId: BrandId | null,
     createdBy: string,
     updatedBy: string,
     createdAt: Date,
     updatedAt: Date,
   ) {
+    super();
     this._id = id;
     this._name = name;
     this._description = description;
-    this._brandId = brandId;
+    this._isActive = isActive;
     this._categoryId = categoryId;
-    this._stock = stock;
+    this._levelId = levelId;
+    this._finishId = finishId;
+    this._brandId = brandId;
     this._createdBy = createdBy;
     this._updatedBy = updatedBy;
     this._createdAt = createdAt;
     this._updatedAt = updatedAt;
   }
 
+  private static validateName(name: string): void {
+    if (!name || name.trim().length === 0) {
+      throw new InvalidEntityNameException('Product');
+    }
+  }
+
   static create(
     name: string,
     description: string,
-    brandId: BrandId,
     categoryId: CategoryId,
-    stock: number,
+    levelId: LevelId,
+    finishId: FinishId,
     createdBy: string,
-  ) {
+    brandId: BrandId | null = null,
+  ): Product {
+    Product.validateName(name);
     const now = new Date();
-    return new Product(
+    const product = new Product(
       ProductId.generate(),
       name,
       description,
-      brandId,
+      true,
       categoryId,
-      stock,
+      levelId,
+      finishId,
+      brandId,
       createdBy,
       createdBy,
       now,
       now,
     );
+    product.apply(
+      new ProductCreatedEvent(
+        product._id.getValue(),
+        name,
+        brandId?.getValue() ?? null,
+        categoryId.getValue(),
+        createdBy,
+      ),
+    );
+    return product;
   }
 
   public static reconstitute(
     id: ProductId,
     name: string,
     description: string,
-    brandId: BrandId,
+    isActive: boolean,
     categoryId: CategoryId,
-    stock: number,
+    levelId: LevelId,
+    finishId: FinishId,
+    brandId: BrandId | null,
     createdBy: string,
     updatedBy: string,
     createdAt: Date,
     updatedAt: Date,
-  ) {
+  ): Product {
     return new Product(
       id,
       name,
       description,
-      brandId,
+      isActive,
       categoryId,
-      stock,
+      levelId,
+      finishId,
+      brandId,
       createdBy,
       updatedBy,
       createdAt,
@@ -87,32 +123,45 @@ export class Product {
     );
   }
 
-  public updateName(name: string, userId: string) {
+  public updateName(name: string, userId: string): void {
+    Product.validateName(name);
     this._name = name;
     this._updatedBy = userId;
     this._updatedAt = new Date();
   }
 
-  public updateDescription(description: string, userId: string) {
+  public updateDescription(description: string, userId: string): void {
     this._description = description;
     this._updatedBy = userId;
     this._updatedAt = new Date();
   }
 
-  public updateBrandId(brandId: BrandId, userId: string) {
+  public updateBrandId(brandId: BrandId | null, userId: string): void {
     this._brandId = brandId;
     this._updatedBy = userId;
     this._updatedAt = new Date();
   }
 
-  public updateCategoryId(categoryId: CategoryId, userId: string) {
+  public updateCategoryId(categoryId: CategoryId, userId: string): void {
     this._categoryId = categoryId;
     this._updatedBy = userId;
     this._updatedAt = new Date();
   }
 
-  public updateStock(stock: number, userId: string) {
-    this._stock = stock;
+  public updateLevelId(levelId: LevelId, userId: string): void {
+    this._levelId = levelId;
+    this._updatedBy = userId;
+    this._updatedAt = new Date();
+  }
+
+  public updateFinishId(finishId: FinishId, userId: string): void {
+    this._finishId = finishId;
+    this._updatedBy = userId;
+    this._updatedAt = new Date();
+  }
+
+  public setActive(isActive: boolean, userId: string): void {
+    this._isActive = isActive;
     this._updatedBy = userId;
     this._updatedAt = new Date();
   }
@@ -129,16 +178,24 @@ export class Product {
     return this._description;
   }
 
-  get brandId(): BrandId {
-    return this._brandId;
+  get isActive(): boolean {
+    return this._isActive;
   }
 
   get categoryId(): CategoryId {
     return this._categoryId;
   }
 
-  get stock(): number {
-    return this._stock;
+  get levelId(): LevelId {
+    return this._levelId;
+  }
+
+  get finishId(): FinishId {
+    return this._finishId;
+  }
+
+  get brandId(): BrandId | null {
+    return this._brandId;
   }
 
   get createdBy(): string {

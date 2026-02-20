@@ -7,6 +7,15 @@ export const envValidation = Joi.object({
   DATABASE_USERNAME: Joi.string().required(),
   DATABASE_PASSWORD: Joi.string().required(),
   DATABASE_NAME: Joi.string().required(),
+  DATABASE_TYPE: Joi.string()
+    .valid('mysql', 'postgres', 'mariadb')
+    .default('mysql'),
   JWT_SECRET: Joi.string().required(),
-  JWT_REFRESH_SECRET: Joi.string().required(),
+  JWT_EXPIRATION_TIME: Joi.number().default(3600),
+  JWT_REFRESH_SECRET: Joi.string().optional(),
+  FIREBASE_PROJECT_ID: Joi.string().required(),
+  GOOGLE_APPLICATION_CREDENTIALS: Joi.string().optional(),
+  FIREBASE_SERVICE_ACCOUNT_JSON: Joi.string().optional(),
+  FIREBASE_DEFAULT_ROLE_NAME: Joi.string().optional(),
+  ALLOWED_ORIGINS: Joi.string().optional(),
 });

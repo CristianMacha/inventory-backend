@@ -16,8 +16,18 @@ export class TypeOrmBrandRepository implements IBrandRepository {
   ) {}
 
   async findAll(): Promise<Brand[] | null> {
-    const brands = await this.typeOrmRepository.find();
+    const brands = await this.typeOrmRepository.find({
+      order: { name: 'ASC' },
+    });
     return brands ? brands.map((e) => BrandMapper.toDomain(e)) : null;
+  }
+
+  async findAllActive(): Promise<Brand[]> {
+    const brands = await this.typeOrmRepository.find({
+      where: { isActive: true },
+      order: { name: 'ASC' },
+    });
+    return brands.map((e) => BrandMapper.toDomain(e));
   }
 
   async findById(id: BrandId): Promise<Brand | null> {
@@ -35,5 +45,9 @@ export class TypeOrmBrandRepository implements IBrandRepository {
   async save(brand: Brand): Promise<void> {
     const brandEntity = BrandMapper.toPersistence(brand);
     await this.typeOrmRepository.save(brandEntity);
+  }
+
+  async count(): Promise<number> {
+    return this.typeOrmRepository.count();
   }
 }

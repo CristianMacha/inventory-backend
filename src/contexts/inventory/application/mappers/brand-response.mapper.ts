@@ -7,6 +7,7 @@ export class BrandResponseMapper {
       id: brand.id.getValue(),
       name: brand.name,
       description: brand.description,
+      isActive: brand.isActive,
       createdBy: brand.createdBy,
       updatedBy: brand.updatedBy,
       createdAt: brand.createdAt.toISOString(),

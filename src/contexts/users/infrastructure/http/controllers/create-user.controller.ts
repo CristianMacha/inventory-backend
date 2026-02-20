@@ -10,7 +10,7 @@ import { Public } from '@contexts/auth/infrastructure/decorators/public.decorato
 @ApiTags('Users')
 @Controller('users')
 export class CreateUserController {
-  constructor(private readonly commandBus: CommandBus) { }
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Public()
   @Post()
@@ -18,8 +18,14 @@ export class CreateUserController {
   @ApiOperation({ summary: 'Register a new user' })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({ status: 201, description: 'User created successfully.' })
-  @ApiResponse({ status: 400, description: 'Invalid request body or role not found.' })
-  @ApiResponse({ status: 409, description: 'User with this email already exists.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request body or role not found.',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'User with this email already exists.',
+  })
   async handle(@Body() dto: CreateUserDto) {
     const command = new CreateUserCommand(
       dto.email,

@@ -19,7 +19,7 @@ import { Permissions } from '@shared/authorization/permissions';
 @Controller('roles')
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 export class CreateRoleController {
-  constructor(private readonly commandBus: CommandBus) { }
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Post()
   @RequirePermissions(Permissions.ROLES.CREATE)
@@ -29,8 +29,14 @@ export class CreateRoleController {
     status: 400,
     description: 'Invalid input or invalid permission IDs',
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized. Valid JWT token required.' })
-  @ApiResponse({ status: 403, description: 'Forbidden. User lacks required permissions.' })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized. Valid JWT token required.',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden. User lacks required permissions.',
+  })
   @ApiResponse({ status: 409, description: 'Role name already exists' })
   async run(@Body() createRoleDto: CreateRoleDto) {
     await this.commandBus.execute(

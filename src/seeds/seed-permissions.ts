@@ -1,13 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
 import AppDataSource from '../../ormconfig';
 import { PermissionEntity } from '@contexts/users/infrastructure/persistence/typeorm/entities/permission.entity';
+import { RoleEntity } from '@contexts/users/infrastructure/persistence/typeorm/entities/role.entity';
 import { Permissions } from '../shared/authorization/permissions';
 
+const ADMIN_ROLE_NAME = 'admin';
+
 const PERMISSIONS = [
+  // Users
   { name: Permissions.USERS.CREATE, description: 'Create new users' },
   { name: Permissions.USERS.READ, description: 'View users list' },
   { name: Permissions.USERS.UPDATE, description: 'Update user details' },
   { name: Permissions.USERS.DELETE, description: 'Delete users' },
+  // Roles
   { name: Permissions.ROLES.CREATE, description: 'Create new roles' },
   { name: Permissions.ROLES.READ, description: 'View roles list' },
   { name: Permissions.ROLES.UPDATE, description: 'Update role details' },
@@ -20,19 +25,45 @@ const PERMISSIONS = [
   // Categories
   { name: Permissions.CATEGORIES.CREATE, description: 'Create new categories' },
   { name: Permissions.CATEGORIES.READ, description: 'View categories list' },
-  { name: Permissions.CATEGORIES.UPDATE, description: 'Update category details' },
+  {
+    name: Permissions.CATEGORIES.UPDATE,
+    description: 'Update category details',
+  },
   { name: Permissions.CATEGORIES.DELETE, description: 'Delete categories' },
   // Products
   { name: Permissions.PRODUCTS.CREATE, description: 'Create new products' },
   { name: Permissions.PRODUCTS.READ, description: 'View products list' },
   { name: Permissions.PRODUCTS.UPDATE, description: 'Update product details' },
   { name: Permissions.PRODUCTS.DELETE, description: 'Delete products' },
-
   // Permissions
-  { name: Permissions.PERMISSIONS.CREATE, description: 'Create new permissions' },
+  {
+    name: Permissions.PERMISSIONS.CREATE,
+    description: 'Create new permissions',
+  },
   { name: Permissions.PERMISSIONS.READ, description: 'View permissions list' },
-  { name: Permissions.PERMISSIONS.UPDATE, description: 'Update permission details' },
+  {
+    name: Permissions.PERMISSIONS.UPDATE,
+    description: 'Update permission details',
+  },
   { name: Permissions.PERMISSIONS.DELETE, description: 'Delete permissions' },
+  // Bundles
+  { name: Permissions.BUNDLES.CREATE, description: 'Create new bundles' },
+  { name: Permissions.BUNDLES.READ, description: 'View bundles details' },
+  { name: Permissions.BUNDLES.UPDATE, description: 'Update bundle details' },
+  { name: Permissions.BUNDLES.DELETE, description: 'Delete bundles' },
+  { name: Permissions.BUNDLES.LIST, description: 'List bundles' },
+  // Slabs
+  { name: Permissions.SLABS.CREATE, description: 'Create new slabs' },
+  { name: Permissions.SLABS.READ, description: 'View slabs details' },
+  { name: Permissions.SLABS.UPDATE, description: 'Update slab details' },
+  { name: Permissions.SLABS.DELETE, description: 'Delete slabs' },
+  { name: Permissions.SLABS.LIST, description: 'List slabs' },
+  // Finishes
+  { name: Permissions.FINISHES.LIST, description: 'List finishes' },
+  // Levels
+  { name: Permissions.LEVELS.LIST, description: 'List levels' },
+  // Suppliers
+  { name: Permissions.SUPPLIERS.LIST, description: 'List suppliers' },
 ];
 
 async function seed() {
@@ -40,21 +71,46 @@ async function seed() {
   console.log('Database connected for seeding...');
 
   try {
-    const repo = AppDataSource.getRepository(PermissionEntity);
+    const permissionRepo = AppDataSource.getRepository(PermissionEntity);
+    const roleRepo = AppDataSource.getRepository(RoleEntity);
 
+    // Upsert all permissions
+    const permissionEntities: PermissionEntity[] = [];
     for (const p of PERMISSIONS) {
-      const existing = await repo.findOneBy({ name: p.name });
-      if (!existing) {
-        await repo.save({
-          id: uuidv4(),
-          name: p.name,
-          description: p.description,
-        });
+      let entity = await permissionRepo.findOneBy({ name: p.name });
+      if (!entity) {
+        entity = await permissionRepo.save(
+          permissionRepo.create({
+            id: uuidv4(),
+            name: p.name,
+            description: p.description,
+          }),
+        );
         console.log(`Created permission: ${p.name}`);
       } else {
         console.log(`Permission already exists: ${p.name}`);
       }
+      permissionEntities.push(entity);
     }
+
+    // Upsert admin role with all permissions
+    let adminRole = await roleRepo.findOne({
+      where: { name: ADMIN_ROLE_NAME },
+      relations: ['permissions'],
+    });
+
+    if (!adminRole) {
+      adminRole = roleRepo.create({ id: uuidv4(), name: ADMIN_ROLE_NAME });
+      console.log(`Created role: ${ADMIN_ROLE_NAME}`);
+    } else {
+      console.log(`Role already exists: ${ADMIN_ROLE_NAME}`);
+    }
+
+    adminRole.permissions = permissionEntities;
+    await roleRepo.save(adminRole);
+    console.log(
+      `Assigned ${permissionEntities.length} permissions to role "${ADMIN_ROLE_NAME}".`,
+    );
 
     console.log('Seeding completed successfully.');
   } catch (error) {

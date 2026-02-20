@@ -1,10 +1,7 @@
 import { Module, Provider } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { CreateUserHandler } from './application/commands/create-user/create-user.handler';
-import { GetUsersHandler } from './application/queries/get-users/get-users.handler';
-import { UpdateUserHandler } from './application/commands/update-user/update-user.handler';
+import { USERS_TOKENS } from './users.tokens';
 
 import { TypeOrmUserRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-user.repository';
 import { TypeOrmRoleRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-role.repository';
@@ -16,16 +13,23 @@ import { UpdateUserController } from './infrastructure/http/controllers/update-u
 import { CreateRoleController } from './infrastructure/http/controllers/create-role.controller';
 import { PermissionEntity } from './infrastructure/persistence/typeorm/entities/permission.entity';
 import { RoleEntity } from './infrastructure/persistence/typeorm/entities/role.entity';
-
-import { CreateRoleHandler } from './application/commands/create-role/create-role.handler';
-import { GetRolesHandler } from './application/queries/get-roles/get-roles.handler';
 import { GetRolesController } from './infrastructure/http/controllers/get-roles.controller';
-import { UpdateRoleHandler } from './application/commands/update-role/update-role.handler';
 import { UpdateRoleController } from './infrastructure/http/controllers/update-role.controller';
+import { GetPermissionsController } from './infrastructure/http/controllers/get-permissions.controller';
+import { GetUserAuthenticationController } from './infrastructure/http/controllers/get-user-authentication.controller';
+import { GetUserMenuController } from './infrastructure/http/controllers/get-user-menu.controller';
+
+import { UpdateUserHandler } from './application/commands/update-user/update-user.handler';
+import { GetUsersHandler } from './application/queries/get-users/get-users.handler';
+import { CreateRoleHandler } from './application/commands/create-role/create-role.handler';
+import { CreateUserHandler } from './application/commands/create-user/create-user.handler';
+import { GetPermissionsHandler } from './application/queries/get-permissions/get-permissions.handler';
+import { GetRolesHandler } from './application/queries/get-roles/get-roles.handler';
+import { UpdateRoleHandler } from './application/commands/update-role/update-role.handler';
+import { GetUserAuthenticationHandler } from './application/queries/get-user-authentication/get-user-authentication.handler';
+import { GetUserMenuHandler } from './application/queries/get-user-menu/get-user-menu.handler';
 
 import { SharedInfrastructureModule } from '../../shared/infrastructure/shared-infrastructure.module';
-import { GetPermissionsHandler } from './application/queries/get-permissions/get-permissions.handler';
-import { GetPermissionsController } from './infrastructure/http/controllers/get-permissions.controller';
 
 const CommandHandlers = [
   CreateUserHandler,
@@ -34,19 +38,25 @@ const CommandHandlers = [
   UpdateRoleHandler,
 ];
 
-const QueryHandlers = [GetUsersHandler, GetRolesHandler, GetPermissionsHandler];
+const QueryHandlers = [
+  GetUsersHandler,
+  GetRolesHandler,
+  GetPermissionsHandler,
+  GetUserAuthenticationHandler,
+  GetUserMenuHandler,
+];
 
 const PersistenceProviders: Provider[] = [
   {
-    provide: 'UserRepository',
+    provide: USERS_TOKENS.USER_REPOSITORY,
     useClass: TypeOrmUserRepository,
   },
   {
-    provide: 'RoleRepository',
+    provide: USERS_TOKENS.ROLE_REPOSITORY,
     useClass: TypeOrmRoleRepository,
   },
   {
-    provide: 'PermissionRepository',
+    provide: USERS_TOKENS.PERMISSION_REPOSITORY,
     useClass: TypeOrmPermissionRepository,
   },
 ];
@@ -65,12 +75,10 @@ const PersistenceProviders: Provider[] = [
     GetRolesController,
     UpdateRoleController,
     GetPermissionsController,
+    GetUserAuthenticationController,
+    GetUserMenuController,
   ],
-  providers: [
-    ...CommandHandlers,
-    ...QueryHandlers,
-    ...PersistenceProviders,
-  ],
+  providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders],
   exports: [...PersistenceProviders],
 })
-export class UsersModule { }
+export class UsersModule {}

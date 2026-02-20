@@ -22,7 +22,7 @@ import { UpdateUserDto } from '../dtos/update-user.dto';
 @ApiTags('Users')
 @Controller('users')
 export class UpdateUserController {
-  constructor(private readonly commandBus: CommandBus) { }
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
@@ -34,8 +34,14 @@ export class UpdateUserController {
     description: 'User ID',
   })
   @ApiResponse({ status: 200, description: 'User updated successfully.' })
-  @ApiResponse({ status: 400, description: 'Invalid request body or role not found.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized. Valid JWT token required.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request body or role not found.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized. Valid JWT token required.',
+  })
   @ApiResponse({ status: 404, description: 'User not found.' })
   async handle(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     const command = new UpdateUserCommand(id, dto.name, dto.roleNames);

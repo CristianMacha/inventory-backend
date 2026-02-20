@@ -4,24 +4,24 @@ import { CategoryId } from '@contexts/inventory/domain/value-objects/category-id
 
 export class CategoryMapper {
   static toDomain(entity: CategoryEntity): Category {
-    const categoryId = CategoryId.create(entity.id);
-    const category = Category.reconstitute(
-      categoryId,
+    return Category.reconstitute(
+      CategoryId.create(entity.id),
       entity.name,
-      entity.description,
+      entity.abbreviation,
+      entity.isActive,
       entity.createdBy,
       entity.updatedBy,
       entity.createdAt,
       entity.updatedAt,
     );
-    return category;
   }
 
   static toPersistence(domain: Category): CategoryEntity {
     const entity = new CategoryEntity();
     entity.id = domain.id.getValue();
     entity.name = domain.name;
-    entity.description = domain.description;
+    entity.abbreviation = domain.abbreviation;
+    entity.isActive = domain.isActive;
     entity.createdBy = domain.createdBy;
     entity.updatedBy = domain.updatedBy;
     entity.createdAt = domain.createdAt;

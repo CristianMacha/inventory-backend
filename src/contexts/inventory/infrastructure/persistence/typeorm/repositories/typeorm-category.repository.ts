@@ -16,10 +16,20 @@ export class TypeOrmCategoryRepository implements ICategoryRepository {
   ) {}
 
   async findAll(): Promise<Category[] | null> {
-    const categories = await this.typeOrmRepository.find();
+    const categories = await this.typeOrmRepository.find({
+      order: { name: 'ASC' },
+    });
     return categories
       ? categories.map((e) => CategoryMapper.toDomain(e))
       : null;
+  }
+
+  async findAllActive(): Promise<Category[]> {
+    const categories = await this.typeOrmRepository.find({
+      where: { isActive: true },
+      order: { name: 'ASC' },
+    });
+    return categories.map((e) => CategoryMapper.toDomain(e));
   }
 
   async findById(id: CategoryId): Promise<Category | null> {
@@ -37,5 +47,9 @@ export class TypeOrmCategoryRepository implements ICategoryRepository {
   async save(category: Category): Promise<void> {
     const categoryEntity = CategoryMapper.toPersistence(category);
     await this.typeOrmRepository.save(categoryEntity);
+  }
+
+  async count(): Promise<number> {
+    return this.typeOrmRepository.count();
   }
 }

@@ -6,7 +6,8 @@ export class CategoryResponseMapper {
     return {
       id: category.id.getValue(),
       name: category.name,
-      description: category.description,
+      abbreviation: category.abbreviation,
+      isActive: category.isActive,
       createdBy: category.createdBy,
       updatedBy: category.updatedBy,
       createdAt: category.createdAt.toISOString(),

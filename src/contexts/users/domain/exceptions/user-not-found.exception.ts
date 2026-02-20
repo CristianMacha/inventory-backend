@@ -1,6 +1,6 @@
 import { DomainException } from '../../../../shared/domain/domain.exception';
 
-export class UserNotFoundExeption extends DomainException {
+export class UserNotFoundException extends DomainException {
   constructor(id: string) {
     super(`User with id ${id} not found`);
   }

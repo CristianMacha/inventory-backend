@@ -1,5 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
-import { ProductEntity } from "./product.entity";
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
+import { ProductEntity } from './product.entity';
 
 @Entity({ name: 'brands' })
 export class BrandEntity {
@@ -11,6 +17,9 @@ export class BrandEntity {
 
   @Column({ type: 'text', nullable: true })
   description: string;
+
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
   createdBy: string;
@@ -24,6 +33,9 @@ export class BrandEntity {
   @Column({ type: 'timestamp', nullable: false })
   updatedAt: Date;
 
-  @OneToMany(() => ProductEntity, product => product.brand)
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date | null;
+
+  @OneToMany(() => ProductEntity, (product) => product.brand)
   products: ProductEntity[];
 }

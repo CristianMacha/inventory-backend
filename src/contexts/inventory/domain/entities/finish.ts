@@ -1,62 +1,95 @@
-import { FinishId } from '@contexts/inventory/domain/value-objects/finish-id';
+import { FinishId } from '../value-objects/finish-id';
+import { InvalidEntityNameException } from '../errors/invalid-entity-name.exception';
 
 export class Finish {
   private readonly _id: FinishId;
   private _name: string;
-  private readonly _createdBy: string;
-  private _updatedBy: string;
+  private _abbreviation: string;
+  private _description: string;
+  private _isActive: boolean;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
   private constructor(
     id: FinishId,
     name: string,
-    createdBy: string,
-    updatedBy: string,
+    abbreviation: string,
+    description: string,
+    isActive: boolean,
     createdAt: Date,
     updatedAt: Date,
   ) {
     this._id = id;
     this._name = name;
-    this._createdBy = createdBy;
-    this._updatedBy = updatedBy;
+    this._abbreviation = abbreviation;
+    this._description = description;
+    this._isActive = isActive;
     this._createdAt = createdAt;
     this._updatedAt = updatedAt;
   }
 
-  static create(name: string, createdBy: string) {
+  private static validateName(name: string): void {
+    if (!name || name.trim().length === 0) {
+      throw new InvalidEntityNameException('Finish');
+    }
+  }
+
+  static create(
+    name: string,
+    abbreviation: string,
+    description: string,
+  ): Finish {
+    Finish.validateName(name);
     const now = new Date();
     return new Finish(
       FinishId.generate(),
       name,
-      createdBy,
-      createdBy,
+      abbreviation,
+      description,
+      true,
       now,
       now,
     );
   }
 
-  public static reconstitute(
-    id: string,
+  static reconstitute(
+    id: FinishId,
     name: string,
-    createdBy: string,
-    updatedBy: string,
+    abbreviation: string,
+    description: string,
+    isActive: boolean,
     createdAt: Date,
     updatedAt: Date,
-  ) {
+  ): Finish {
     return new Finish(
-      FinishId.create(id),
+      id,
       name,
-      createdBy,
-      updatedBy,
+      abbreviation,
+      description,
+      isActive,
       createdAt,
       updatedAt,
     );
   }
 
-  public updateName(name: string, userId: string) {
+  updateName(name: string): void {
+    Finish.validateName(name);
     this._name = name;
-    this._updatedBy = userId;
+    this._updatedAt = new Date();
+  }
+
+  updateAbbreviation(abbreviation: string): void {
+    this._abbreviation = abbreviation;
+    this._updatedAt = new Date();
+  }
+
+  updateDescription(description: string): void {
+    this._description = description;
+    this._updatedAt = new Date();
+  }
+
+  setActive(isActive: boolean): void {
+    this._isActive = isActive;
     this._updatedAt = new Date();
   }
 
@@ -68,12 +101,16 @@ export class Finish {
     return this._name;
   }
 
-  get createdBy(): string {
-    return this._createdBy;
+  get abbreviation(): string {
+    return this._abbreviation;
   }
 
-  get updatedBy(): string {
-    return this._updatedBy;
+  get description(): string {
+    return this._description;
+  }
+
+  get isActive(): boolean {
+    return this._isActive;
   }
 
   get createdAt(): Date {

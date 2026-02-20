@@ -3,7 +3,9 @@ import { BrandId } from '@contexts/inventory/domain/value-objects/brand-id';
 
 export interface IBrandRepository {
   findAll(): Promise<Brand[] | null>;
+  findAllActive(): Promise<Brand[]>;
   findById(id: BrandId): Promise<Brand | null>;
   findByName(name: string): Promise<Brand | null>;
   save(brand: Brand): Promise<void>;
+  count(): Promise<number>;
 }

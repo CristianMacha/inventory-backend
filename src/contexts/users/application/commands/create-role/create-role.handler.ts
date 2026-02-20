@@ -6,13 +6,14 @@ import { IRoleRepository } from '../../../domain/repositories/role.repository';
 import { IPermissionRepository } from '../../../domain/repositories/permission.repository';
 import { Role } from '../../../domain/entities/role';
 import { RoleId } from '@contexts/users/domain/value-objects/role-id';
+import { USERS_TOKENS } from '@contexts/users/users.tokens';
 
 @CommandHandler(CreateRoleCommand)
 export class CreateRoleHandler implements ICommandHandler<CreateRoleCommand> {
   constructor(
-    @Inject('RoleRepository')
+    @Inject(USERS_TOKENS.ROLE_REPOSITORY)
     private readonly roleRepository: IRoleRepository,
-    @Inject('PermissionRepository')
+    @Inject(USERS_TOKENS.PERMISSION_REPOSITORY)
     private readonly permissionRepository: IPermissionRepository,
   ) {}
 

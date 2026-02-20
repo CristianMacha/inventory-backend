@@ -17,7 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
           password: config.get<string>('DATABASE_PASSWORD', ''),
           entities: [
             __dirname +
-              '/../../context/users/infrastructure/persitence/typeorm/entities/*.entity.{js,ts}',
+              '/../../contexts/users/infrastructure/persistence/typeorm/entities/*.entity.{js,ts}',
           ],
           synchronize: false,
           autoLoadEntities: true,

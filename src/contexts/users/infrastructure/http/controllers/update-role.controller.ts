@@ -20,15 +20,24 @@ import { Permissions } from '@shared/authorization/permissions';
 @Controller('roles')
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 export class UpdateRoleController {
-  constructor(private readonly commandBus: CommandBus) { }
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Patch(':id')
   @RequirePermissions(Permissions.ROLES.UPDATE)
   @ApiOperation({ summary: 'Update role name and/or permissions' })
   @ApiResponse({ status: 200, description: 'Role updated successfully' })
-  @ApiResponse({ status: 400, description: 'Invalid input or invalid permission IDs' })
-  @ApiResponse({ status: 401, description: 'Unauthorized. Valid JWT token required.' })
-  @ApiResponse({ status: 403, description: 'Forbidden. User lacks required permissions.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input or invalid permission IDs',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized. Valid JWT token required.',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden. User lacks required permissions.',
+  })
   @ApiResponse({ status: 404, description: 'Role not found' })
   @ApiParam({ name: 'id', type: String })
   async run(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {

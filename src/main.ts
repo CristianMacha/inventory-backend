@@ -1,20 +1,33 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
+import { Logger } from 'nestjs-pino';
+import helmet from 'helmet';
 
 import { AppModule } from './app.module';
-import { DomainExceptionFilter } from './shared/infrastructure/filters/domain-exception.filter';
-import { ValidationPipe } from '@nestjs/common';
-
-import { Logger } from 'nestjs-pino';
+import { DomainExceptionFilter } from '@contexts/users/infrastructure/filters/domain-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  app.use(helmet());
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  app.use(cookieParser());
 
   app.useLogger(app.get(Logger));
 
   app.setGlobalPrefix('api/v1');
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  );
   app.useGlobalFilters(new DomainExceptionFilter());
 
   const config = new DocumentBuilder()
@@ -26,7 +39,16 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
-  app.enableCors();
+  const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
+    : [];
+
+  app.enableCors({
+    origin: allowedOrigins.length > 0 ? allowedOrigins : false,
+    credentials: true,
+  });
+
   await app.listen(process.env.APP_PORT ?? 3000);
 }
-bootstrap();
+
+void bootstrap();

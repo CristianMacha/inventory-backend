@@ -3,22 +3,26 @@ import { BadRequestException, Inject } from '@nestjs/common';
 
 import { UpdateUserCommand } from './update-user.command';
 import { Role } from '@contexts/users/domain/entities/role';
-import { UserNotFoundExeption } from '@contexts/users/domain/exceptions/user-not-found.exception';
+import { UserNotFoundException } from '@contexts/users/domain/exceptions/user-not-found.exception';
 import { IUserRepository } from '@contexts/users/domain/repositories/user.repository';
 import { IRoleRepository } from '@contexts/users/domain/repositories/role.repository';
+import { UserId } from '@contexts/users/domain/value-objects/user-id';
+import { USERS_TOKENS } from '@contexts/users/users.tokens';
 
 @CommandHandler(UpdateUserCommand)
 export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
   constructor(
-    @Inject('UserRepository') private readonly userRepository: IUserRepository,
-    @Inject('RoleRepository') private readonly roleRepository: IRoleRepository,
+    @Inject(USERS_TOKENS.USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
+    @Inject(USERS_TOKENS.ROLE_REPOSITORY)
+    private readonly roleRepository: IRoleRepository,
   ) {}
 
   async execute(command: UpdateUserCommand): Promise<void> {
     const { id, name, roleNames } = command;
-    const user = await this.userRepository.findById(id);
+    const user = await this.userRepository.findById(UserId.create(id));
     if (!user) {
-      throw new UserNotFoundExeption(id);
+      throw new UserNotFoundException(id);
     }
 
     if (name) {
