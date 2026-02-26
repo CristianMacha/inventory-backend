@@ -1,5 +1,6 @@
 import {
   Column,
+  DeleteDateColumn,
   Entity,
   Index,
   JoinColumn,
@@ -32,6 +33,9 @@ export class ProductSupplierEntity {
   })
   @JoinColumn({ name: 'productId', referencedColumnName: 'id' })
   product: ProductEntity;
+
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date | null;
 
   @ManyToOne(() => SupplierEntity, (supplier) => supplier.productSuppliers, {
     onDelete: 'CASCADE',

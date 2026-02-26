@@ -3,23 +3,27 @@ import {
   IProductOutputDto,
   ProductBrandDto,
   ProductCategoryDto,
+  ProductLevelDto,
+  ProductFinishDto,
 } from '@contexts/inventory/application/dtos/product-output.dto';
 
 export class ProductResponseMapper {
   public static toResponse(
     product: Product,
-    brand?: ProductBrandDto,
-    category?: ProductCategoryDto,
+    brand: ProductBrandDto | undefined,
+    category: ProductCategoryDto,
+    level: ProductLevelDto,
+    finish: ProductFinishDto,
   ): IProductOutputDto {
     return {
       id: product.id.getValue(),
       name: product.name,
       description: product.description,
       isActive: product.isActive,
-      levelId: product.levelId.getValue(),
-      finishId: product.finishId.getValue(),
       ...(brand && { brand }),
-      ...(category && { category }),
+      category,
+      level,
+      finish,
       createdBy: product.createdBy,
       updatedBy: product.updatedBy,
       createdAt: product.createdAt.toISOString(),

@@ -1,9 +1,10 @@
-import { Module, Provider } from '@nestjs/common';
+import { forwardRef, Module, Provider } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SharedInfrastructureModule } from '@shared/infrastructure/shared-infrastructure.module';
 import { INVENTORY_TOKENS } from './inventory.tokens';
+import { PurchasingModule } from '@contexts/purchasing/purchasing.module';
 
 import { ProductEntity } from './infrastructure/persistence/typeorm/entities/product.entity';
 import { CategoryEntity } from './infrastructure/persistence/typeorm/entities/category.entity';
@@ -54,6 +55,7 @@ import { CreateSlabController } from './infrastructure/http/controllers/create-s
 import { GetSlabsController } from './infrastructure/http/controllers/get-slabs.controller';
 
 import { GetBundlesHandler } from './application/queries/get-bundles/get-bundles.handler';
+import { GetProductDetailHandler } from './application/queries/get-product-detail/get-product-detail.handler';
 import { GetSlabsHandler } from './application/queries/get-slabs/get-slabs.handler';
 import { GetLevelsHandler } from './application/queries/get-levels/get-levels.handler';
 import { GetFinishesHandler } from './application/queries/get-finishes/get-finishes.handler';
@@ -70,6 +72,26 @@ import { CreateBundleWithSlabsController } from './infrastructure/http/controlle
 import { GetLevelsController } from './infrastructure/http/controllers/get-levels.controller';
 import { GetFinishesController } from './infrastructure/http/controllers/get-finishes.controller';
 import { GetSuppliersController } from './infrastructure/http/controllers/get-suppliers.controller';
+import { CreateFinishHandler } from './application/commands/create-finish/create-finish.handler';
+import { UpdateFinishHandler } from './application/commands/update-finish/update-finish.handler';
+import { CreateLevelHandler } from './application/commands/create-level/create-level.handler';
+import { UpdateLevelHandler } from './application/commands/update-level/update-level.handler';
+import { CreateSupplierHandler } from './application/commands/create-supplier/create-supplier.handler';
+import { UpdateSupplierHandler } from './application/commands/update-supplier/update-supplier.handler';
+import { CreateFinishController } from './infrastructure/http/controllers/create-finish.controller';
+import { UpdateFinishController } from './infrastructure/http/controllers/update-finish.controller';
+import { CreateLevelController } from './infrastructure/http/controllers/create-level.controller';
+import { UpdateLevelController } from './infrastructure/http/controllers/update-level.controller';
+import { CreateSupplierController } from './infrastructure/http/controllers/create-supplier.controller';
+import { UpdateSupplierController } from './infrastructure/http/controllers/update-supplier.controller';
+
+import { GetBundleDetailHandler } from './application/queries/get-bundle-detail/get-bundle-detail.handler';
+import { GetBundleDetailController } from './infrastructure/http/controllers/get-bundle-detail.controller';
+import { GetReturnableSlabsHandler } from './application/queries/get-returnable-slabs/get-returnable-slabs.handler';
+import { OnJobApprovedHandler } from './application/event-handlers/on-job-approved.handler';
+import { OnJobCompletedHandler } from './application/event-handlers/on-job-completed.handler';
+import { OnJobCancelledHandler } from './application/event-handlers/on-job-cancelled.handler';
+import { OnSupplierReturnCreditedHandler } from './application/event-handlers/on-supplier-return-credited.handler';
 
 const CommandHandlers = [
   CreateBrandHandler,
@@ -83,6 +105,12 @@ const CommandHandlers = [
   CreateBundleHandler,
   CreateSlabHandler,
   CreateBundleWithSlabsHandler,
+  CreateFinishHandler,
+  UpdateFinishHandler,
+  CreateLevelHandler,
+  UpdateLevelHandler,
+  CreateSupplierHandler,
+  UpdateSupplierHandler,
 ];
 
 const QueryHandlers = [
@@ -92,6 +120,8 @@ const QueryHandlers = [
   GetProductByIdHandler,
   GetBundlesHandler,
   GetSlabsHandler,
+  GetProductDetailHandler,
+  GetBundleDetailHandler,
   GetLevelsHandler,
   GetFinishesHandler,
   GetSuppliersHandler,
@@ -100,6 +130,7 @@ const QueryHandlers = [
   GetActiveLevelsHandler,
   GetActiveFinishesHandler,
   GetActiveSuppliersHandler,
+  GetReturnableSlabsHandler,
 ];
 
 const PersistenceProviders: Provider[] = [
@@ -156,6 +187,7 @@ const PersistenceProviders: Provider[] = [
       ProductSupplierEntity,
     ]),
     SharedInfrastructureModule,
+    forwardRef(() => PurchasingModule),
   ],
   controllers: [
     GetBrandsController,
@@ -177,8 +209,23 @@ const PersistenceProviders: Provider[] = [
     GetFinishesController,
     GetSuppliersController,
     CreateBundleWithSlabsController,
+    CreateFinishController,
+    UpdateFinishController,
+    CreateLevelController,
+    UpdateLevelController,
+    CreateSupplierController,
+    UpdateSupplierController,
+    GetBundleDetailController,
   ],
-  providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders],
+  providers: [
+    ...CommandHandlers,
+    ...QueryHandlers,
+    ...PersistenceProviders,
+    OnJobApprovedHandler,
+    OnJobCompletedHandler,
+    OnJobCancelledHandler,
+    OnSupplierReturnCreditedHandler,
+  ],
   exports: [...PersistenceProviders],
 })
 export class InventoryModule {}

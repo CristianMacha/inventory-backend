@@ -16,6 +16,22 @@ export class ProductCategoryDto {
   name: string;
 }
 
+export class ProductLevelDto {
+  @ApiProperty({ example: 'uuid-here' })
+  id: string;
+
+  @ApiProperty({ example: 'Premium' })
+  name: string;
+}
+
+export class ProductFinishDto {
+  @ApiProperty({ example: 'uuid-here' })
+  id: string;
+
+  @ApiProperty({ example: 'Pulido' })
+  name: string;
+}
+
 export class IProductOutputDto {
   @ApiProperty({ example: 'uuid-here' })
   id: string;
@@ -35,11 +51,11 @@ export class IProductOutputDto {
   @ApiProperty({ type: () => ProductCategoryDto, required: false })
   category?: ProductCategoryDto;
 
-  @ApiProperty({ example: 'uuid-level' })
-  levelId: string;
+  @ApiProperty({ type: () => ProductLevelDto })
+  level: ProductLevelDto;
 
-  @ApiProperty({ example: 'uuid-finish' })
-  finishId: string;
+  @ApiProperty({ type: () => ProductFinishDto })
+  finish: ProductFinishDto;
 
   @ApiProperty({ example: 'uuid-user' })
   createdBy: string;

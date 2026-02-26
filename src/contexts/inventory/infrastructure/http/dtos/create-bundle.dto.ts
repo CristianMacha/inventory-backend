@@ -6,6 +6,7 @@ import {
   IsString,
   IsUUID,
   Min,
+  ValidateIf,
 } from 'class-validator';
 
 export class CreateBundleDto {
@@ -14,10 +15,22 @@ export class CreateBundleDto {
   @IsNotEmpty()
   readonly productId: string;
 
-  @ApiProperty({ example: 'Supplier UUID' })
+  @ApiPropertyOptional({
+    example: 'Supplier UUID',
+    description: 'Required if purchaseInvoiceId is not provided',
+  })
   @IsUUID()
+  @ValidateIf((o) => !o.purchaseInvoiceId)
   @IsNotEmpty()
-  readonly supplierId: string;
+  readonly supplierId?: string;
+
+  @ApiPropertyOptional({
+    example: 'Invoice UUID',
+    description: 'If provided, supplierId is derived from the invoice',
+  })
+  @IsUUID()
+  @IsOptional()
+  readonly purchaseInvoiceId?: string;
 
   @ApiPropertyOptional({ example: 'LOT-2024-001' })
   @IsString()

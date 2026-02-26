@@ -53,11 +53,12 @@ export class CreateBundleWithSlabsController {
     const result: CreateBundleWithSlabsResult = await this.commandBus.execute(
       new CreateBundleWithSlabsCommand(
         dto.productId,
-        dto.supplierId,
         (user as { id: string }).id,
         dto.slabs,
         dto.lotNumber,
         dto.thicknessCm,
+        dto.supplierId,
+        dto.purchaseInvoiceId,
       ),
     );
 
@@ -66,6 +67,7 @@ export class CreateBundleWithSlabsController {
         result.bundle,
         result.productName,
         result.supplierName,
+        result.invoiceNumber,
       ),
       slabs: result.slabs.map((slab) => SlabResponseMapper.toResponse(slab)),
     };

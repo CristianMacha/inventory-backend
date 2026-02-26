@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Patch,
   UseGuards,
 } from '@nestjs/common';
@@ -38,16 +39,26 @@ export class UpdateBrandController {
   @RequirePermissions(Permissions.BRANDS.UPDATE)
   @ApiOperation({ summary: 'Update a brand' })
   @ApiParam({ name: 'id', type: String, description: 'Brand ID' })
-  @ApiResponse({ status: 200, description: 'Brand updated successfully', type: MessageResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Brand updated successfully',
+    type: MessageResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Brand not found' })
   @ApiResponse({ status: 409, description: 'Brand name already exists' })
   async run(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdateBrandDto,
     @GetUser() user: AuthUserDto,
   ) {
     await this.commandBus.execute(
-      new UpdateBrandCommand(id, user.id, dto.name, dto.description),
+      new UpdateBrandCommand(
+        id,
+        user.id,
+        dto.name,
+        dto.description,
+        dto.isActive,
+      ),
     );
     return {
       statusCode: HttpStatus.OK,

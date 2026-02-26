@@ -1,9 +1,17 @@
-import { Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
 import type { ProductSupplierEntity } from './product-supplier.entity';
 import type { BundleEntity } from './bundle.entity';
 
 @Entity({ name: 'suppliers' })
 @Index('IDX_suppliers_name', ['name'], { unique: true })
+@Index('IDX_suppliers_isActive', ['isActive'])
 export class SupplierEntity {
   @PrimaryColumn('uuid')
   id: string;
@@ -37,6 +45,9 @@ export class SupplierEntity {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date | null;
 
   @OneToMany('ProductSupplierEntity', 'supplier')
   productSuppliers: ProductSupplierEntity[];

@@ -60,10 +60,68 @@ const PERMISSIONS = [
   { name: Permissions.SLABS.LIST, description: 'List slabs' },
   // Finishes
   { name: Permissions.FINISHES.LIST, description: 'List finishes' },
+  { name: Permissions.FINISHES.CREATE, description: 'Create new finishes' },
+  { name: Permissions.FINISHES.UPDATE, description: 'Update finish details' },
   // Levels
   { name: Permissions.LEVELS.LIST, description: 'List levels' },
+  { name: Permissions.LEVELS.CREATE, description: 'Create new levels' },
+  { name: Permissions.LEVELS.UPDATE, description: 'Update level details' },
   // Suppliers
   { name: Permissions.SUPPLIERS.LIST, description: 'List suppliers' },
+  { name: Permissions.SUPPLIERS.CREATE, description: 'Create new suppliers' },
+  {
+    name: Permissions.SUPPLIERS.UPDATE,
+    description: 'Update supplier details',
+  },
+  // Purchase Invoices
+  {
+    name: Permissions.PURCHASE_INVOICES.CREATE,
+    description: 'Create purchase invoices',
+  },
+  {
+    name: Permissions.PURCHASE_INVOICES.READ,
+    description: 'View purchase invoices',
+  },
+  {
+    name: Permissions.PURCHASE_INVOICES.UPDATE,
+    description: 'Update purchase invoices',
+  },
+  {
+    name: Permissions.PURCHASE_INVOICES.DELETE,
+    description: 'Delete purchase invoices',
+  },
+  // Jobs
+  { name: Permissions.JOBS.CREATE, description: 'Create jobs' },
+  { name: Permissions.JOBS.READ, description: 'View jobs' },
+  { name: Permissions.JOBS.UPDATE, description: 'Update jobs' },
+  { name: Permissions.JOBS.DELETE, description: 'Delete jobs' },
+  // Supplier Returns
+  {
+    name: Permissions.SUPPLIER_RETURNS.CREATE,
+    description: 'Create supplier returns',
+  },
+  {
+    name: Permissions.SUPPLIER_RETURNS.READ,
+    description: 'View supplier return details',
+  },
+  {
+    name: Permissions.SUPPLIER_RETURNS.LIST,
+    description: 'List supplier returns',
+  },
+  {
+    name: Permissions.SUPPLIER_RETURNS.UPDATE,
+    description: 'Update supplier returns',
+  },
+  {
+    name: Permissions.SUPPLIER_RETURNS.CANCEL,
+    description: 'Cancel supplier returns',
+  },
+  // Settings
+  { name: Permissions.SETTINGS.READ, description: 'Read settings' },
+  // Profile
+  { name: Permissions.PROFILE.READ, description: 'Read profile' },
+  // Dashboard
+  { name: Permissions.DASHBOARD.VIEW, description: 'View dashboard summary' },
 ];
 
 async function seed() {

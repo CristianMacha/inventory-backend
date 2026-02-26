@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class IBundleOutputDto {
   @ApiProperty({ example: 'uuid-here' })
@@ -21,6 +21,12 @@ export class IBundleOutputDto {
 
   @ApiProperty({ example: 2.5 })
   thicknessCm: number;
+
+  @ApiPropertyOptional({ example: 'uuid-invoice', nullable: true })
+  purchaseInvoiceId: string | null;
+
+  @ApiPropertyOptional({ example: 'INV-2026-001', nullable: true })
+  invoiceNumber: string | null;
 
   @ApiProperty({ example: 'uuid-user' })
   createdBy: string;

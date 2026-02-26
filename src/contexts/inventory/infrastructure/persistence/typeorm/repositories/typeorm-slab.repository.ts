@@ -5,11 +5,14 @@ import { Repository } from 'typeorm';
 import {
   ISlabRepository,
   SlabFilters,
+  ReturnableSlabWithBundle,
 } from '@contexts/inventory/domain/repositories/slab.repository';
 import { Slab } from '@contexts/inventory/domain/entities/slab';
 import { SlabId } from '@contexts/inventory/domain/value-objects/slab-id';
 import { BundleId } from '@contexts/inventory/domain/value-objects/bundle-id';
+import { SlabStatus } from '@contexts/inventory/domain/enums/slab-status.enum';
 import { SlabEntity } from '../entities/slab.entity';
+import { BundleEntity } from '../entities/bundle.entity';
 import { SlabMapper } from '../mappers/slab.mapper';
 import type { PaginationParams } from '@shared/domain/pagination/pagination-params.interface';
 import {
@@ -68,6 +71,35 @@ export class TypeOrmSlabRepository implements ISlabRepository {
       page,
       limit,
     );
+  }
+
+  async findReturnable(filters: {
+    purchaseInvoiceId: string;
+    bundleId?: string;
+  }): Promise<ReturnableSlabWithBundle[]> {
+    const qb = this.repository
+      .createQueryBuilder('slab')
+      .innerJoin(BundleEntity, 'bundle', 'bundle.id = slab.bundleId')
+      .addSelect('bundle.lotNumber', 'bundle_lotNumber')
+      .where('bundle.purchaseInvoiceId = :purchaseInvoiceId', {
+        purchaseInvoiceId: filters.purchaseInvoiceId,
+      })
+      .andWhere('slab.status IN (:...statuses)', {
+        statuses: [SlabStatus.AVAILABLE, SlabStatus.RESERVED],
+      })
+      .orderBy('bundle.lotNumber', 'ASC')
+      .addOrderBy('slab.code', 'ASC');
+
+    if (filters.bundleId) {
+      qb.andWhere('slab.bundleId = :bundleId', { bundleId: filters.bundleId });
+    }
+
+    const raw = await qb.getRawAndEntities();
+
+    return raw.entities.map((entity, i) => ({
+      slab: SlabMapper.toDomain(entity),
+      lotNumber: raw.raw[i]?.bundle_lotNumber ?? '',
+    }));
   }
 
   async count(): Promise<number> {

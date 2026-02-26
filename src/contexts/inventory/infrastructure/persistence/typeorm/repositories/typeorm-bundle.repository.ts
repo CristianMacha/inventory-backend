@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
+import { PurchaseInvoiceEntity } from '@contexts/purchasing/infrastructure/persistence/typeorm/entities/purchase-invoice.entity';
 
 import {
   IBundleRepository,
   BundleWithRelations,
+  BundleWithSlabs,
+  BundleWithProductName,
 } from '@contexts/inventory/domain/repositories/bundle.repository';
 import { Bundle } from '@contexts/inventory/domain/entities/bundle';
 import { Slab } from '@contexts/inventory/domain/entities/slab';
@@ -44,11 +47,70 @@ export class TypeOrmBundleRepository implements IBundleRepository {
     });
   }
 
+  async findByIdWithSlabs(id: BundleId): Promise<BundleWithSlabs | null> {
+    const entity = await this.repository.findOne({
+      where: { id: id.getValue() },
+      relations: ['slabs', 'supplier'],
+    });
+    if (!entity) return null;
+
+    let invoiceNumber: string | null = null;
+    if (entity.purchaseInvoiceId) {
+      const invoice = await this.dataSource
+        .getRepository(PurchaseInvoiceEntity)
+        .findOne({ where: { id: entity.purchaseInvoiceId }, select: ['id', 'invoiceNumber'] });
+      invoiceNumber = invoice?.invoiceNumber ?? null;
+    }
+
+    return {
+      bundle: BundleMapper.toDomain(entity),
+      slabs: (entity.slabs ?? []).map((s) => SlabMapper.toDomain(s)),
+      supplierName: entity.supplier?.name ?? '',
+      invoiceNumber,
+    };
+  }
+
+  async findByProductIdWithSlabs(
+    productId: string,
+  ): Promise<BundleWithSlabs[]> {
+    const entities = await this.repository
+      .createQueryBuilder('bundle')
+      .leftJoinAndSelect('bundle.slabs', 'slabs')
+      .leftJoinAndSelect('bundle.supplier', 'supplier')
+      .leftJoinAndMapOne(
+        'bundle.invoice',
+        PurchaseInvoiceEntity,
+        'invoice',
+        'invoice.id = bundle.purchaseInvoiceId',
+      )
+      .where('bundle.productId = :productId', { productId })
+      .orderBy('bundle.createdAt', 'DESC')
+      .getMany();
+
+    return entities.map((e) => ({
+      bundle: BundleMapper.toDomain(e),
+      slabs: (e.slabs ?? []).map((s) => SlabMapper.toDomain(s)),
+      supplierName: e.supplier?.name ?? '',
+      invoiceNumber: (e as any).invoice?.invoiceNumber ?? null,
+    }));
+  }
+
   async findById(id: BundleId): Promise<Bundle | null> {
     const entity = await this.repository.findOne({
       where: { id: id.getValue() },
     });
     return entity ? BundleMapper.toDomain(entity) : null;
+  }
+
+  async findByIdWithProductName(
+    id: BundleId,
+  ): Promise<BundleWithProductName | null> {
+    const entity = await this.repository.findOne({
+      where: { id: id.getValue() },
+      relations: ['product'],
+    });
+    if (!entity) return null;
+    return { bundle: BundleMapper.toDomain(entity), productName: entity.product?.name ?? '' };
   }
 
   async findAll(): Promise<Bundle[]> {
@@ -79,16 +141,26 @@ export class TypeOrmBundleRepository implements IBundleRepository {
     params: PaginationParams,
   ): Promise<PaginatedResult<BundleWithRelations>> {
     const { page, limit } = params;
-    const [entities, total] = await this.repository.findAndCount({
-      relations: ['product', 'supplier'],
-      order: { createdAt: 'DESC' },
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+    const qb = this.repository
+      .createQueryBuilder('bundle')
+      .leftJoinAndSelect('bundle.product', 'product')
+      .leftJoinAndSelect('bundle.supplier', 'supplier')
+      .leftJoinAndMapOne(
+        'bundle.invoice',
+        PurchaseInvoiceEntity,
+        'invoice',
+        'invoice.id = bundle.purchaseInvoiceId',
+      )
+      .orderBy('bundle.createdAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit);
+
+    const [entities, total] = await qb.getManyAndCount();
     const data = entities.map((e) => ({
       bundle: BundleMapper.toDomain(e),
       productName: e.product?.name ?? '',
       supplierName: e.supplier?.name ?? '',
+      invoiceNumber: (e as any).invoice?.invoiceNumber ?? null,
     }));
     return buildPaginatedResult(data, total, page, limit);
   }

@@ -8,6 +8,7 @@ import {
   IsString,
   IsUUID,
   Min,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
@@ -39,10 +40,22 @@ export class CreateBundleWithSlabsDto {
   @IsNotEmpty()
   productId: string;
 
-  @ApiProperty({ example: 'uuid-supplier' })
+  @ApiPropertyOptional({
+    example: 'uuid-supplier',
+    description: 'Required if purchaseInvoiceId is not provided',
+  })
   @IsUUID()
+  @ValidateIf((o) => !o.purchaseInvoiceId)
   @IsNotEmpty()
-  supplierId: string;
+  supplierId?: string;
+
+  @ApiPropertyOptional({
+    example: 'uuid-invoice',
+    description: 'If provided, supplierId is derived from the invoice',
+  })
+  @IsUUID()
+  @IsOptional()
+  purchaseInvoiceId?: string;
 
   @ApiPropertyOptional({ example: 'LOT-2024-001' })
   @IsString()

@@ -2,12 +2,24 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { GetBundlesHandler } from './get-bundles.handler';
 import { IBundleRepository } from '../../../domain/repositories/bundle.repository';
 import { GetBundlesQuery } from './get-bundles.query';
-import { Bundle } from '../../../domain/entities/bundle';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
 
 describe('GetBundlesHandler', () => {
   let handler: GetBundlesHandler;
   let bundleRepository: jest.Mocked<IBundleRepository>;
+
+  const mockBundle = {
+    id: { getValue: () => 'bundle-1' },
+    productId: { getValue: () => 'product-1' },
+    supplierId: { getValue: () => 'supplier-1' },
+    lotNumber: 'LOT-001',
+    thicknessCm: 2,
+    purchaseInvoiceId: null,
+    createdBy: 'user-1',
+    updatedBy: 'user-1',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  } as any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -15,7 +27,9 @@ describe('GetBundlesHandler', () => {
         GetBundlesHandler,
         {
           provide: INVENTORY_TOKENS.BUNDLE_REPOSITORY,
-          useValue: { findPaginated: jest.fn() },
+          useValue: {
+            findPaginatedWithRelations: jest.fn(),
+          },
         },
       ],
     }).compile();
@@ -25,22 +39,15 @@ describe('GetBundlesHandler', () => {
   });
 
   it('should return paginated bundles', async () => {
-    const bundles = [
-      {
-        id: { getValue: () => 'b1' },
-        productId: { getValue: () => 'p1' },
-        supplierId: { getValue: () => 's1' },
-        lotNumber: 'LOT-001',
-        thicknessCm: 2.0,
-        createdBy: 'user1',
-        updatedBy: 'user1',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ] as unknown as Bundle[];
-
-    bundleRepository.findPaginated.mockResolvedValue({
-      data: bundles,
+    bundleRepository.findPaginatedWithRelations.mockResolvedValue({
+      data: [
+        {
+          bundle: mockBundle,
+          productName: 'Calacatta Gold',
+          supplierName: 'Proveedor A',
+          invoiceNumber: null,
+        },
+      ],
       total: 1,
       page: 1,
       limit: 10,

@@ -30,6 +30,7 @@ describe('AuthService', () => {
           provide: USERS_TOKENS.USER_REPOSITORY,
           useValue: {
             findByExternalId: jest.fn(),
+            findByEmail: jest.fn(),
             save: jest.fn(),
           },
         },

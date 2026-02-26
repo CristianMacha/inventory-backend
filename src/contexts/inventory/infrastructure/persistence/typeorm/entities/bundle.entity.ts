@@ -25,6 +25,9 @@ export class BundleEntity {
   @Column('uuid')
   supplierId: string;
 
+  @Column({ type: 'uuid', nullable: true })
+  purchaseInvoiceId: string | null;
+
   @Column({ type: 'varchar', length: 255, nullable: true })
   lotNumber: string;
 

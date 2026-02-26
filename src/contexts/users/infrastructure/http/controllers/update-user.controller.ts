@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Patch,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
@@ -43,7 +44,10 @@ export class UpdateUserController {
     description: 'Unauthorized. Valid JWT token required.',
   })
   @ApiResponse({ status: 404, description: 'User not found.' })
-  async handle(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+  async handle(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: UpdateUserDto,
+  ) {
     const command = new UpdateUserCommand(id, dto.name, dto.roleNames);
     await this.commandBus.execute(command);
 

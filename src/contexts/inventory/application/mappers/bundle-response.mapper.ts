@@ -6,6 +6,7 @@ export class BundleResponseMapper {
     bundle: Bundle,
     productName = '',
     supplierName = '',
+    invoiceNumber: string | null = null,
   ): IBundleOutputDto {
     return {
       id: bundle.id.getValue(),
@@ -15,6 +16,8 @@ export class BundleResponseMapper {
       supplierName,
       lotNumber: bundle.lotNumber,
       thicknessCm: bundle.thicknessCm,
+      purchaseInvoiceId: bundle.purchaseInvoiceId,
+      invoiceNumber,
       createdBy: bundle.createdBy,
       updatedBy: bundle.updatedBy,
       createdAt: bundle.createdAt.toISOString(),

@@ -18,15 +18,20 @@ export class GetProductsHandler implements IQueryHandler<GetProductsQuery> {
   async execute(
     query: GetProductsQuery,
   ): Promise<PaginatedResult<IProductOutputDto>> {
-    const result =
-      await this.productRepository.findPaginatedWithBrandAndCategory(
-        query.filters,
-        query.pagination,
-      );
+    const result = await this.productRepository.findPaginatedWithRelations(
+      query.filters,
+      query.pagination,
+    );
     return {
       ...result,
-      data: result.data.map(({ product, brand, category }) =>
-        ProductResponseMapper.toResponse(product, brand, category),
+      data: result.data.map(({ product, brand, category, level, finish }) =>
+        ProductResponseMapper.toResponse(
+          product,
+          brand,
+          category,
+          level,
+          finish,
+        ),
       ),
     };
   }

@@ -13,6 +13,12 @@ import { LevelEntity } from './src/contexts/inventory/infrastructure/persistence
 import { FinishEntity } from './src/contexts/inventory/infrastructure/persistence/typeorm/entities/finish.entity';
 import { SupplierEntity } from './src/contexts/inventory/infrastructure/persistence/typeorm/entities/supplier.entity';
 import { ProductSupplierEntity } from './src/contexts/inventory/infrastructure/persistence/typeorm/entities/product-supplier.entity';
+import { PurchaseInvoiceItemEntity } from './src/contexts/purchasing/infrastructure/persistence/typeorm/entities/purchase-invoice-item.entity';
+import { JobEntity } from './src/contexts/projects/infrastructure/persistence/typeorm/entities/job.entity';
+import { JobItemEntity } from './src/contexts/projects/infrastructure/persistence/typeorm/entities/job-item.entity';
+import { PurchaseInvoiceEntity } from './src/contexts/purchasing/infrastructure/persistence/typeorm/entities/purchase-invoice.entity';
+import { SupplierReturnEntity } from './src/contexts/purchasing/infrastructure/persistence/typeorm/entities/supplier-return.entity';
+import { SupplierReturnItemEntity } from './src/contexts/purchasing/infrastructure/persistence/typeorm/entities/supplier-return-item.entity';
 
 dotenv.config();
 
@@ -36,11 +42,17 @@ const config: DataSourceOptions = {
     FinishEntity,
     SupplierEntity,
     ProductSupplierEntity,
+    PurchaseInvoiceItemEntity,
+    JobEntity,
+    JobItemEntity,
+    PurchaseInvoiceEntity,
+    SupplierReturnEntity,
+    SupplierReturnItemEntity,
   ],
   migrations: ['src/migrations/*.ts'],
   migrationsTableName: 'typeorm_migrations',
   synchronize: false,
-  logging: true,
+  logging: process.env.NODE_ENV !== 'production',
 };
 const AppDataSource = new DataSource(config);
 

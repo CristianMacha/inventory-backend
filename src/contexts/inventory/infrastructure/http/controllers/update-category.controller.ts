@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Patch,
   UseGuards,
 } from '@nestjs/common';
@@ -38,11 +39,15 @@ export class UpdateCategoryController {
   @RequirePermissions(Permissions.CATEGORIES.UPDATE)
   @ApiOperation({ summary: 'Update a category' })
   @ApiParam({ name: 'id', type: String, description: 'Category ID' })
-  @ApiResponse({ status: 200, description: 'Category updated successfully', type: MessageResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Category updated successfully',
+    type: MessageResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Category not found' })
   @ApiResponse({ status: 409, description: 'Category name already exists' })
   async run(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdateCategoryDto,
     @GetUser() user: AuthUserDto,
   ) {

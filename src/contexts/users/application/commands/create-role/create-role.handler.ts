@@ -5,7 +5,6 @@ import { CreateRoleCommand } from './create-role.command';
 import { IRoleRepository } from '../../../domain/repositories/role.repository';
 import { IPermissionRepository } from '../../../domain/repositories/permission.repository';
 import { Role } from '../../../domain/entities/role';
-import { RoleId } from '@contexts/users/domain/value-objects/role-id';
 import { USERS_TOKENS } from '@contexts/users/users.tokens';
 
 @CommandHandler(CreateRoleCommand)
@@ -37,7 +36,7 @@ export class CreateRoleHandler implements ICommandHandler<CreateRoleCommand> {
       );
     }
 
-    const role = new Role(RoleId.generate(), name, permissions);
+    const role = Role.create(name, permissions);
 
     await this.roleRepository.save(role);
   }

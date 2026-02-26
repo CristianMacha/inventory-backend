@@ -6,14 +6,12 @@ import { Logger } from 'nestjs-pino';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';
-import { DomainExceptionFilter } from '@contexts/users/infrastructure/filters/domain-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
   app.use(helmet());
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   app.use(cookieParser());
 
   app.useLogger(app.get(Logger));
@@ -28,8 +26,6 @@ async function bootstrap() {
       transformOptions: { enableImplicitConversion: true },
     }),
   );
-  app.useGlobalFilters(new DomainExceptionFilter());
-
   const config = new DocumentBuilder()
     .setTitle('Project X')
     .setDescription('The Project X API description')

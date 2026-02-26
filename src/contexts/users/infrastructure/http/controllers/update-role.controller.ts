@@ -1,4 +1,11 @@
-import { Body, Controller, Param, Patch, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
   ApiTags,
@@ -40,7 +47,10 @@ export class UpdateRoleController {
   })
   @ApiResponse({ status: 404, description: 'Role not found' })
   @ApiParam({ name: 'id', type: String })
-  async run(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
+  async run(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateRoleDto: UpdateRoleDto,
+  ) {
     await this.commandBus.execute(
       new UpdateRoleCommand(id, updateRoleDto.name, updateRoleDto.permissions),
     );

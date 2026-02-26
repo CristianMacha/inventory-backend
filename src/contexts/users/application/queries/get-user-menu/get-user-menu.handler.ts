@@ -45,29 +45,24 @@ export class GetUserMenuHandler implements IQueryHandler<GetUserMenuQuery> {
   ): MenuItem[] {
     return menuItems
       .filter((item) => userPermissions.includes(item.permission))
-      .map((item) => {
-        // Si tiene hijos, filtrarlos recursivamente
+      .flatMap((item) => {
         if (item.children && item.children.length > 0) {
           const filteredChildren = this.filterMenuByPermissions(
             item.children,
             userPermissions,
           );
 
-          // Solo incluir el item padre si tiene hijos visibles
           if (filteredChildren.length > 0) {
-            return { ...item, children: filteredChildren };
+            return [{ ...item, children: filteredChildren }];
           }
-          // Si no tiene hijos visibles pero el padre tiene path, incluirlo sin hijos
           if (item.path) {
-            const { children, ...itemWithoutChildren } = item;
-            return itemWithoutChildren;
+            const { children: _children, ...itemWithoutChildren } = item;
+            return [itemWithoutChildren];
           }
-          // Si no tiene path ni hijos visibles, no incluirlo
-          return null;
+          return [];
         }
 
-        return item;
-      })
-      .filter((item): item is MenuItem => item !== null);
+        return [item];
+      });
   }
 }

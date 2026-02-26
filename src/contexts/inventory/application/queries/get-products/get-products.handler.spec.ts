@@ -16,7 +16,7 @@ describe('GetProductsHandler', () => {
         {
           provide: INVENTORY_TOKENS.PRODUCT_REPOSITORY,
           useValue: {
-            findPaginatedWithBrandAndCategory: jest.fn(),
+            findPaginatedWithRelations: jest.fn(),
           },
         },
       ],
@@ -26,15 +26,17 @@ describe('GetProductsHandler', () => {
     productRepository = module.get(INVENTORY_TOKENS.PRODUCT_REPOSITORY);
   });
 
-  it('should return paginated products with brand and category', async () => {
+  it('should return paginated products with brand, category, level and finish', async () => {
     const products = [
       {
         id: { getValue: () => '1' },
         name: 'Prod1',
         description: 'Desc',
+        isActive: true,
         brandId: { getValue: () => 'b1' },
         categoryId: { getValue: () => 'c1' },
-        stock: 10,
+        levelId: { getValue: () => 'l1' },
+        finishId: { getValue: () => 'f1' },
         createdAt: new Date(),
         updatedAt: new Date(),
         createdBy: 'User1',
@@ -42,12 +44,14 @@ describe('GetProductsHandler', () => {
       },
     ] as unknown as Product[];
 
-    productRepository.findPaginatedWithBrandAndCategory.mockResolvedValue({
+    productRepository.findPaginatedWithRelations.mockResolvedValue({
       data: [
         {
           product: products[0],
           brand: { id: 'b1', name: 'Brand One' },
           category: { id: 'c1', name: 'Category One' },
+          level: { id: 'l1', name: 'Premium' },
+          finish: { id: 'f1', name: 'Pulido' },
         },
       ],
       total: 1,
@@ -64,6 +68,8 @@ describe('GetProductsHandler', () => {
     expect(result.data[0].name).toBe('Prod1');
     expect(result.data[0].brand).toEqual({ id: 'b1', name: 'Brand One' });
     expect(result.data[0].category).toEqual({ id: 'c1', name: 'Category One' });
+    expect(result.data[0].level).toEqual({ id: 'l1', name: 'Premium' });
+    expect(result.data[0].finish).toEqual({ id: 'f1', name: 'Pulido' });
     expect(result.total).toBe(1);
     expect(result.page).toBe(1);
     expect(result.limit).toBe(10);

@@ -2,6 +2,7 @@ import { SlabId } from '../value-objects/slab-id';
 import { BundleId } from '../value-objects/bundle-id';
 import { SlabStatus } from '../enums/slab-status.enum';
 import { SlabDimensions } from '../value-objects/slab-dimensions';
+import { InvalidEntityNameException } from '../errors/invalid-entity-name.exception';
 
 export class Slab {
   private readonly _id: SlabId;
@@ -39,6 +40,12 @@ export class Slab {
     this._updatedAt = updatedAt;
   }
 
+  private static validateCode(code: string): void {
+    if (!code || code.trim().length === 0) {
+      throw new InvalidEntityNameException('Slab code');
+    }
+  }
+
   static create(
     bundleId: BundleId,
     code: string,
@@ -46,6 +53,7 @@ export class Slab {
     description: string,
     createdBy: string,
   ): Slab {
+    Slab.validateCode(code);
     const now = new Date();
     return new Slab(
       SlabId.generate(),
@@ -106,6 +114,7 @@ export class Slab {
   }
 
   public updateCode(code: string, userId: string): void {
+    Slab.validateCode(code);
     this._code = code;
     this._updatedBy = userId;
     this._updatedAt = new Date();

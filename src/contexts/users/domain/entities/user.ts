@@ -1,6 +1,7 @@
 import { IHasher } from '@shared/domain/hasher.interface';
 import { Role } from './role';
 import { UserId } from '@contexts/users/domain/value-objects/user-id';
+import { InvalidUserNameException } from '../exceptions/invalid-user-name.exception';
 
 /** Identity from an external provider (e.g. Firebase); same shape as auth VerifiedIdentity. */
 export interface ProviderIdentity {
@@ -20,7 +21,7 @@ export class User {
   private readonly _externalId: string | null;
   private readonly _provider: typeof FIREBASE_PROVIDER | null;
 
-  constructor(
+  private constructor(
     id: UserId,
     name: string,
     email: string,
@@ -38,6 +39,12 @@ export class User {
     this._provider = provider;
   }
 
+  private static validateName(name: string): void {
+    if (!name || name.trim().length === 0) {
+      throw new InvalidUserNameException();
+    }
+  }
+
   static async create(
     name: string,
     email: string,
@@ -45,6 +52,7 @@ export class User {
     hasher: IHasher,
     roles: Role[] = [],
   ): Promise<User> {
+    User.validateName(name);
     const hashedPassword = await hasher.hash(password);
     return new User(UserId.generate(), name, email, hashedPassword, roles);
   }
@@ -66,12 +74,25 @@ export class User {
     );
   }
 
+  static reconstitute(
+    id: UserId,
+    name: string,
+    email: string,
+    password: string | null,
+    roles: Role[],
+    externalId: string | null,
+    provider: typeof FIREBASE_PROVIDER | null,
+  ): User {
+    return new User(id, name, email, password, roles, externalId, provider);
+  }
+
   async comparePassword(password: string, hasher: IHasher): Promise<boolean> {
     if (this._password === null) return false;
     return await hasher.compare(password, this._password);
   }
 
   public updateName(name: string): void {
+    User.validateName(name);
     this._name = name;
   }
 

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-class MetricsDto {
+class InventoryMetricsDto {
   @ApiProperty({ description: 'Total number of products', example: 42 })
   totalProducts: number;
 
@@ -17,7 +17,23 @@ class MetricsDto {
   totalSlabs: number;
 }
 
+class ProjectsMetricsDto {
+  @ApiProperty({ description: 'Total number of jobs', example: 10 })
+  totalJobs: number;
+}
+
+class PurchasingMetricsDto {
+  @ApiProperty({ description: 'Total number of purchase invoices', example: 5 })
+  totalPurchaseInvoices: number;
+}
+
 export class DashboardSummaryDto {
-  @ApiProperty({ description: 'Dashboard metrics', type: MetricsDto })
-  metrics: MetricsDto;
+  @ApiProperty({ description: 'Inventory metrics', type: InventoryMetricsDto })
+  inventory: InventoryMetricsDto;
+
+  @ApiProperty({ description: 'Projects metrics', type: ProjectsMetricsDto })
+  projects: ProjectsMetricsDto;
+
+  @ApiProperty({ description: 'Purchasing metrics', type: PurchasingMetricsDto })
+  purchasing: PurchasingMetricsDto;
 }

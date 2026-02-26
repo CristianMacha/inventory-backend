@@ -13,6 +13,9 @@ import { UserNotFoundException } from '../../domain/exceptions/user-not-found.ex
 import { InvalidEntityNameException } from '@contexts/inventory/domain/errors/invalid-entity-name.exception';
 import { InvalidStockException } from '@contexts/inventory/domain/errors/invalid-stock.exception';
 import { InvalidSlabDimensionsException } from '@contexts/inventory/domain/errors/invalid-slab-dimensions.exception';
+import { InvalidThicknessException } from '@contexts/inventory/domain/errors/invalid-thickness.exception';
+import { InvalidUserNameException } from '../../domain/exceptions/invalid-user-name.exception';
+import { InvalidRoleNameException } from '../../domain/exceptions/invalid-role-name.exception';
 
 @Catch(DomainException)
 export class DomainExceptionFilter implements ExceptionFilter {
@@ -39,7 +42,10 @@ export class DomainExceptionFilter implements ExceptionFilter {
     if (
       exception instanceof InvalidEntityNameException ||
       exception instanceof InvalidStockException ||
-      exception instanceof InvalidSlabDimensionsException
+      exception instanceof InvalidSlabDimensionsException ||
+      exception instanceof InvalidThicknessException ||
+      exception instanceof InvalidUserNameException ||
+      exception instanceof InvalidRoleNameException
     ) {
       statusCode = HttpStatus.UNPROCESSABLE_ENTITY;
     }

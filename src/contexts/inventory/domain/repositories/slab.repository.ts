@@ -8,6 +8,11 @@ export interface SlabFilters {
   bundleId?: string;
 }
 
+export interface ReturnableSlabWithBundle {
+  slab: Slab;
+  lotNumber: string;
+}
+
 export interface ISlabRepository {
   save(slab: Slab): Promise<void>;
   findById(id: SlabId): Promise<Slab | null>;
@@ -17,5 +22,9 @@ export interface ISlabRepository {
     params: PaginationParams,
     filters?: SlabFilters,
   ): Promise<PaginatedResult<Slab>>;
+  findReturnable(filters: {
+    purchaseInvoiceId: string;
+    bundleId?: string;
+  }): Promise<ReturnableSlabWithBundle[]>;
   count(): Promise<number>;
 }

@@ -2,12 +2,14 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryColumn,
 } from 'typeorm';
 import { ProductEntity } from './product.entity';
 
 @Entity({ name: 'categories' })
+@Index('IDX_categories_name', ['name'], { unique: true })
 export class CategoryEntity {
   @PrimaryColumn('uuid')
   id: string;

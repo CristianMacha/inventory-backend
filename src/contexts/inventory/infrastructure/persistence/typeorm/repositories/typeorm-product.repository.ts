@@ -3,7 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Product } from '@contexts/inventory/domain/entities/product';
-import { IProductRepository } from '@contexts/inventory/domain/repositories/product.repository';
+import {
+  IProductRepository,
+  ProductWithRelations,
+} from '@contexts/inventory/domain/repositories/product.repository';
 import type { ProductSearchFilters } from '@contexts/inventory/domain/repositories/product-search-filters.interface';
 import type { PaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
 import type { PaginationParams } from '@shared/domain/pagination/pagination-params.interface';
@@ -33,27 +36,15 @@ export class TypeOrmProductRepository implements IProductRepository {
     return product ? ProductMapper.toDomain(product) : null;
   }
 
-  async findByIdWithBrandAndCategory(id: ProductId): Promise<{
-    product: Product;
-    brand?: { id: string; name: string };
-    category: { id: string; name: string };
-  } | null> {
+  async findByIdWithRelations(
+    id: ProductId,
+  ): Promise<ProductWithRelations | null> {
     const entity = await this.typeOrmRepository.findOne({
       where: { id: id.getValue() },
-      relations: ['brand', 'category'],
+      relations: ['brand', 'category', 'level', 'finish'],
     });
     if (!entity) return null;
-    return {
-      product: ProductMapper.toDomain(entity),
-      brand: entity.brand
-        ? { id: entity.brand.id, name: entity.brand.name }
-        : entity.brandId
-          ? { id: entity.brandId, name: '' }
-          : undefined,
-      category: entity.category
-        ? { id: entity.category.id, name: entity.category.name }
-        : { id: entity.categoryId, name: '' },
-    };
+    return this.mapEntityToProductWithRelations(entity);
   }
 
   async findByName(name: string): Promise<Product | null> {
@@ -112,20 +103,16 @@ export class TypeOrmProductRepository implements IProductRepository {
     );
   }
 
-  async findPaginatedWithBrandAndCategory(
+  async findPaginatedWithRelations(
     filters: ProductSearchFilters,
     pagination: PaginationParams,
-  ): Promise<
-    PaginatedResult<{
-      product: Product;
-      brand?: { id: string; name: string };
-      category: { id: string; name: string };
-    }>
-  > {
+  ): Promise<PaginatedResult<ProductWithRelations>> {
     const qb = this.typeOrmRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.brand', 'brand')
-      .leftJoinAndSelect('product.category', 'category');
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.level', 'level')
+      .leftJoinAndSelect('product.finish', 'finish');
 
     if (filters.search?.trim()) {
       const term = `%${filters.search.trim()}%`;
@@ -149,17 +136,7 @@ export class TypeOrmProductRepository implements IProductRepository {
     qb.orderBy('product.name', 'ASC').skip(skip).take(pagination.limit);
 
     const [entities, total] = await qb.getManyAndCount();
-    const data = entities.map((e) => ({
-      product: ProductMapper.toDomain(e),
-      brand: e.brand
-        ? { id: e.brand.id, name: e.brand.name }
-        : e.brandId
-          ? { id: e.brandId, name: '' }
-          : undefined,
-      category: e.category
-        ? { id: e.category.id, name: e.category.name }
-        : { id: e.categoryId, name: '' },
-    }));
+    const data = entities.map((e) => this.mapEntityToProductWithRelations(e));
     return buildPaginatedResult(data, total, pagination.page, pagination.limit);
   }
 
@@ -170,5 +147,27 @@ export class TypeOrmProductRepository implements IProductRepository {
 
   async count(): Promise<number> {
     return this.typeOrmRepository.count();
+  }
+
+  private mapEntityToProductWithRelations(
+    e: ProductEntity,
+  ): ProductWithRelations {
+    return {
+      product: ProductMapper.toDomain(e),
+      brand: e.brand
+        ? { id: e.brand.id, name: e.brand.name }
+        : e.brandId
+          ? { id: e.brandId, name: '' }
+          : undefined,
+      category: e.category
+        ? { id: e.category.id, name: e.category.name }
+        : { id: e.categoryId, name: '' },
+      level: e.level
+        ? { id: e.level.id, name: e.level.name }
+        : { id: e.levelId, name: '' },
+      finish: e.finish
+        ? { id: e.finish.id, name: e.finish.name }
+        : { id: e.finishId, name: '' },
+    };
   }
 }

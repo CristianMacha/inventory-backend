@@ -21,6 +21,10 @@ export class RoleMapper {
       ? entity.permissions.map((p) => PermissionMapper.toDomain(p))
       : [];
 
-    return new Role(RoleId.create(entity.id), entity.name, permissions);
+    return Role.reconstitute(
+      RoleId.create(entity.id),
+      entity.name,
+      permissions,
+    );
   }
 }

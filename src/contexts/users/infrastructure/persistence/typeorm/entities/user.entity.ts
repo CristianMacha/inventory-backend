@@ -1,7 +1,18 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  JoinTable,
+  ManyToMany,
+  PrimaryColumn,
+} from 'typeorm';
 import { RoleEntity } from './role.entity';
 
 @Entity({ name: 'users' })
+@Index('IDX_users_email', ['email'], { unique: true })
+@Index('IDX_users_externalId', ['externalId'])
+@Index('IDX_users_provider_externalId', ['provider', 'externalId'])
 export class UserEntity {
   @PrimaryColumn('uuid')
   id: string;
@@ -31,7 +42,10 @@ export class UserEntity {
   })
   updatedAt: Date;
 
-  @ManyToMany(() => RoleEntity, { cascade: true })
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date | null;
+
+  @ManyToMany(() => RoleEntity, { cascade: false })
   @JoinTable({
     name: 'users_roles',
     joinColumn: { name: 'user_id', referencedColumnName: 'id' },

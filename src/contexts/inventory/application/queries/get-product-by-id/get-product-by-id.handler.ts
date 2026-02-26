@@ -19,7 +19,7 @@ export class GetProductByIdHandler implements IQueryHandler<GetProductByIdQuery>
   async execute(query: GetProductByIdQuery): Promise<IProductOutputDto> {
     const productId = ProductId.create(query.id);
     const result =
-      await this.productRepository.findByIdWithBrandAndCategory(productId);
+      await this.productRepository.findByIdWithRelations(productId);
     if (!result) {
       throw new ResourceNotFoundException('Product', query.id);
     }
@@ -27,6 +27,8 @@ export class GetProductByIdHandler implements IQueryHandler<GetProductByIdQuery>
       result.product,
       result.brand,
       result.category,
+      result.level,
+      result.finish,
     );
   }
 }

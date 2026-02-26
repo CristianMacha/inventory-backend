@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Patch,
   UseGuards,
 } from '@nestjs/common';
@@ -38,10 +39,14 @@ export class UpdateSlabController {
   @RequirePermissions(Permissions.SLABS.UPDATE)
   @ApiOperation({ summary: 'Update slab status or description' })
   @ApiParam({ name: 'id', type: String, description: 'Slab ID' })
-  @ApiResponse({ status: 200, description: 'Slab updated successfully', type: MessageResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Slab updated successfully',
+    type: MessageResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Slab not found' })
   async run(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdateSlabDto,
     @GetUser() user: AuthUserDto,
   ) {

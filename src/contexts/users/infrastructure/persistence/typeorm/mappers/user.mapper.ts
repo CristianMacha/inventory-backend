@@ -24,7 +24,7 @@ export class UserMapper {
       ? entity.roles.map((role) => RoleMapper.toDomain(role))
       : [];
 
-    return new User(
+    return User.reconstitute(
       userId,
       entity.name,
       entity.email,

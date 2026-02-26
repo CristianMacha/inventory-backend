@@ -1,6 +1,8 @@
 import { BundleId } from '../value-objects/bundle-id';
 import { ProductId } from '../value-objects/product-id';
 import { SupplierId } from '../value-objects/supplier-id';
+import { InvalidEntityNameException } from '../errors/invalid-entity-name.exception';
+import { InvalidThicknessException } from '../errors/invalid-thickness.exception';
 
 export class Bundle {
   private readonly _id: BundleId;
@@ -8,6 +10,7 @@ export class Bundle {
   private readonly _supplierId: SupplierId;
   private _lotNumber: string;
   private _thicknessCm: number;
+  private readonly _purchaseInvoiceId: string | null;
   private readonly _createdBy: string;
   private _updatedBy: string;
   private readonly _createdAt: Date;
@@ -19,6 +22,7 @@ export class Bundle {
     supplierId: SupplierId,
     lotNumber: string,
     thicknessCm: number,
+    purchaseInvoiceId: string | null,
     createdBy: string,
     updatedBy: string,
     createdAt: Date,
@@ -29,10 +33,23 @@ export class Bundle {
     this._supplierId = supplierId;
     this._lotNumber = lotNumber;
     this._thicknessCm = thicknessCm;
+    this._purchaseInvoiceId = purchaseInvoiceId;
     this._createdBy = createdBy;
     this._updatedBy = updatedBy;
     this._createdAt = createdAt;
     this._updatedAt = updatedAt;
+  }
+
+  private static validateLotNumber(lotNumber: string): void {
+    if (!lotNumber || lotNumber.trim().length === 0) {
+      throw new InvalidEntityNameException('Bundle lot number');
+    }
+  }
+
+  private static validateThickness(thicknessCm: number): void {
+    if (thicknessCm <= 0) {
+      throw new InvalidThicknessException();
+    }
   }
 
   static create(
@@ -41,7 +58,10 @@ export class Bundle {
     lotNumber: string,
     thicknessCm: number,
     createdBy: string,
+    purchaseInvoiceId: string | null = null,
   ): Bundle {
+    Bundle.validateLotNumber(lotNumber);
+    Bundle.validateThickness(thicknessCm);
     const now = new Date();
     return new Bundle(
       BundleId.generate(),
@@ -49,6 +69,7 @@ export class Bundle {
       supplierId,
       lotNumber,
       thicknessCm,
+      purchaseInvoiceId,
       createdBy,
       createdBy,
       now,
@@ -62,6 +83,7 @@ export class Bundle {
     supplierId: SupplierId,
     lotNumber: string,
     thicknessCm: number,
+    purchaseInvoiceId: string | null,
     createdBy: string,
     updatedBy: string,
     createdAt: Date,
@@ -73,6 +95,7 @@ export class Bundle {
       supplierId,
       lotNumber,
       thicknessCm,
+      purchaseInvoiceId,
       createdBy,
       updatedBy,
       createdAt,
@@ -81,12 +104,14 @@ export class Bundle {
   }
 
   public updateLotNumber(lotNumber: string, userId: string): void {
+    Bundle.validateLotNumber(lotNumber);
     this._lotNumber = lotNumber;
     this._updatedBy = userId;
     this._updatedAt = new Date();
   }
 
   public updateThicknessCm(thicknessCm: number, userId: string): void {
+    Bundle.validateThickness(thicknessCm);
     this._thicknessCm = thicknessCm;
     this._updatedBy = userId;
     this._updatedAt = new Date();
@@ -106,6 +131,9 @@ export class Bundle {
   }
   get thicknessCm(): number {
     return this._thicknessCm;
+  }
+  get purchaseInvoiceId(): string | null {
+    return this._purchaseInvoiceId;
   }
   get createdBy(): string {
     return this._createdBy;

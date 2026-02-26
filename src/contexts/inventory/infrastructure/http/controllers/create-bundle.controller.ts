@@ -33,10 +33,11 @@ export class CreateBundleController {
     await this.commandBus.execute(
       new CreateBundleCommand(
         dto.productId,
-        dto.supplierId,
         user.id,
         dto.lotNumber,
         dto.thicknessCm,
+        dto.supplierId,
+        dto.purchaseInvoiceId,
       ),
     );
   }

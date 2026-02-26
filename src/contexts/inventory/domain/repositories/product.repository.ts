@@ -6,14 +6,18 @@ import type { ProductSearchFilters } from './product-search-filters.interface';
 import type { PaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
 import type { PaginationParams } from '@shared/domain/pagination/pagination-params.interface';
 
+export interface ProductWithRelations {
+  product: Product;
+  brand?: { id: string; name: string };
+  category: { id: string; name: string };
+  level: { id: string; name: string };
+  finish: { id: string; name: string };
+}
+
 export interface IProductRepository {
   findAll(): Promise<Product[] | null>;
   findById(id: ProductId): Promise<Product | null>;
-  findByIdWithBrandAndCategory(id: ProductId): Promise<{
-    product: Product;
-    brand?: { id: string; name: string };
-    category: { id: string; name: string };
-  } | null>;
+  findByIdWithRelations(id: ProductId): Promise<ProductWithRelations | null>;
   findByName(name: string): Promise<Product | null>;
   findByBrandId(brandId: BrandId): Promise<Product[] | null>;
   findByCategoryId(categoryId: CategoryId): Promise<Product[] | null>;
@@ -21,16 +25,10 @@ export interface IProductRepository {
     filters: ProductSearchFilters,
     pagination: PaginationParams,
   ): Promise<PaginatedResult<Product>>;
-  findPaginatedWithBrandAndCategory(
+  findPaginatedWithRelations(
     filters: ProductSearchFilters,
     pagination: PaginationParams,
-  ): Promise<
-    PaginatedResult<{
-      product: Product;
-      brand?: { id: string; name: string };
-      category: { id: string; name: string };
-    }>
-  >;
+  ): Promise<PaginatedResult<ProductWithRelations>>;
   save(product: Product): Promise<void>;
   count(): Promise<number>;
 }

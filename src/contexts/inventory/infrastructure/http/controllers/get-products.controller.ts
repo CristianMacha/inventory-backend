@@ -1,4 +1,11 @@
-import { Controller, UseGuards, Get, Query, Param } from '@nestjs/common';
+import {
+  Controller,
+  UseGuards,
+  Get,
+  Query,
+  Param,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
@@ -6,6 +13,8 @@ import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guar
 import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { GetProductsQuery } from '@contexts/inventory/application/queries/get-products/get-products.query';
 import { GetProductByIdQuery } from '@contexts/inventory/application/queries/get-product-by-id/get-product-by-id.query';
+import { GetProductDetailQuery } from '@contexts/inventory/application/queries/get-product-detail/get-product-detail.query';
+import { ProductDetailOutputDto } from '@contexts/inventory/application/dtos/product-detail-output.dto';
 import {
   ApiBearerAuth,
   ApiTags,
@@ -90,6 +99,32 @@ export class GetProductsController {
     );
   }
 
+  @Get(':id/detail')
+  @RequirePermissions(Permissions.PRODUCTS.READ)
+  @ApiOperation({
+    summary: 'Get full product detail',
+    description:
+      'Returns a product with all its bundles and their slabs in a single response.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Product UUID',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Product with bundles and slabs.',
+    type: ProductDetailOutputDto,
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 404, description: 'Product not found.' })
+  async getDetail(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<ProductDetailOutputDto> {
+    return await this.queryBus.execute(new GetProductDetailQuery(id));
+  }
+
   @Get(':id')
   @RequirePermissions(Permissions.PRODUCTS.READ)
   @ApiOperation({
@@ -119,7 +154,9 @@ export class GetProductsController {
     status: 404,
     description: 'Product not found.',
   })
-  async getById(@Param('id') id: string): Promise<IProductOutputDto> {
+  async getById(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<IProductOutputDto> {
     return await this.queryBus.execute(new GetProductByIdQuery(id));
   }
 }

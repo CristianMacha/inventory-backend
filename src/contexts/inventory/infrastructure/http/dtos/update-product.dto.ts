@@ -1,9 +1,16 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsBoolean,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+} from 'class-validator';
 
 export class UpdateProductDto {
   @ApiPropertyOptional({ example: 'Calacatta Gold' })
   @IsString()
+  @MinLength(1)
   @IsOptional()
   readonly name?: string;
 

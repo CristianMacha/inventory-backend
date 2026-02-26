@@ -15,7 +15,7 @@ export class UpdateBrandHandler implements ICommandHandler<UpdateBrandCommand> {
   ) {}
 
   async execute(command: UpdateBrandCommand): Promise<void> {
-    const { id, name, description, updatedBy } = command;
+    const { id, name, description, isActive, updatedBy } = command;
 
     const brand = await this.brandRepository.findById(BrandId.create(id));
     if (!brand) {
@@ -32,6 +32,10 @@ export class UpdateBrandHandler implements ICommandHandler<UpdateBrandCommand> {
 
     if (description !== undefined) {
       brand.updateDescription(description, updatedBy);
+    }
+
+    if (isActive !== undefined) {
+      brand.setActive(isActive, updatedBy);
     }
 
     await this.brandRepository.save(brand);

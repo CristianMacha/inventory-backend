@@ -1,7 +1,15 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
 import type { ProductEntity } from './product.entity';
 
 @Entity({ name: 'levels' })
+@Index('IDX_levels_name', ['name'], { unique: true })
 export class LevelEntity {
   @PrimaryColumn('uuid')
   id: string;
@@ -32,6 +40,9 @@ export class LevelEntity {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date | null;
 
   @OneToMany('ProductEntity', 'level')
   products: ProductEntity[];

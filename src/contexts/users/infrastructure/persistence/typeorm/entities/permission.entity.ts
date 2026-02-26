@@ -1,6 +1,13 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  PrimaryColumn,
+} from 'typeorm';
 
 @Entity({ name: 'permissions' })
+@Index('IDX_permissions_name', ['name'], { unique: true })
 export class PermissionEntity {
   @PrimaryColumn('uuid')
   id: string;
@@ -10,4 +17,7 @@ export class PermissionEntity {
 
   @Column({ nullable: true })
   description: string;
+
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date | null;
 }

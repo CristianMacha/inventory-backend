@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Patch,
   UseGuards,
 } from '@nestjs/common';
@@ -38,7 +39,11 @@ export class UpdateProductController {
   @RequirePermissions(Permissions.PRODUCTS.UPDATE)
   @ApiOperation({ summary: 'Update a product' })
   @ApiParam({ name: 'id', type: String, description: 'Product ID' })
-  @ApiResponse({ status: 200, description: 'Product updated successfully', type: MessageResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Product updated successfully',
+    type: MessageResponseDto,
+  })
   @ApiResponse({ status: 400, description: 'Invalid input' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
@@ -48,7 +53,7 @@ export class UpdateProductController {
   })
   @ApiResponse({ status: 409, description: 'Product name already exists' })
   async run(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdateProductDto,
     @GetUser() user: AuthUserDto,
   ) {

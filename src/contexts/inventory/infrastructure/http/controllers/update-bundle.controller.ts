@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Patch,
   UseGuards,
 } from '@nestjs/common';
@@ -38,10 +39,14 @@ export class UpdateBundleController {
   @RequirePermissions(Permissions.BUNDLES.UPDATE)
   @ApiOperation({ summary: 'Update a bundle' })
   @ApiParam({ name: 'id', type: String, description: 'Bundle ID' })
-  @ApiResponse({ status: 200, description: 'Bundle updated successfully', type: MessageResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Bundle updated successfully',
+    type: MessageResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Bundle not found' })
   async run(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdateBundleDto,
     @GetUser() user: AuthUserDto,
   ) {

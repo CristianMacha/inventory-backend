@@ -24,8 +24,8 @@ export class GetBundlesHandler implements IQueryHandler<GetBundlesQuery> {
       query.pagination,
     );
     return buildPaginatedResult(
-      result.data.map(({ bundle, productName, supplierName }) =>
-        BundleResponseMapper.toResponse(bundle, productName, supplierName),
+      result.data.map(({ bundle, productName, supplierName, invoiceNumber }) =>
+        BundleResponseMapper.toResponse(bundle, productName, supplierName, invoiceNumber),
       ),
       result.total,
       result.page,

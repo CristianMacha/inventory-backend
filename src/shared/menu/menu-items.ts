@@ -7,7 +7,7 @@ export const MENU_ITEMS: MenuItem[] = [
     label: 'Dashboard',
     icon: 'dashboard',
     path: '/dashboard',
-    permission: 'dashboard.view',
+    permission: Permissions.DASHBOARD.VIEW,
   },
   {
     id: 'inventory',
@@ -21,6 +21,27 @@ export const MENU_ITEMS: MenuItem[] = [
         icon: 'box',
         path: '/products',
         permission: Permissions.PRODUCTS.READ,
+      },
+      {
+        id: 'finishes',
+        label: 'Finishes',
+        icon: 'finish',
+        path: '/finishes',
+        permission: Permissions.FINISHES.LIST,
+      },
+      {
+        id: 'levels',
+        label: 'Levels',
+        icon: 'level',
+        path: '/levels',
+        permission: Permissions.LEVELS.LIST,
+      },
+      {
+        id: 'suppliers',
+        label: 'Suppliers',
+        icon: 'supplier',
+        path: '/suppliers',
+        permission: Permissions.SUPPLIERS.LIST,
       },
       {
         id: 'brands',
@@ -53,6 +74,43 @@ export const MENU_ITEMS: MenuItem[] = [
     ],
   },
   {
+    id: 'purchasing',
+    label: 'Purchasing',
+    icon: 'receipt',
+    permission: Permissions.PURCHASE_INVOICES.READ,
+    children: [
+      {
+        id: 'purchase-invoices',
+        label: 'Invoices',
+        icon: 'receipt-long',
+        path: '/purchase-invoices',
+        permission: Permissions.PURCHASE_INVOICES.READ,
+      },
+      {
+        id: 'supplier-returns',
+        label: 'Supplier Returns',
+        icon: 'assignment-return',
+        path: '/purchasing/supplier-returns',
+        permission: Permissions.SUPPLIER_RETURNS.LIST,
+      },
+    ],
+  },
+  {
+    id: 'projects',
+    label: 'Projects',
+    icon: 'construction',
+    permission: Permissions.JOBS.READ,
+    children: [
+      {
+        id: 'jobs',
+        label: 'Jobs',
+        icon: 'work',
+        path: '/jobs',
+        permission: Permissions.JOBS.READ,
+      },
+    ],
+  },
+  {
     id: 'users',
     label: 'Users',
     icon: 'people',
@@ -73,5 +131,19 @@ export const MENU_ITEMS: MenuItem[] = [
         permission: Permissions.ROLES.READ,
       },
     ],
+  },
+  {
+    id: 'settings',
+    label: 'Settings',
+    icon: 'settings',
+    path: '/settings',
+    permission: Permissions.SETTINGS.READ,
+  },
+  {
+    id: 'profile',
+    label: 'Profile',
+    icon: 'person',
+    path: '/profile',
+    permission: Permissions.PROFILE.READ,
   },
 ];

@@ -50,13 +50,47 @@ export const Permissions = {
     LIST: 'slabs.list',
   },
   FINISHES: {
+    CREATE: 'finishes.create',
+    UPDATE: 'finishes.update',
     LIST: 'finishes.list',
   },
   LEVELS: {
+    CREATE: 'levels.create',
+    UPDATE: 'levels.update',
     LIST: 'levels.list',
   },
   SUPPLIERS: {
+    CREATE: 'suppliers.create',
+    UPDATE: 'suppliers.update',
     LIST: 'suppliers.list',
+  },
+  PURCHASE_INVOICES: {
+    CREATE: 'purchase-invoices.create',
+    READ: 'purchase-invoices.read',
+    UPDATE: 'purchase-invoices.update',
+    DELETE: 'purchase-invoices.delete',
+  },
+  JOBS: {
+    CREATE: 'jobs.create',
+    READ: 'jobs.read',
+    UPDATE: 'jobs.update',
+    DELETE: 'jobs.delete',
+  },
+  SETTINGS: {
+    READ: 'settings.read',
+  },
+  PROFILE: {
+    READ: 'profile.read',
+  },
+  DASHBOARD: {
+    VIEW: 'dashboard.view',
+  },
+  SUPPLIER_RETURNS: {
+    CREATE: 'supplier-returns.create',
+    READ: 'supplier-returns.read',
+    LIST: 'supplier-returns.list',
+    UPDATE: 'supplier-returns.update',
+    CANCEL: 'supplier-returns.cancel',
   },
 } as const;
 
