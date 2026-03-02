@@ -1,9 +1,7 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -19,7 +17,6 @@ import { CreateCategoryCommand } from '@contexts/inventory/application/commands/
 @ApiBearerAuth()
 @ApiTags('Categories')
 @Controller('categories')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class CreateCategoryController {
   constructor(private readonly commandBus: CommandBus) {}
 

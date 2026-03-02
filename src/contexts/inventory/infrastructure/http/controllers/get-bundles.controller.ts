@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
@@ -9,8 +9,6 @@ import {
 
 import { GetBundlesQuery } from '../../../application/queries/get-bundles/get-bundles.query';
 import { IBundleOutputDto } from '../../../application/dtos/bundle-output.dto';
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 import {
@@ -22,7 +20,6 @@ import type { PaginatedResult } from '@shared/domain/pagination/paginated-result
 @ApiBearerAuth()
 @ApiTags('Bundles')
 @Controller('bundles')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class GetBundlesController {
   constructor(private readonly queryBus: QueryBus) {}
 

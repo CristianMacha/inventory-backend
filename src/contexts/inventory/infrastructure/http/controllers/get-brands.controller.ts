@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
@@ -7,8 +7,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 import { GetBrandsQuery } from '@contexts/inventory/application/queries/get-brands/get-brands.query';
@@ -18,7 +16,6 @@ import { IBrandOutputDto } from '@contexts/inventory/application/dtos/brand-outp
 @ApiBearerAuth()
 @ApiTags('Brands')
 @Controller('brands')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class GetBrandsController {
   constructor(private readonly queryBus: QueryBus) {}
 

@@ -6,7 +6,6 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
@@ -18,8 +17,6 @@ import {
 } from '@nestjs/swagger';
 
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
@@ -30,7 +27,6 @@ import { MessageResponseDto } from '@shared/http/dtos/message-response.dto';
 @ApiBearerAuth()
 @ApiTags('Suppliers')
 @Controller('suppliers')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class UpdateSupplierController {
   constructor(private readonly commandBus: CommandBus) {}
 

@@ -10,7 +10,6 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
@@ -23,8 +22,6 @@ import {
 
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 import { Permissions } from '@shared/authorization/permissions';
 import { MessageResponseDto } from '@shared/http/dtos/message-response.dto';
@@ -52,7 +49,6 @@ import {
 @ApiBearerAuth()
 @ApiTags('Supplier Returns')
 @Controller('purchasing/supplier-returns')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class SupplierReturnsController {
   constructor(
     private readonly commandBus: CommandBus,

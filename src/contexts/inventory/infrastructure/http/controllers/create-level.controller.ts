@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
@@ -7,8 +7,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 import { CreateLevelCommand } from '../../../application/commands/create-level/create-level.command';
@@ -17,7 +15,6 @@ import { CreateLevelDto } from '../dtos/create-level.dto';
 @ApiBearerAuth()
 @ApiTags('Levels')
 @Controller('levels')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class CreateLevelController {
   constructor(private readonly commandBus: CommandBus) {}
 

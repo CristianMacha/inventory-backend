@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
@@ -7,8 +7,6 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 import { GetFinishesQuery } from '../../../application/queries/get-finishes/get-finishes.query';
@@ -18,7 +16,6 @@ import { IFinishOutputDto } from '../../../application/dtos/finish-output.dto';
 @ApiBearerAuth()
 @ApiTags('Finishes')
 @Controller('finishes')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class GetFinishesController {
   constructor(private readonly queryBus: QueryBus) {}
 

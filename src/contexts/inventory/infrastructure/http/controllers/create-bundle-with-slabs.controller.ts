@@ -4,7 +4,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
@@ -15,8 +14,6 @@ import {
 } from '@nestjs/swagger';
 
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 import { CreateBundleWithSlabsCommand } from '../../../application/commands/create-bundle-with-slabs/create-bundle-with-slabs.command';
@@ -29,7 +26,6 @@ import { SlabResponseMapper } from '../../../application/mappers/slab-response.m
 @ApiBearerAuth()
 @ApiTags('Bundles')
 @Controller('bundles')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class CreateBundleWithSlabsController {
   constructor(private readonly commandBus: CommandBus) {}
 

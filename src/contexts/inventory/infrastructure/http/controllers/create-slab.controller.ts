@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
@@ -10,15 +10,12 @@ import {
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
 import { CreateSlabCommand } from '../../../application/commands/create-slab/create-slab.command';
 import { CreateSlabDto } from '../dtos/create-slab.dto';
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 
 @ApiBearerAuth()
 @ApiTags('Slabs')
 @Controller('slabs')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class CreateSlabController {
   constructor(private readonly commandBus: CommandBus) {}
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
@@ -11,8 +11,6 @@ import { GetSlabsQuery } from '../../../application/queries/get-slabs/get-slabs.
 import { GetReturnableSlabsQuery } from '../../../application/queries/get-returnable-slabs/get-returnable-slabs.query';
 import { ISlabOutputDto } from '../../../application/dtos/slab-output.dto';
 import { SlabReturnableOutputDto } from '../../../application/dtos/slab-returnable-output.dto';
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 import {
@@ -25,7 +23,6 @@ import type { PaginatedResult } from '@shared/domain/pagination/paginated-result
 @ApiBearerAuth()
 @ApiTags('Slabs')
 @Controller('slabs')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class GetSlabsController {
   constructor(private readonly queryBus: QueryBus) {}
 

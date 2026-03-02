@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
@@ -8,8 +8,6 @@ import {
 } from '@nestjs/swagger';
 
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
@@ -19,7 +17,6 @@ import { CreateSupplierDto } from '../dtos/create-supplier.dto';
 @ApiBearerAuth()
 @ApiTags('Suppliers')
 @Controller('suppliers')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class CreateSupplierController {
   constructor(private readonly commandBus: CommandBus) {}
 

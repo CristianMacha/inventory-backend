@@ -6,7 +6,6 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
@@ -17,8 +16,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 import { UpdateFinishCommand } from '../../../application/commands/update-finish/update-finish.command';
@@ -28,7 +25,6 @@ import { MessageResponseDto } from '@shared/http/dtos/message-response.dto';
 @ApiBearerAuth()
 @ApiTags('Finishes')
 @Controller('finishes')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class UpdateFinishController {
   constructor(private readonly commandBus: CommandBus) {}
 

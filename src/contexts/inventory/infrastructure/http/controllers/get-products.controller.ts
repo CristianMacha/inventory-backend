@@ -1,6 +1,5 @@
 import {
   Controller,
-  UseGuards,
   Get,
   Query,
   Param,
@@ -9,8 +8,6 @@ import {
 import { QueryBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { GetProductsQuery } from '@contexts/inventory/application/queries/get-products/get-products.query';
 import { GetProductByIdQuery } from '@contexts/inventory/application/queries/get-product-by-id/get-product-by-id.query';
 import { GetProductDetailQuery } from '@contexts/inventory/application/queries/get-product-detail/get-product-detail.query';
@@ -35,7 +32,6 @@ import {
 @ApiBearerAuth()
 @ApiTags('Products')
 @Controller('products')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class GetProductsController {
   constructor(private readonly queryBus: QueryBus) {}
 

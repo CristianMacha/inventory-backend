@@ -6,7 +6,6 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
@@ -19,8 +18,6 @@ import {
 
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { UpdateBundleCommand } from '@contexts/inventory/application/commands/update-bundle/update-bundle.command';
 import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 import { UpdateBundleDto } from '../dtos/update-bundle.dto';
@@ -30,7 +27,6 @@ import { MessageResponseDto } from '@shared/http/dtos/message-response.dto';
 @ApiBearerAuth()
 @ApiTags('Bundles')
 @Controller('bundles')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class UpdateBundleController {
   constructor(private readonly commandBus: CommandBus) {}
 

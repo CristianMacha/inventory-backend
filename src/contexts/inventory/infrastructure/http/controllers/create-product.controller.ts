@@ -1,10 +1,8 @@
-import { Controller, UseGuards, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { CreateProductCommand } from '@contexts/inventory/application/commands/create-product/create-product.command';
 import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 import {
@@ -19,7 +17,6 @@ import { Permissions } from '@shared/authorization/permissions';
 @ApiBearerAuth()
 @ApiTags('Products')
 @Controller('products')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class CreateProductController {
   constructor(private readonly commandBus: CommandBus) {}
 

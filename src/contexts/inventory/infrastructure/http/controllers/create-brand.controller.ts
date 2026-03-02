@@ -4,11 +4,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 import { CreateBrandDto } from '../dtos/create-brand.dto';
@@ -19,7 +17,6 @@ import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 @ApiBearerAuth()
 @ApiTags('Brands')
 @Controller('brands')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class CreateBrandController {
   constructor(private readonly commandBus: CommandBus) {}
 

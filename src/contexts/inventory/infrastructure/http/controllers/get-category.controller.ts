@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
@@ -8,8 +8,6 @@ import {
 } from '@nestjs/swagger';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
-import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
-import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { GetCategoriesQuery } from '@contexts/inventory/application/queries/get-categories/get-categories.query';
 import { GetActiveCategoriesQuery } from '@contexts/inventory/application/queries/get-active-categories/get-active-categories.query';
 import { ICategoryOutputDto } from '@contexts/inventory/application/dtos/category-output.dto';
@@ -18,7 +16,6 @@ import { Permissions } from '@shared/authorization/permissions';
 @ApiBearerAuth()
 @ApiTags('Categories')
 @Controller('categories')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 export class GetCategoriesController {
   constructor(private readonly queryBus: QueryBus) {}
 
