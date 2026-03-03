@@ -34,6 +34,7 @@ import { GetBundleCostSummaryHandler } from './application/queries/get-bundle-co
 import { GetPurchaseInvoicesSelectHandler } from './application/queries/get-purchase-invoices-select/get-purchase-invoices-select.handler';
 import { GetSupplierReturnsHandler } from './application/queries/get-supplier-returns/get-supplier-returns.handler';
 import { GetSupplierReturnByIdHandler } from './application/queries/get-supplier-return-by-id/get-supplier-return-by-id.handler';
+import { GetSupplierReturnsSelectHandler } from './application/queries/get-supplier-returns-select/get-supplier-returns-select.handler';
 
 import { PurchaseInvoicesController } from './infrastructure/http/controllers/purchase-invoices.controller';
 import { SupplierReturnsController } from './infrastructure/http/controllers/supplier-returns.controller';
@@ -60,6 +61,7 @@ const QueryHandlers = [
   GetPurchaseInvoicesSelectHandler,
   GetSupplierReturnsHandler,
   GetSupplierReturnByIdHandler,
+  GetSupplierReturnsSelectHandler,
 ];
 
 const PersistenceProviders: Provider[] = [

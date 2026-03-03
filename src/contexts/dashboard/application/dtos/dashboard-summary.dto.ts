@@ -34,6 +34,9 @@ export class DashboardSummaryDto {
   @ApiProperty({ description: 'Projects metrics', type: ProjectsMetricsDto })
   projects: ProjectsMetricsDto;
 
-  @ApiProperty({ description: 'Purchasing metrics', type: PurchasingMetricsDto })
+  @ApiProperty({
+    description: 'Purchasing metrics',
+    type: PurchasingMetricsDto,
+  })
   purchasing: PurchasingMetricsDto;
 }

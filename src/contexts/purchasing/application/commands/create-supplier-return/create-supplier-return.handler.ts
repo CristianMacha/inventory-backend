@@ -15,7 +15,8 @@ export class CreateSupplierReturnHandler implements ICommandHandler<CreateSuppli
   ) {}
 
   async execute(command: CreateSupplierReturnCommand): Promise<string> {
-    const { purchaseInvoiceId, supplierId, returnDate, notes, createdBy } = command;
+    const { purchaseInvoiceId, supplierId, returnDate, notes, createdBy } =
+      command;
 
     const supplierReturn = SupplierReturn.create(
       purchaseInvoiceId,

@@ -23,6 +23,9 @@ export class RemoveJobItemHandler implements ICommandHandler<RemoveJobItemComman
     }
 
     job.removeItem(itemId, userId);
-    await this.jobRepository.save(job);
+    await Promise.all([
+      this.jobRepository.save(job),
+      this.jobRepository.removeItem(itemId),
+    ]);
   }
 }

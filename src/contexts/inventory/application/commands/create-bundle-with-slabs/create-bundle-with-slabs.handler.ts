@@ -41,11 +41,20 @@ export class CreateBundleWithSlabsHandler implements ICommandHandler<CreateBundl
   async execute(
     command: CreateBundleWithSlabsCommand,
   ): Promise<CreateBundleWithSlabsResult> {
-    const { productId, lotNumber, thicknessCm, createdBy, slabs, purchaseInvoiceId } = command;
+    const {
+      productId,
+      lotNumber,
+      thicknessCm,
+      createdBy,
+      slabs,
+      purchaseInvoiceId,
+    } = command;
     let { supplierId } = command;
     let invoiceNumber: string | null = null;
 
-    const product = await this.productRepository.findById(ProductId.create(productId));
+    const product = await this.productRepository.findById(
+      ProductId.create(productId),
+    );
     if (!product) {
       throw new ResourceNotFoundException('Product', productId);
     }
@@ -55,17 +64,24 @@ export class CreateBundleWithSlabsHandler implements ICommandHandler<CreateBundl
         PurchaseInvoiceId.create(purchaseInvoiceId),
       );
       if (!invoice) {
-        throw new ResourceNotFoundException('PurchaseInvoice', purchaseInvoiceId);
+        throw new ResourceNotFoundException(
+          'PurchaseInvoice',
+          purchaseInvoiceId,
+        );
       }
       supplierId = invoice.supplierId;
       invoiceNumber = invoice.invoiceNumber;
     }
 
     if (!supplierId) {
-      throw new BadRequestException('supplierId or purchaseInvoiceId is required');
+      throw new BadRequestException(
+        'supplierId or purchaseInvoiceId is required',
+      );
     }
 
-    const supplier = await this.supplierRepository.findById(SupplierId.create(supplierId));
+    const supplier = await this.supplierRepository.findById(
+      SupplierId.create(supplierId),
+    );
     if (!supplier) {
       throw new ResourceNotFoundException('Supplier', supplierId);
     }

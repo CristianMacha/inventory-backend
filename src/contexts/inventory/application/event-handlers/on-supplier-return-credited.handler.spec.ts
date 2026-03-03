@@ -35,7 +35,9 @@ describe('OnSupplierReturnCreditedHandler', () => {
       ],
     }).compile();
 
-    handler = module.get<OnSupplierReturnCreditedHandler>(OnSupplierReturnCreditedHandler);
+    handler = module.get<OnSupplierReturnCreditedHandler>(
+      OnSupplierReturnCreditedHandler,
+    );
     slabRepository = module.get(INVENTORY_TOKENS.SLAB_REPOSITORY);
   });
 
@@ -44,7 +46,9 @@ describe('OnSupplierReturnCreditedHandler', () => {
     slabRepository.findById.mockResolvedValue(slab);
     slabRepository.save.mockResolvedValue(undefined);
 
-    const event = new SupplierReturnCreditedEvent('return-id', [slab.id.getValue()]);
+    const event = new SupplierReturnCreditedEvent('return-id', [
+      slab.id.getValue(),
+    ]);
     await handler.handle(event);
 
     expect(slabRepository.findById).toHaveBeenCalledTimes(1);
@@ -55,7 +59,9 @@ describe('OnSupplierReturnCreditedHandler', () => {
   it('should warn but not throw when slab is not found', async () => {
     slabRepository.findById.mockResolvedValue(null);
 
-    const event = new SupplierReturnCreditedEvent('return-id', ['non-existent-slab']);
+    const event = new SupplierReturnCreditedEvent('return-id', [
+      'non-existent-slab',
+    ]);
     await expect(handler.handle(event)).resolves.not.toThrow();
     expect(slabRepository.save).not.toHaveBeenCalled();
   });

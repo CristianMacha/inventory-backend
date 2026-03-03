@@ -7,15 +7,15 @@ import { SlabReturnableOutputDto } from '../../dtos/slab-returnable-output.dto';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
 
 @QueryHandler(GetReturnableSlabsQuery)
-export class GetReturnableSlabsHandler
-  implements IQueryHandler<GetReturnableSlabsQuery>
-{
+export class GetReturnableSlabsHandler implements IQueryHandler<GetReturnableSlabsQuery> {
   constructor(
     @Inject(INVENTORY_TOKENS.SLAB_REPOSITORY)
     private readonly slabRepository: ISlabRepository,
   ) {}
 
-  async execute(query: GetReturnableSlabsQuery): Promise<SlabReturnableOutputDto[]> {
+  async execute(
+    query: GetReturnableSlabsQuery,
+  ): Promise<SlabReturnableOutputDto[]> {
     const results = await this.slabRepository.findReturnable({
       purchaseInvoiceId: query.purchaseInvoiceId,
       bundleId: query.bundleId,

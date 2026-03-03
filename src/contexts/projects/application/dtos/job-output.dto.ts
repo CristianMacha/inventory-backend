@@ -8,6 +8,12 @@ export class JobItemOutputDto {
   @ApiProperty({ example: 'uuid-slab' })
   slabId: string;
 
+  @ApiProperty({ example: 'SLB-001' })
+  slabCode: string;
+
+  @ApiProperty({ example: 'Granito Blanco Polar' })
+  productName: string;
+
   @ApiProperty({ example: 'Granito Blanco Polar - Slab SLB-001' })
   description: string;
 

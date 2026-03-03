@@ -68,6 +68,8 @@ import { GetActiveSuppliersHandler } from './application/queries/get-active-supp
 import { CreateBundleHandler } from './application/commands/create-bundle/create-bundle.handler';
 import { CreateSlabHandler } from './application/commands/create-slab/create-slab.handler';
 import { CreateBundleWithSlabsHandler } from './application/commands/create-bundle-with-slabs/create-bundle-with-slabs.handler';
+import { LinkBundleInvoiceHandler } from './application/commands/link-bundle-invoice/link-bundle-invoice.handler';
+import { UnlinkBundleInvoiceHandler } from './application/commands/unlink-bundle-invoice/unlink-bundle-invoice.handler';
 import { CreateBundleWithSlabsController } from './infrastructure/http/controllers/create-bundle-with-slabs.controller';
 import { GetLevelsController } from './infrastructure/http/controllers/get-levels.controller';
 import { GetFinishesController } from './infrastructure/http/controllers/get-finishes.controller';
@@ -87,7 +89,10 @@ import { UpdateSupplierController } from './infrastructure/http/controllers/upda
 
 import { GetBundleDetailHandler } from './application/queries/get-bundle-detail/get-bundle-detail.handler';
 import { GetBundleDetailController } from './infrastructure/http/controllers/get-bundle-detail.controller';
+import { LinkBundleInvoiceController } from './infrastructure/http/controllers/link-bundle-invoice.controller';
+import { UnlinkBundleInvoiceController } from './infrastructure/http/controllers/unlink-bundle-invoice.controller';
 import { GetReturnableSlabsHandler } from './application/queries/get-returnable-slabs/get-returnable-slabs.handler';
+import { GetProductsSelectHandler } from './application/queries/get-products-select/get-products-select.handler';
 import { OnJobApprovedHandler } from './application/event-handlers/on-job-approved.handler';
 import { OnJobCompletedHandler } from './application/event-handlers/on-job-completed.handler';
 import { OnJobCancelledHandler } from './application/event-handlers/on-job-cancelled.handler';
@@ -105,6 +110,8 @@ const CommandHandlers = [
   CreateBundleHandler,
   CreateSlabHandler,
   CreateBundleWithSlabsHandler,
+  LinkBundleInvoiceHandler,
+  UnlinkBundleInvoiceHandler,
   CreateFinishHandler,
   UpdateFinishHandler,
   CreateLevelHandler,
@@ -131,6 +138,7 @@ const QueryHandlers = [
   GetActiveFinishesHandler,
   GetActiveSuppliersHandler,
   GetReturnableSlabsHandler,
+  GetProductsSelectHandler,
 ];
 
 const PersistenceProviders: Provider[] = [
@@ -216,6 +224,8 @@ const PersistenceProviders: Provider[] = [
     CreateSupplierController,
     UpdateSupplierController,
     GetBundleDetailController,
+    LinkBundleInvoiceController,
+    UnlinkBundleInvoiceController,
   ],
   providers: [
     ...CommandHandlers,

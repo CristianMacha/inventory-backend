@@ -60,7 +60,9 @@ export class SupplierReturnMapper {
     return entity;
   }
 
-  static itemToPersistence(domain: SupplierReturnItem): SupplierReturnItemEntity {
+  static itemToPersistence(
+    domain: SupplierReturnItem,
+  ): SupplierReturnItemEntity {
     const entity = new SupplierReturnItemEntity();
     entity.id = domain.id.getValue();
     entity.supplierReturnId = domain.supplierReturnId.getValue();

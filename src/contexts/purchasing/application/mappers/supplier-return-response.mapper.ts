@@ -1,4 +1,5 @@
 import { SupplierReturn } from '../../domain/entities/supplier-return';
+import { SupplierReturnWithRelations } from '../../domain/repositories/supplier-return.repository';
 import {
   SupplierReturnOutputDto,
   SupplierReturnDetailOutputDto,
@@ -6,11 +7,17 @@ import {
 } from '../dtos/supplier-return-output.dto';
 
 export class SupplierReturnResponseMapper {
-  static toResponse(domain: SupplierReturn): SupplierReturnOutputDto {
+  static toResponse(
+    domain: SupplierReturn,
+    supplierName: string = '',
+    invoiceNumber: string | null = null,
+  ): SupplierReturnOutputDto {
     return {
       id: domain.id.getValue(),
       purchaseInvoiceId: domain.purchaseInvoiceId,
+      invoiceNumber,
       supplierId: domain.supplierId,
+      supplierName,
       returnDate: domain.returnDate.toISOString(),
       status: domain.status,
       notes: domain.notes,
@@ -22,7 +29,21 @@ export class SupplierReturnResponseMapper {
     };
   }
 
-  static toDetailResponse(domain: SupplierReturn): SupplierReturnDetailOutputDto {
+  static fromWithRelations(
+    r: SupplierReturnWithRelations,
+  ): SupplierReturnOutputDto {
+    return SupplierReturnResponseMapper.toResponse(
+      r.supplierReturn,
+      r.supplierName,
+      r.invoiceNumber,
+    );
+  }
+
+  static toDetailResponse(
+    domain: SupplierReturn,
+    supplierName: string = '',
+    invoiceNumber: string | null = null,
+  ): SupplierReturnDetailOutputDto {
     const items: SupplierReturnItemOutputDto[] = domain.items.map((item) => ({
       id: item.id.getValue(),
       supplierReturnId: item.supplierReturnId.getValue(),
@@ -35,7 +56,7 @@ export class SupplierReturnResponseMapper {
     }));
 
     return {
-      ...SupplierReturnResponseMapper.toResponse(domain),
+      ...SupplierReturnResponseMapper.toResponse(domain, supplierName, invoiceNumber),
       items,
     };
   }

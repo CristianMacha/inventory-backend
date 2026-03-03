@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsInt, IsOptional, IsUUID, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
@@ -10,6 +10,11 @@ import {
 } from '@shared/domain/pagination/pagination-params.interface';
 
 export class GetBundlesQueryDto {
+  @ApiPropertyOptional({ example: 'uuid-product', description: 'Filter by product' })
+  @IsOptional()
+  @IsUUID()
+  productId?: string;
+
   @ApiPropertyOptional({
     description: 'Page number (1-based)',
     default: DEFAULT_PAGE,
@@ -38,3 +43,4 @@ export class GetBundlesQueryDto {
 export function toPaginationParams(dto: GetBundlesQueryDto): PaginationParams {
   return normalizePaginationParams(dto.page, dto.limit);
 }
+

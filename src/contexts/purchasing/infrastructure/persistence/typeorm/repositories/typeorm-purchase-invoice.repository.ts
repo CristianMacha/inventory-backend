@@ -154,7 +154,10 @@ export class TypeOrmPurchaseInvoiceRepository implements IPurchaseInvoiceReposit
       qb.andWhere('invoice.status = :status', { status: filters.status });
     } else {
       qb.andWhere('invoice.status NOT IN (:...excludedStatuses)', {
-        excludedStatuses: [PurchaseInvoiceStatus.DRAFT, PurchaseInvoiceStatus.CANCELLED],
+        excludedStatuses: [
+          PurchaseInvoiceStatus.DRAFT,
+          PurchaseInvoiceStatus.CANCELLED,
+        ],
       });
     }
 

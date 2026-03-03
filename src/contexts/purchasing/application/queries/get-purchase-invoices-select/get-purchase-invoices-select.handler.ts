@@ -7,9 +7,7 @@ import { PurchaseInvoiceSelectOutputDto } from '../../dtos/purchase-invoice-sele
 import { PURCHASING_TOKENS } from '../../purchasing.tokens';
 
 @QueryHandler(GetPurchaseInvoicesSelectQuery)
-export class GetPurchaseInvoicesSelectHandler
-  implements IQueryHandler<GetPurchaseInvoicesSelectQuery>
-{
+export class GetPurchaseInvoicesSelectHandler implements IQueryHandler<GetPurchaseInvoicesSelectQuery> {
   constructor(
     @Inject(PURCHASING_TOKENS.PURCHASE_INVOICE_REPOSITORY)
     private readonly invoiceRepository: IPurchaseInvoiceRepository,

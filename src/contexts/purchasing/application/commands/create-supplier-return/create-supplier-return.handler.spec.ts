@@ -31,8 +31,12 @@ describe('CreateSupplierReturnHandler', () => {
       ],
     }).compile();
 
-    handler = module.get<CreateSupplierReturnHandler>(CreateSupplierReturnHandler);
-    supplierReturnRepository = module.get(PURCHASING_TOKENS.SUPPLIER_RETURN_REPOSITORY);
+    handler = module.get<CreateSupplierReturnHandler>(
+      CreateSupplierReturnHandler,
+    );
+    supplierReturnRepository = module.get(
+      PURCHASING_TOKENS.SUPPLIER_RETURN_REPOSITORY,
+    );
     eventBus = module.get(EventBus);
   });
 

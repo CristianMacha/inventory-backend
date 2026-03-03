@@ -1,17 +1,13 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Param,
-  ParseUUIDPipe,
-} from '@nestjs/common';
+import { Controller, Get, Query, Param, ParseUUIDPipe } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { GetProductsQuery } from '@contexts/inventory/application/queries/get-products/get-products.query';
 import { GetProductByIdQuery } from '@contexts/inventory/application/queries/get-product-by-id/get-product-by-id.query';
 import { GetProductDetailQuery } from '@contexts/inventory/application/queries/get-product-detail/get-product-detail.query';
+import { GetProductsSelectQuery } from '@contexts/inventory/application/queries/get-products-select/get-products-select.query';
 import { ProductDetailOutputDto } from '@contexts/inventory/application/dtos/product-detail-output.dto';
+import { ProductSelectOutputDto } from '@contexts/inventory/application/dtos/product-select-output.dto';
 import {
   ApiBearerAuth,
   ApiTags,
@@ -93,6 +89,14 @@ export class GetProductsController {
     return await this.queryBus.execute(
       new GetProductsQuery(filters, pagination),
     );
+  }
+
+  @Get('select')
+  @RequirePermissions(Permissions.PRODUCTS.READ)
+  @ApiOperation({ summary: 'List all products for select dropdowns (id + name)' })
+  @ApiResponse({ status: 200, type: ProductSelectOutputDto, isArray: true })
+  async getForSelect(): Promise<ProductSelectOutputDto[]> {
+    return this.queryBus.execute(new GetProductsSelectQuery());
   }
 
   @Get(':id/detail')

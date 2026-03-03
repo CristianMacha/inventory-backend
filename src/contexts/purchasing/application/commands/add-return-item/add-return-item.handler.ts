@@ -22,13 +22,24 @@ export class AddReturnItemHandler implements ICommandHandler<AddReturnItemComman
   ) {}
 
   async execute(command: AddReturnItemCommand): Promise<void> {
-    const { returnId, slabId, bundleId, reason, description, unitCost, userId } = command;
+    const {
+      returnId,
+      slabId,
+      bundleId,
+      reason,
+      description,
+      unitCost,
+      userId,
+    } = command;
 
     const slab = await this.slabRepository.findById(SlabId.create(slabId));
     if (!slab) {
       throw new ResourceNotFoundException('Slab', slabId);
     }
-    if (slab.status !== SlabStatus.AVAILABLE && slab.status !== SlabStatus.RESERVED) {
+    if (
+      slab.status !== SlabStatus.AVAILABLE &&
+      slab.status !== SlabStatus.RESERVED
+    ) {
       throw new InvalidSlabStatusForReturnException(slabId, slab.status);
     }
 
@@ -39,7 +50,14 @@ export class AddReturnItemHandler implements ICommandHandler<AddReturnItemComman
       throw new ResourceNotFoundException('SupplierReturn', returnId);
     }
 
-    supplierReturn.addItem(slabId, bundleId, reason, description, unitCost, userId);
+    supplierReturn.addItem(
+      slabId,
+      bundleId,
+      reason,
+      description,
+      unitCost,
+      userId,
+    );
     await this.supplierReturnRepository.save(supplierReturn);
   }
 }

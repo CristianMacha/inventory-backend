@@ -42,20 +42,22 @@ export class GetProductDetailHandler implements IQueryHandler<GetProductDetailQu
 
     return {
       ...productOutput,
-      bundles: bundlesWithSlabs.map(({ bundle, slabs, supplierName, invoiceNumber }) => ({
-        id: bundle.id.getValue(),
-        supplierId: bundle.supplierId.getValue(),
-        supplierName,
-        lotNumber: bundle.lotNumber,
-        thicknessCm: bundle.thicknessCm,
-        purchaseInvoiceId: bundle.purchaseInvoiceId,
-        invoiceNumber,
-        slabs: slabs.map((slab) => SlabResponseMapper.toResponse(slab)),
-        createdBy: bundle.createdBy,
-        updatedBy: bundle.updatedBy,
-        createdAt: bundle.createdAt.toISOString(),
-        updatedAt: bundle.updatedAt.toISOString(),
-      })),
+      bundles: bundlesWithSlabs.map(
+        ({ bundle, slabs, supplierName, invoiceNumber }) => ({
+          id: bundle.id.getValue(),
+          supplierId: bundle.supplierId.getValue(),
+          supplierName,
+          lotNumber: bundle.lotNumber,
+          thicknessCm: bundle.thicknessCm,
+          purchaseInvoiceId: bundle.purchaseInvoiceId,
+          invoiceNumber,
+          slabs: slabs.map((slab) => SlabResponseMapper.toResponse(slab)),
+          createdBy: bundle.createdBy,
+          updatedBy: bundle.updatedBy,
+          createdAt: bundle.createdAt.toISOString(),
+          updatedAt: bundle.updatedAt.toISOString(),
+        }),
+      ),
     };
   }
 }

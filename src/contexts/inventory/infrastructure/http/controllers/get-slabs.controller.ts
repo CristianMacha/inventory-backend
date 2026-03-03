@@ -48,7 +48,8 @@ export class GetSlabsController {
   @Get('returnable')
   @RequirePermissions(Permissions.SLABS.LIST)
   @ApiOperation({
-    summary: 'List slabs eligible for a supplier return (AVAILABLE or RESERVED) filtered by purchase invoice',
+    summary:
+      'List slabs eligible for a supplier return (AVAILABLE or RESERVED) filtered by purchase invoice',
   })
   @ApiResponse({
     status: 200,

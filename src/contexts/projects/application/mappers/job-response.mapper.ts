@@ -1,5 +1,5 @@
 import { Job } from '../../domain/entities/job';
-import { JobItem } from '../../domain/entities/job-item';
+import { JobItemDetails } from '../../domain/repositories/job.repository';
 import {
   JobOutputDto,
   JobDetailOutputDto,
@@ -32,17 +32,24 @@ export class JobResponseMapper {
     };
   }
 
-  static toDetailResponse(job: Job): JobDetailOutputDto {
+  static toDetailResponse(
+    job: Job,
+    itemDetails: JobItemDetails[],
+  ): JobDetailOutputDto {
     return {
       ...JobResponseMapper.toResponse(job),
-      items: job.items.map((item) => JobResponseMapper.itemToResponse(item)),
+      items: itemDetails.map((item) =>
+        JobResponseMapper.itemDetailsToResponse(item),
+      ),
     };
   }
 
-  static itemToResponse(item: JobItem): JobItemOutputDto {
+  static itemDetailsToResponse(item: JobItemDetails): JobItemOutputDto {
     return {
-      id: item.id.getValue(),
+      id: item.id,
       slabId: item.slabId,
+      slabCode: item.slabCode,
+      productName: item.productName,
       description: item.description,
       unitPrice: item.unitPrice,
       totalPrice: item.totalPrice,

@@ -1,10 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
@@ -14,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
+import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 import { CreateBundleWithSlabsCommand } from '../../../application/commands/create-bundle-with-slabs/create-bundle-with-slabs.command';
@@ -44,12 +39,12 @@ export class CreateBundleWithSlabsController {
   @ApiResponse({ status: 404, description: 'Product or supplier not found.' })
   async run(
     @Body() dto: CreateBundleWithSlabsDto,
-    @GetUser() user: any,
+    @GetUser() user: AuthUserDto,
   ): Promise<BundleWithSlabsOutputDto> {
     const result: CreateBundleWithSlabsResult = await this.commandBus.execute(
       new CreateBundleWithSlabsCommand(
         dto.productId,
-        (user as { id: string }).id,
+        user.id,
         dto.slabs,
         dto.lotNumber,
         dto.thicknessCm,

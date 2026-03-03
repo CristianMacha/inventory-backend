@@ -36,7 +36,9 @@ export interface IPurchaseInvoiceRepository {
     pagination: PaginationParams,
   ): Promise<PaginatedResult<PurchaseInvoice>>;
   getBundleCostSummary(bundleId: string): Promise<BundleCostSummary | null>;
-  findItemsWithBundleInfo(invoiceId: string): Promise<InvoiceItemWithBundleInfo[]>;
+  findItemsWithBundleInfo(
+    invoiceId: string,
+  ): Promise<InvoiceItemWithBundleInfo[]>;
   findForSelect(filters: {
     supplierId?: string;
     status?: PurchaseInvoiceStatus;

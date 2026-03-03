@@ -50,25 +50,37 @@ describe('CreditSupplierReturnHandler', () => {
       ],
     }).compile();
 
-    handler = module.get<CreditSupplierReturnHandler>(CreditSupplierReturnHandler);
-    supplierReturnRepository = module.get(PURCHASING_TOKENS.SUPPLIER_RETURN_REPOSITORY);
+    handler = module.get<CreditSupplierReturnHandler>(
+      CreditSupplierReturnHandler,
+    );
+    supplierReturnRepository = module.get(
+      PURCHASING_TOKENS.SUPPLIER_RETURN_REPOSITORY,
+    );
     eventBus = module.get(EventBus);
   });
 
   it('should throw ResourceNotFoundException when not found', async () => {
     supplierReturnRepository.findById.mockResolvedValue(null);
     await expect(
-      handler.execute(new CreditSupplierReturnCommand('non-existent', 'user-1')),
+      handler.execute(
+        new CreditSupplierReturnCommand('non-existent', 'user-1'),
+      ),
     ).rejects.toThrow(ResourceNotFoundException);
   });
 
   it('should throw InvalidReturnTransitionException when not SENT', async () => {
     const ret = SupplierReturn.create(
-      'invoice-id', 'supplier-id', new Date(), '', 'user-1',
+      'invoice-id',
+      'supplier-id',
+      new Date(),
+      '',
+      'user-1',
     );
     supplierReturnRepository.findById.mockResolvedValue(ret);
     await expect(
-      handler.execute(new CreditSupplierReturnCommand(ret.id.getValue(), 'user-1')),
+      handler.execute(
+        new CreditSupplierReturnCommand(ret.id.getValue(), 'user-1'),
+      ),
     ).rejects.toThrow(InvalidReturnTransitionException);
   });
 
@@ -79,7 +91,9 @@ describe('CreditSupplierReturnHandler', () => {
 
     eventBus.publishAll.mockReturnValue(undefined);
 
-    await handler.execute(new CreditSupplierReturnCommand(ret.id.getValue(), 'user-1'));
+    await handler.execute(
+      new CreditSupplierReturnCommand(ret.id.getValue(), 'user-1'),
+    );
 
     expect(supplierReturnRepository.save).toHaveBeenCalledWith(ret);
     expect(eventBus.publishAll).toHaveBeenCalled();

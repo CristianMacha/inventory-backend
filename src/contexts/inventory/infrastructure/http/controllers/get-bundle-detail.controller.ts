@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  ParseUUIDPipe,
-} from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,

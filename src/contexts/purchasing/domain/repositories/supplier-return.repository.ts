@@ -10,13 +10,23 @@ export interface SupplierReturnSearchFilters {
   purchaseInvoiceId?: string;
 }
 
+export interface SupplierReturnWithRelations {
+  supplierReturn: SupplierReturn;
+  supplierName: string;
+  invoiceNumber: string | null;
+}
+
 export interface ISupplierReturnRepository {
   save(supplierReturn: SupplierReturn): Promise<void>;
   deleteItem(itemId: string): Promise<void>;
   findById(id: SupplierReturnId): Promise<SupplierReturn | null>;
+  findByIdWithRelations(id: SupplierReturnId): Promise<SupplierReturnWithRelations | null>;
   findPaginated(
     filters: SupplierReturnSearchFilters,
     pagination: PaginationParams,
-  ): Promise<PaginatedResult<SupplierReturn>>;
+  ): Promise<PaginatedResult<SupplierReturnWithRelations>>;
+  findForSelect(
+    filters: SupplierReturnSearchFilters,
+  ): Promise<SupplierReturn[]>;
   count(): Promise<number>;
 }

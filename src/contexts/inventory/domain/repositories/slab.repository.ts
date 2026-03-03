@@ -15,7 +15,9 @@ export interface ReturnableSlabWithBundle {
 
 export interface ISlabRepository {
   save(slab: Slab): Promise<void>;
+  saveMany(slabs: Slab[]): Promise<void>;
   findById(id: SlabId): Promise<Slab | null>;
+  findByIds(ids: string[]): Promise<Slab[]>;
   findByBundleId(bundleId: BundleId): Promise<Slab[]>;
   findAll(): Promise<Slab[]>;
   findPaginated(

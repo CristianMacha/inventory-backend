@@ -1,11 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsUUID,
-  Min,
-} from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsUUID, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { SupplierReturnStatus } from '../../../domain/enums/supplier-return-status.enum';
 import type { PaginationParams } from '@shared/domain/pagination/pagination-params.interface';
@@ -41,6 +35,8 @@ export class GetSupplierReturnsQueryDto {
   purchaseInvoiceId?: string;
 }
 
-export function toPaginationParams(dto: GetSupplierReturnsQueryDto): PaginationParams {
+export function toPaginationParams(
+  dto: GetSupplierReturnsQueryDto,
+): PaginationParams {
   return { page: dto.page ?? 1, limit: dto.limit ?? 20 };
 }

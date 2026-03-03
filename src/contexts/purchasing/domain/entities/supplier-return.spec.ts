@@ -34,16 +34,37 @@ describe('SupplierReturn entity', () => {
   describe('addItem', () => {
     it('should add item and recalculate creditAmount', () => {
       const ret = makeReturn();
-      ret.addItem('slab-1', 'bundle-1', ReturnReason.DEFECTIVE, '', 150, 'user-1');
+      ret.addItem(
+        'slab-1',
+        'bundle-1',
+        ReturnReason.DEFECTIVE,
+        '',
+        150,
+        'user-1',
+      );
       expect(ret.items).toHaveLength(1);
       expect(ret.creditAmount).toBe(150);
     });
 
     it('should throw DuplicateSlabInReturnException for duplicate slab', () => {
       const ret = makeReturn();
-      ret.addItem('slab-1', 'bundle-1', ReturnReason.DEFECTIVE, '', 150, 'user-1');
+      ret.addItem(
+        'slab-1',
+        'bundle-1',
+        ReturnReason.DEFECTIVE,
+        '',
+        150,
+        'user-1',
+      );
       expect(() =>
-        ret.addItem('slab-1', 'bundle-1', ReturnReason.BROKEN, '', 100, 'user-1'),
+        ret.addItem(
+          'slab-1',
+          'bundle-1',
+          ReturnReason.BROKEN,
+          '',
+          100,
+          'user-1',
+        ),
       ).toThrow(DuplicateSlabInReturnException);
     });
   });
@@ -51,7 +72,14 @@ describe('SupplierReturn entity', () => {
   describe('removeItem', () => {
     it('should remove item and recalculate creditAmount', () => {
       const ret = makeReturn();
-      ret.addItem('slab-1', 'bundle-1', ReturnReason.DEFECTIVE, '', 150, 'user-1');
+      ret.addItem(
+        'slab-1',
+        'bundle-1',
+        ReturnReason.DEFECTIVE,
+        '',
+        150,
+        'user-1',
+      );
       const itemId = ret.items[0].id.getValue();
       ret.removeItem(itemId, 'user-1');
       expect(ret.items).toHaveLength(0);
@@ -62,7 +90,14 @@ describe('SupplierReturn entity', () => {
   describe('send', () => {
     it('should transition DRAFT → SENT', () => {
       const ret = makeReturn();
-      ret.addItem('slab-1', 'bundle-1', ReturnReason.DEFECTIVE, '', 150, 'user-1');
+      ret.addItem(
+        'slab-1',
+        'bundle-1',
+        ReturnReason.DEFECTIVE,
+        '',
+        150,
+        'user-1',
+      );
       ret.send('user-1');
       expect(ret.status).toBe(SupplierReturnStatus.SENT);
     });
@@ -74,16 +109,32 @@ describe('SupplierReturn entity', () => {
 
     it('should throw InvalidReturnTransitionException when not DRAFT', () => {
       const ret = makeReturn();
-      ret.addItem('slab-1', 'bundle-1', ReturnReason.DEFECTIVE, '', 150, 'user-1');
+      ret.addItem(
+        'slab-1',
+        'bundle-1',
+        ReturnReason.DEFECTIVE,
+        '',
+        150,
+        'user-1',
+      );
       ret.send('user-1');
-      expect(() => ret.send('user-1')).toThrow(InvalidReturnTransitionException);
+      expect(() => ret.send('user-1')).toThrow(
+        InvalidReturnTransitionException,
+      );
     });
   });
 
   describe('credit', () => {
     it('should transition SENT → CREDITED and emit SupplierReturnCreditedEvent', () => {
       const ret = makeReturn();
-      ret.addItem('slab-1', 'bundle-1', ReturnReason.DEFECTIVE, '', 150, 'user-1');
+      ret.addItem(
+        'slab-1',
+        'bundle-1',
+        ReturnReason.DEFECTIVE,
+        '',
+        150,
+        'user-1',
+      );
       ret.send('user-1');
       ret.commit(); // clear uncommitted events
       ret.credit('user-1');
@@ -91,12 +142,16 @@ describe('SupplierReturn entity', () => {
       const events = ret.getUncommittedEvents();
       expect(events).toHaveLength(1);
       expect(events[0]).toBeInstanceOf(SupplierReturnCreditedEvent);
-      expect((events[0] as SupplierReturnCreditedEvent).slabIds).toEqual(['slab-1']);
+      expect((events[0] as SupplierReturnCreditedEvent).slabIds).toEqual([
+        'slab-1',
+      ]);
     });
 
     it('should throw when not SENT', () => {
       const ret = makeReturn();
-      expect(() => ret.credit('user-1')).toThrow(InvalidReturnTransitionException);
+      expect(() => ret.credit('user-1')).toThrow(
+        InvalidReturnTransitionException,
+      );
     });
   });
 
@@ -109,7 +164,14 @@ describe('SupplierReturn entity', () => {
 
     it('should cancel from SENT', () => {
       const ret = makeReturn();
-      ret.addItem('slab-1', 'bundle-1', ReturnReason.DEFECTIVE, '', 150, 'user-1');
+      ret.addItem(
+        'slab-1',
+        'bundle-1',
+        ReturnReason.DEFECTIVE,
+        '',
+        150,
+        'user-1',
+      );
       ret.send('user-1');
       ret.cancel('user-1');
       expect(ret.status).toBe(SupplierReturnStatus.CANCELLED);
@@ -117,10 +179,19 @@ describe('SupplierReturn entity', () => {
 
     it('should throw when CREDITED', () => {
       const ret = makeReturn();
-      ret.addItem('slab-1', 'bundle-1', ReturnReason.DEFECTIVE, '', 150, 'user-1');
+      ret.addItem(
+        'slab-1',
+        'bundle-1',
+        ReturnReason.DEFECTIVE,
+        '',
+        150,
+        'user-1',
+      );
       ret.send('user-1');
       ret.credit('user-1');
-      expect(() => ret.cancel('user-1')).toThrow(InvalidReturnTransitionException);
+      expect(() => ret.cancel('user-1')).toThrow(
+        InvalidReturnTransitionException,
+      );
     });
   });
 });

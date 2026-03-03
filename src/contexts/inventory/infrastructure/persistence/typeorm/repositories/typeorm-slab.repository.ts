@@ -32,6 +32,17 @@ export class TypeOrmSlabRepository implements ISlabRepository {
     await this.repository.save(entity);
   }
 
+  async saveMany(slabs: Slab[]): Promise<void> {
+    const entities = slabs.map((s) => SlabMapper.toPersistence(s));
+    await this.repository.save(entities);
+  }
+
+  async findByIds(ids: string[]): Promise<Slab[]> {
+    if (ids.length === 0) return [];
+    const entities = await this.repository.findByIds(ids);
+    return entities.map((e) => SlabMapper.toDomain(e));
+  }
+
   async findById(id: SlabId): Promise<Slab | null> {
     const entity = await this.repository.findOne({
       where: { id: id.getValue() },

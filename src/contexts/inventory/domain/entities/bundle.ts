@@ -3,6 +3,8 @@ import { ProductId } from '../value-objects/product-id';
 import { SupplierId } from '../value-objects/supplier-id';
 import { InvalidEntityNameException } from '../errors/invalid-entity-name.exception';
 import { InvalidThicknessException } from '../errors/invalid-thickness.exception';
+import { BundleAlreadyLinkedToInvoiceException } from '../errors/bundle-already-linked-to-invoice.exception';
+import { BundleNotLinkedToInvoiceException } from '../errors/bundle-not-linked-to-invoice.exception';
 
 export class Bundle {
   private readonly _id: BundleId;
@@ -10,7 +12,7 @@ export class Bundle {
   private readonly _supplierId: SupplierId;
   private _lotNumber: string;
   private _thicknessCm: number;
-  private readonly _purchaseInvoiceId: string | null;
+  private _purchaseInvoiceId: string | null;
   private readonly _createdBy: string;
   private _updatedBy: string;
   private readonly _createdAt: Date;
@@ -113,6 +115,27 @@ export class Bundle {
   public updateThicknessCm(thicknessCm: number, userId: string): void {
     Bundle.validateThickness(thicknessCm);
     this._thicknessCm = thicknessCm;
+    this._updatedBy = userId;
+    this._updatedAt = new Date();
+  }
+
+  public linkInvoice(invoiceId: string, userId: string): void {
+    if (this._purchaseInvoiceId !== null) {
+      throw new BundleAlreadyLinkedToInvoiceException(
+        this._id.getValue(),
+        this._purchaseInvoiceId,
+      );
+    }
+    this._purchaseInvoiceId = invoiceId;
+    this._updatedBy = userId;
+    this._updatedAt = new Date();
+  }
+
+  public unlinkInvoice(userId: string): void {
+    if (this._purchaseInvoiceId === null) {
+      throw new BundleNotLinkedToInvoiceException(this._id.getValue());
+    }
+    this._purchaseInvoiceId = null;
     this._updatedBy = userId;
     this._updatedAt = new Date();
   }

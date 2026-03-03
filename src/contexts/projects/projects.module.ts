@@ -1,8 +1,9 @@
-import { Module, Provider } from '@nestjs/common';
+import { forwardRef, Module, Provider } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SharedInfrastructureModule } from '@shared/infrastructure/shared-infrastructure.module';
+import { InventoryModule } from '@contexts/inventory/inventory.module';
 import { PROJECTS_TOKENS } from './application/projects.tokens';
 
 import { JobEntity } from './infrastructure/persistence/typeorm/entities/job.entity';
@@ -16,6 +17,8 @@ import { ApproveJobHandler } from './application/commands/approve-job/approve-jo
 import { StartJobHandler } from './application/commands/start-job/start-job.handler';
 import { CompleteJobHandler } from './application/commands/complete-job/complete-job.handler';
 import { CancelJobHandler } from './application/commands/cancel-job/cancel-job.handler';
+import { AddBulkJobItemsHandler } from './application/commands/add-bulk-job-items/add-bulk-job-items.handler';
+import { UpdateJobHandler } from './application/commands/update-job/update-job.handler';
 
 import { GetJobsHandler } from './application/queries/get-jobs/get-jobs.handler';
 import { GetJobByIdHandler } from './application/queries/get-job-by-id/get-job-by-id.handler';
@@ -24,7 +27,9 @@ import { JobsController } from './infrastructure/http/controllers/jobs.controlle
 
 const CommandHandlers = [
   CreateJobHandler,
+  UpdateJobHandler,
   AddJobItemHandler,
+  AddBulkJobItemsHandler,
   RemoveJobItemHandler,
   ApproveJobHandler,
   StartJobHandler,
@@ -46,6 +51,7 @@ const PersistenceProviders: Provider[] = [
     CqrsModule,
     TypeOrmModule.forFeature([JobEntity, JobItemEntity]),
     SharedInfrastructureModule,
+    forwardRef(() => InventoryModule),
   ],
   controllers: [JobsController],
   providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders],

@@ -22,10 +22,16 @@ export class GetBundlesHandler implements IQueryHandler<GetBundlesQuery> {
   ): Promise<PaginatedResult<IBundleOutputDto>> {
     const result = await this.bundleRepository.findPaginatedWithRelations(
       query.pagination,
+      query.productId,
     );
     return buildPaginatedResult(
       result.data.map(({ bundle, productName, supplierName, invoiceNumber }) =>
-        BundleResponseMapper.toResponse(bundle, productName, supplierName, invoiceNumber),
+        BundleResponseMapper.toResponse(
+          bundle,
+          productName,
+          supplierName,
+          invoiceNumber,
+        ),
       ),
       result.total,
       result.page,

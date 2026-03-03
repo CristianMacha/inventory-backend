@@ -43,8 +43,13 @@ import {
   JobOutputDto,
   JobDetailOutputDto,
 } from '../../../application/dtos/job-output.dto';
+import { UpdateJobCommand } from '../../../application/commands/update-job/update-job.command';
+import { AddBulkJobItemsCommand } from '../../../application/commands/add-bulk-job-items/add-bulk-job-items.command';
+import { JobItemOutputDto } from '../../../application/dtos/job-output.dto';
 import { CreateJobDto } from '../dtos/create-job.dto';
+import { UpdateJobDto } from '../dtos/update-job.dto';
 import { AddJobItemDto } from '../dtos/add-job-item.dto';
+import { AddBulkJobItemsDto } from '../dtos/add-bulk-job-items.dto';
 import {
   GetJobsQueryDto,
   toPaginationParams,
@@ -104,6 +109,39 @@ export class JobsController {
     return this.queryBus.execute(new GetJobByIdQuery(id));
   }
 
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  @RequirePermissions(Permissions.JOBS.UPDATE)
+  @ApiOperation({ summary: 'Update job details (name, client info, dates, tax, notes)' })
+  @ApiParam({ name: 'id', description: 'Job UUID' })
+  @ApiResponse({ status: 200, type: MessageResponseDto })
+  @ApiResponse({ status: 404, description: 'Job not found' })
+  async update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: UpdateJobDto,
+    @GetUser() user: AuthUserDto,
+  ): Promise<MessageResponseDto> {
+    await this.commandBus.execute(
+      new UpdateJobCommand(
+        id,
+        user.id,
+        dto.projectName,
+        dto.clientName,
+        dto.clientPhone,
+        dto.clientEmail,
+        dto.clientAddress,
+        dto.notes,
+        dto.scheduledDate !== undefined
+          ? dto.scheduledDate
+            ? new Date(dto.scheduledDate)
+            : null
+          : undefined,
+        dto.taxAmount,
+      ),
+    );
+    return { statusCode: HttpStatus.OK, message: 'Job updated' };
+  }
+
   @Post(':id/items')
   @RequirePermissions(Permissions.JOBS.UPDATE)
   @ApiOperation({ summary: 'Add a slab item to a job' })
@@ -124,6 +162,21 @@ export class JobsController {
       ),
     );
     return { statusCode: HttpStatus.CREATED, message: 'Item added to job' };
+  }
+
+  @Post(':id/items/bulk')
+  @RequirePermissions(Permissions.JOBS.UPDATE)
+  @ApiOperation({ summary: 'Add multiple slab items to a job in one operation' })
+  @ApiParam({ name: 'id', description: 'Job UUID' })
+  @ApiResponse({ status: 201, type: JobItemOutputDto, isArray: true })
+  async addBulkItems(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: AddBulkJobItemsDto,
+    @GetUser() user: AuthUserDto,
+  ): Promise<JobItemOutputDto[]> {
+    return this.commandBus.execute(
+      new AddBulkJobItemsCommand(id, dto.items, user.id),
+    );
   }
 
   @Delete(':id/items/:itemId')

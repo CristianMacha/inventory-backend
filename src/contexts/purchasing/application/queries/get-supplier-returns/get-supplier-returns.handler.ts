@@ -15,7 +15,9 @@ export class GetSupplierReturnsHandler implements IQueryHandler<GetSupplierRetur
     private readonly supplierReturnRepository: ISupplierReturnRepository,
   ) {}
 
-  async execute(query: GetSupplierReturnsQuery): Promise<PaginatedResult<SupplierReturnOutputDto>> {
+  async execute(
+    query: GetSupplierReturnsQuery,
+  ): Promise<PaginatedResult<SupplierReturnOutputDto>> {
     const result = await this.supplierReturnRepository.findPaginated(
       {
         supplierId: query.supplierId,
@@ -27,7 +29,7 @@ export class GetSupplierReturnsHandler implements IQueryHandler<GetSupplierRetur
 
     return {
       ...result,
-      data: result.data.map((r) => SupplierReturnResponseMapper.toResponse(r)),
+      data: result.data.map((r) => SupplierReturnResponseMapper.fromWithRelations(r)),
     };
   }
 }

@@ -17,10 +17,12 @@ export class GetJobByIdHandler implements IQueryHandler<GetJobByIdQuery> {
   ) {}
 
   async execute(query: GetJobByIdQuery): Promise<JobDetailOutputDto> {
-    const job = await this.jobRepository.findById(JobId.create(query.id));
-    if (!job) {
+    const result = await this.jobRepository.findByIdWithItemDetails(
+      JobId.create(query.id),
+    );
+    if (!result) {
       throw new ResourceNotFoundException('Job', query.id);
     }
-    return JobResponseMapper.toDetailResponse(job);
+    return JobResponseMapper.toDetailResponse(result.job, result.itemDetails);
   }
 }

@@ -14,6 +14,9 @@ export class PurchaseInvoiceSelectOutputDto {
   @ApiProperty({ example: '2026-01-15' })
   invoiceDate: string;
 
-  @ApiProperty({ enum: PurchaseInvoiceStatus, example: PurchaseInvoiceStatus.RECEIVED })
+  @ApiProperty({
+    enum: PurchaseInvoiceStatus,
+    example: PurchaseInvoiceStatus.RECEIVED,
+  })
   status: PurchaseInvoiceStatus;
 }

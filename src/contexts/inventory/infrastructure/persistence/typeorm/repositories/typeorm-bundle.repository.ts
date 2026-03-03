@@ -58,7 +58,10 @@ export class TypeOrmBundleRepository implements IBundleRepository {
     if (entity.purchaseInvoiceId) {
       const invoice = await this.dataSource
         .getRepository(PurchaseInvoiceEntity)
-        .findOne({ where: { id: entity.purchaseInvoiceId }, select: ['id', 'invoiceNumber'] });
+        .findOne({
+          where: { id: entity.purchaseInvoiceId },
+          select: ['id', 'invoiceNumber'],
+        });
       invoiceNumber = invoice?.invoiceNumber ?? null;
     }
 
@@ -110,7 +113,10 @@ export class TypeOrmBundleRepository implements IBundleRepository {
       relations: ['product'],
     });
     if (!entity) return null;
-    return { bundle: BundleMapper.toDomain(entity), productName: entity.product?.name ?? '' };
+    return {
+      bundle: BundleMapper.toDomain(entity),
+      productName: entity.product?.name ?? '',
+    };
   }
 
   async findAll(): Promise<Bundle[]> {
@@ -139,6 +145,7 @@ export class TypeOrmBundleRepository implements IBundleRepository {
 
   async findPaginatedWithRelations(
     params: PaginationParams,
+    productId?: string,
   ): Promise<PaginatedResult<BundleWithRelations>> {
     const { page, limit } = params;
     const qb = this.repository
@@ -154,6 +161,10 @@ export class TypeOrmBundleRepository implements IBundleRepository {
       .orderBy('bundle.createdAt', 'DESC')
       .skip((page - 1) * limit)
       .take(limit);
+
+    if (productId) {
+      qb.andWhere('bundle.productId = :productId', { productId });
+    }
 
     const [entities, total] = await qb.getManyAndCount();
     const data = entities.map((e) => ({

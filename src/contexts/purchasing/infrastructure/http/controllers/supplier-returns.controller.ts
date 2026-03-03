@@ -35,16 +35,19 @@ import { CreditSupplierReturnCommand } from '../../../application/commands/credi
 import { CancelSupplierReturnCommand } from '../../../application/commands/cancel-supplier-return/cancel-supplier-return.command';
 import { GetSupplierReturnsQuery } from '../../../application/queries/get-supplier-returns/get-supplier-returns.query';
 import { GetSupplierReturnByIdQuery } from '../../../application/queries/get-supplier-return-by-id/get-supplier-return-by-id.query';
+import { GetSupplierReturnsSelectQuery } from '../../../application/queries/get-supplier-returns-select/get-supplier-returns-select.query';
 import {
   SupplierReturnOutputDto,
   SupplierReturnDetailOutputDto,
 } from '../../../application/dtos/supplier-return-output.dto';
+import { SupplierReturnSelectOutputDto } from '../../../application/dtos/supplier-return-select-output.dto';
 import { CreateSupplierReturnDto } from '../dtos/create-supplier-return.dto';
 import { AddReturnItemDto } from '../dtos/add-return-item.dto';
 import {
   GetSupplierReturnsQueryDto,
   toPaginationParams,
 } from '../dtos/get-supplier-returns-query.dto';
+import { GetSupplierReturnsSelectQueryDto } from '../dtos/get-supplier-returns-select-query.dto';
 
 @ApiBearerAuth()
 @ApiTags('Supplier Returns')
@@ -72,12 +75,18 @@ export class SupplierReturnsController {
         user.id,
       ),
     );
-    return { statusCode: HttpStatus.CREATED, message: 'Supplier return created', id };
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: 'Supplier return created',
+      id,
+    };
   }
 
   @Get()
   @RequirePermissions(Permissions.SUPPLIER_RETURNS.LIST)
-  @ApiOperation({ summary: 'List supplier returns with filters and pagination' })
+  @ApiOperation({
+    summary: 'List supplier returns with filters and pagination',
+  })
   @ApiResponse({ status: 200, type: SupplierReturnOutputDto, isArray: true })
   async list(
     @Query() query: GetSupplierReturnsQueryDto,
@@ -85,6 +94,29 @@ export class SupplierReturnsController {
     return this.queryBus.execute(
       new GetSupplierReturnsQuery(
         toPaginationParams(query),
+        query.supplierId,
+        query.status,
+        query.purchaseInvoiceId,
+      ),
+    );
+  }
+
+  @Get('select')
+  @RequirePermissions(Permissions.SUPPLIER_RETURNS.READ)
+  @ApiOperation({
+    summary:
+      'List supplier returns for select dropdowns (DRAFT and SENT by default)',
+  })
+  @ApiResponse({
+    status: 200,
+    type: SupplierReturnSelectOutputDto,
+    isArray: true,
+  })
+  async getForSelect(
+    @Query() query: GetSupplierReturnsSelectQueryDto,
+  ): Promise<SupplierReturnSelectOutputDto[]> {
+    return this.queryBus.execute(
+      new GetSupplierReturnsSelectQuery(
         query.supplierId,
         query.status,
         query.purchaseInvoiceId,
@@ -160,7 +192,9 @@ export class SupplierReturnsController {
   @Patch(':id/credit')
   @HttpCode(HttpStatus.OK)
   @RequirePermissions(Permissions.SUPPLIER_RETURNS.UPDATE)
-  @ApiOperation({ summary: 'Mark supplier return as credited (SENT → CREDITED)' })
+  @ApiOperation({
+    summary: 'Mark supplier return as credited (SENT → CREDITED)',
+  })
   @ApiResponse({ status: 200, type: MessageResponseDto })
   async credit(
     @Param('id', new ParseUUIDPipe()) id: string,

@@ -35,8 +35,14 @@ export class SupplierReturnOutputDto {
   @ApiProperty()
   purchaseInvoiceId: string;
 
+  @ApiProperty({ nullable: true })
+  invoiceNumber: string | null;
+
   @ApiProperty()
   supplierId: string;
+
+  @ApiProperty()
+  supplierName: string;
 
   @ApiProperty()
   returnDate: string;

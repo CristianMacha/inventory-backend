@@ -29,6 +29,7 @@ export interface IProductRepository {
     filters: ProductSearchFilters,
     pagination: PaginationParams,
   ): Promise<PaginatedResult<ProductWithRelations>>;
+  findForSelect(): Promise<{ id: string; name: string }[]>;
   save(product: Product): Promise<void>;
   count(): Promise<number>;
 }

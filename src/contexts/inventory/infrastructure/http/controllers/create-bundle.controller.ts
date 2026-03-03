@@ -8,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
+import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 import { CreateBundleCommand } from '../../../application/commands/create-bundle/create-bundle.command';
 import { CreateBundleDto } from '../dtos/create-bundle.dto';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
@@ -26,7 +27,10 @@ export class CreateBundleController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Product or supplier not found' })
-  async run(@Body() dto: CreateBundleDto, @GetUser() user: any): Promise<void> {
+  async run(
+    @Body() dto: CreateBundleDto,
+    @GetUser() user: AuthUserDto,
+  ): Promise<void> {
     await this.commandBus.execute(
       new CreateBundleCommand(
         dto.productId,

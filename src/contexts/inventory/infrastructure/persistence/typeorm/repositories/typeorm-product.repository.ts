@@ -140,6 +140,14 @@ export class TypeOrmProductRepository implements IProductRepository {
     return buildPaginatedResult(data, total, pagination.page, pagination.limit);
   }
 
+  async findForSelect(): Promise<{ id: string; name: string }[]> {
+    const entities = await this.typeOrmRepository.find({
+      select: ['id', 'name'],
+      order: { name: 'ASC' },
+    });
+    return entities.map((e) => ({ id: e.id, name: e.name }));
+  }
+
   async save(product: Product): Promise<void> {
     const productEntity = ProductMapper.toPersistence(product);
     await this.typeOrmRepository.save(productEntity);

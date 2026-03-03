@@ -34,6 +34,7 @@ export interface IBundleRepository {
   findPaginated(params: PaginationParams): Promise<PaginatedResult<Bundle>>;
   findPaginatedWithRelations(
     params: PaginationParams,
+    productId?: string,
   ): Promise<PaginatedResult<BundleWithRelations>>;
   count(): Promise<number>;
 }

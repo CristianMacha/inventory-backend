@@ -51,11 +51,19 @@ describe('CreateBundleHandler', () => {
     bundleRepository = module.get(INVENTORY_TOKENS.BUNDLE_REPOSITORY);
     productRepository = module.get(INVENTORY_TOKENS.PRODUCT_REPOSITORY);
     supplierRepository = module.get(INVENTORY_TOKENS.SUPPLIER_REPOSITORY);
-    invoiceRepository = module.get(PURCHASING_TOKENS.PURCHASE_INVOICE_REPOSITORY);
+    invoiceRepository = module.get(
+      PURCHASING_TOKENS.PURCHASE_INVOICE_REPOSITORY,
+    );
   });
 
   it('should create a bundle with supplierId', async () => {
-    const command = new CreateBundleCommand('prod1', 'user1', 'LOT-001', 2.0, 'sup1');
+    const command = new CreateBundleCommand(
+      'prod1',
+      'user1',
+      'LOT-001',
+      2.0,
+      'sup1',
+    );
     productRepository.findById.mockResolvedValue(mockProduct);
     supplierRepository.findById.mockResolvedValue(mockSupplier);
 
@@ -89,10 +97,18 @@ describe('CreateBundleHandler', () => {
   });
 
   it('should throw ResourceNotFoundException if product not found', async () => {
-    const command = new CreateBundleCommand('prod1', 'user1', undefined, undefined, 'sup1');
+    const command = new CreateBundleCommand(
+      'prod1',
+      'user1',
+      undefined,
+      undefined,
+      'sup1',
+    );
     productRepository.findById.mockResolvedValue(null);
 
-    await expect(handler.execute(command)).rejects.toThrow(ResourceNotFoundException);
+    await expect(handler.execute(command)).rejects.toThrow(
+      ResourceNotFoundException,
+    );
     expect(bundleRepository.save).not.toHaveBeenCalled();
   });
 
@@ -108,16 +124,26 @@ describe('CreateBundleHandler', () => {
     productRepository.findById.mockResolvedValue(mockProduct);
     invoiceRepository.findById.mockResolvedValue(null);
 
-    await expect(handler.execute(command)).rejects.toThrow(ResourceNotFoundException);
+    await expect(handler.execute(command)).rejects.toThrow(
+      ResourceNotFoundException,
+    );
     expect(bundleRepository.save).not.toHaveBeenCalled();
   });
 
   it('should throw ResourceNotFoundException if supplier not found', async () => {
-    const command = new CreateBundleCommand('prod1', 'user1', undefined, undefined, 'sup1');
+    const command = new CreateBundleCommand(
+      'prod1',
+      'user1',
+      undefined,
+      undefined,
+      'sup1',
+    );
     productRepository.findById.mockResolvedValue(mockProduct);
     supplierRepository.findById.mockResolvedValue(null);
 
-    await expect(handler.execute(command)).rejects.toThrow(ResourceNotFoundException);
+    await expect(handler.execute(command)).rejects.toThrow(
+      ResourceNotFoundException,
+    );
     expect(bundleRepository.save).not.toHaveBeenCalled();
   });
 });

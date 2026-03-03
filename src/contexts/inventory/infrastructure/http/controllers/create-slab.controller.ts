@@ -8,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
+import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 import { CreateSlabCommand } from '../../../application/commands/create-slab/create-slab.command';
 import { CreateSlabDto } from '../dtos/create-slab.dto';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
@@ -32,7 +33,10 @@ export class CreateSlabController {
     description: 'Forbidden. User lacks required permissions.',
   })
   @ApiResponse({ status: 400, description: 'Bad request. Invalid input data.' })
-  async run(@Body() dto: CreateSlabDto, @GetUser() user: any): Promise<void> {
+  async run(
+    @Body() dto: CreateSlabDto,
+    @GetUser() user: AuthUserDto,
+  ): Promise<void> {
     await this.commandBus.execute(
       new CreateSlabCommand(
         dto.bundleId,

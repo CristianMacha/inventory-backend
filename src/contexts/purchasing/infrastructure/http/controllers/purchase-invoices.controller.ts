@@ -116,8 +116,15 @@ export class PurchaseInvoicesController {
 
   @Get('select')
   @RequirePermissions(Permissions.PURCHASE_INVOICES.READ)
-  @ApiOperation({ summary: 'List purchase invoices for select dropdowns (excludes DRAFT and CANCELLED)' })
-  @ApiResponse({ status: 200, type: PurchaseInvoiceSelectOutputDto, isArray: true })
+  @ApiOperation({
+    summary:
+      'List purchase invoices for select dropdowns (excludes DRAFT and CANCELLED)',
+  })
+  @ApiResponse({
+    status: 200,
+    type: PurchaseInvoiceSelectOutputDto,
+    isArray: true,
+  })
   async getForSelect(
     @Query() query: GetPurchaseInvoicesSelectQueryDto,
   ): Promise<PurchaseInvoiceSelectOutputDto[]> {

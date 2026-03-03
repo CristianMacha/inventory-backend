@@ -16,14 +16,20 @@ export class GetSupplierReturnByIdHandler implements IQueryHandler<GetSupplierRe
     private readonly supplierReturnRepository: ISupplierReturnRepository,
   ) {}
 
-  async execute(query: GetSupplierReturnByIdQuery): Promise<SupplierReturnDetailOutputDto> {
-    const supplierReturn = await this.supplierReturnRepository.findById(
+  async execute(
+    query: GetSupplierReturnByIdQuery,
+  ): Promise<SupplierReturnDetailOutputDto> {
+    const result = await this.supplierReturnRepository.findByIdWithRelations(
       SupplierReturnId.create(query.returnId),
     );
-    if (!supplierReturn) {
+    if (!result) {
       throw new ResourceNotFoundException('SupplierReturn', query.returnId);
     }
 
-    return SupplierReturnResponseMapper.toDetailResponse(supplierReturn);
+    return SupplierReturnResponseMapper.toDetailResponse(
+      result.supplierReturn,
+      result.supplierName,
+      result.invoiceNumber,
+    );
   }
 }

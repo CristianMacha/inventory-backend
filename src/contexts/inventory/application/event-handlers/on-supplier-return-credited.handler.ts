@@ -22,7 +22,9 @@ export class OnSupplierReturnCreditedHandler implements IEventHandler<SupplierRe
     );
 
     for (const slabIdValue of event.slabIds) {
-      const slab = await this.slabRepository.findById(SlabId.create(slabIdValue));
+      const slab = await this.slabRepository.findById(
+        SlabId.create(slabIdValue),
+      );
       if (slab) {
         slab.updateStatus(SlabStatus.RETURNED, 'system');
         await this.slabRepository.save(slab);

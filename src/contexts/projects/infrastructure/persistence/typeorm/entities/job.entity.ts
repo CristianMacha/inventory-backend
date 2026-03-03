@@ -81,6 +81,6 @@ export class JobEntity {
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date | null;
 
-  @OneToMany('JobItemEntity', 'job', { cascade: true })
+  @OneToMany('JobItemEntity', 'job', { cascade: true, orphanedRowAction: 'delete' })
   items: JobItemEntity[];
 }
