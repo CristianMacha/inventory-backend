@@ -37,12 +37,19 @@ export class JobMapper {
       Number(entity.subtotal),
       Number(entity.taxAmount),
       Number(entity.totalAmount),
+      Number(entity.paidAmount),
       items,
       entity.createdBy,
       entity.updatedBy,
       toDate(entity.createdAt)!,
       toDate(entity.updatedAt)!,
     );
+  }
+
+  static toDomainWithCount(entity: JobEntity & { itemCount?: number }): Job {
+    const domain = JobMapper.toDomain({ ...entity, items: [] });
+    domain.setItemCount(entity.itemCount ?? 0);
+    return domain;
   }
 
   static toPersistence(domain: Job): JobEntity {
@@ -60,6 +67,7 @@ export class JobMapper {
     entity.subtotal = domain.subtotal;
     entity.taxAmount = domain.taxAmount;
     entity.totalAmount = domain.totalAmount;
+    entity.paidAmount = domain.paidAmount;
     entity.createdBy = domain.createdBy;
     entity.updatedBy = domain.updatedBy;
     entity.createdAt = domain.createdAt;

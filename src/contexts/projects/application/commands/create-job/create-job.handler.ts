@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 
 import { CreateJobCommand } from './create-job.command';
@@ -11,6 +11,7 @@ export class CreateJobHandler implements ICommandHandler<CreateJobCommand> {
   constructor(
     @Inject(PROJECTS_TOKENS.JOB_REPOSITORY)
     private readonly jobRepository: IJobRepository,
+    private readonly eventBus: EventBus,
   ) {}
 
   async execute(command: CreateJobCommand): Promise<string> {
@@ -26,6 +27,8 @@ export class CreateJobHandler implements ICommandHandler<CreateJobCommand> {
     );
 
     await this.jobRepository.save(job);
+    this.eventBus.publishAll(job.getUncommittedEvents());
+    job.commit();
     return job.id.getValue();
   }
 }

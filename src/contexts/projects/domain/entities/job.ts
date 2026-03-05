@@ -23,7 +23,9 @@ export class Job extends AggregateRoot {
   private _subtotal: number;
   private _taxAmount: number;
   private _totalAmount: number;
+  private _paidAmount: number;
   private _items: JobItem[];
+  private _itemCount: number | null;
   private readonly _createdBy: string;
   private _updatedBy: string;
   private readonly _createdAt: Date;
@@ -43,6 +45,7 @@ export class Job extends AggregateRoot {
     subtotal: number,
     taxAmount: number,
     totalAmount: number,
+    paidAmount: number,
     items: JobItem[],
     createdBy: string,
     updatedBy: string,
@@ -63,7 +66,9 @@ export class Job extends AggregateRoot {
     this._subtotal = subtotal;
     this._taxAmount = taxAmount;
     this._totalAmount = totalAmount;
+    this._paidAmount = paidAmount;
     this._items = items;
+    this._itemCount = null;
     this._createdBy = createdBy;
     this._updatedBy = updatedBy;
     this._createdAt = createdAt;
@@ -102,6 +107,7 @@ export class Job extends AggregateRoot {
       0,
       0,
       0,
+      0,
       [],
       createdBy,
       createdBy,
@@ -124,6 +130,7 @@ export class Job extends AggregateRoot {
     subtotal: number,
     taxAmount: number,
     totalAmount: number,
+    paidAmount: number,
     items: JobItem[],
     createdBy: string,
     updatedBy: string,
@@ -144,6 +151,7 @@ export class Job extends AggregateRoot {
       subtotal,
       taxAmount,
       totalAmount,
+      paidAmount,
       items,
       createdBy,
       updatedBy,
@@ -294,6 +302,12 @@ export class Job extends AggregateRoot {
     this._totalAmount = this._subtotal + this._taxAmount;
   }
 
+  public applyPayment(amount: number, userId: string): void {
+    this._paidAmount += amount;
+    this._updatedBy = userId;
+    this._updatedAt = new Date();
+  }
+
   get id(): JobId {
     return this._id;
   }
@@ -333,8 +347,17 @@ export class Job extends AggregateRoot {
   get totalAmount(): number {
     return this._totalAmount;
   }
+  get paidAmount(): number {
+    return this._paidAmount;
+  }
   get items(): ReadonlyArray<JobItem> {
     return this._items;
+  }
+  get itemCount(): number {
+    return this._itemCount ?? this._items.length;
+  }
+  setItemCount(count: number): void {
+    this._itemCount = count;
   }
   get createdBy(): string {
     return this._createdBy;

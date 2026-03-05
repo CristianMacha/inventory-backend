@@ -29,7 +29,9 @@ export class GetSupplierReturnsHandler implements IQueryHandler<GetSupplierRetur
 
     return {
       ...result,
-      data: result.data.map((r) => SupplierReturnResponseMapper.fromWithRelations(r)),
+      data: result.data.map((r) =>
+        SupplierReturnResponseMapper.fromWithRelations(r),
+      ),
     };
   }
 }

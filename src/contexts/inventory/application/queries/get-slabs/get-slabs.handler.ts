@@ -20,10 +20,12 @@ export class GetSlabsHandler implements IQueryHandler<GetSlabsQuery> {
   async execute(
     query: GetSlabsQuery,
   ): Promise<PaginatedResult<ISlabOutputDto>> {
-    const result = await this.slabRepository.findPaginated(
-      query.pagination,
-      query.bundleId ? { bundleId: query.bundleId } : undefined,
-    );
+    const filters =
+      query.bundleId || query.status || query.search || query.isRemnant !== undefined
+        ? { bundleId: query.bundleId, status: query.status, search: query.search, isRemnant: query.isRemnant }
+        : undefined;
+
+    const result = await this.slabRepository.findPaginated(query.pagination, filters);
     return buildPaginatedResult(
       result.data.map((s) => SlabResponseMapper.toResponse(s)),
       result.total,

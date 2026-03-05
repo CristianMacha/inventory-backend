@@ -92,6 +92,21 @@ export const Permissions = {
     UPDATE: 'supplier-returns.update',
     CANCEL: 'supplier-returns.cancel',
   },
+  INVOICE_PAYMENTS: {
+    CREATE: 'invoice-payments.create',
+    READ: 'invoice-payments.read',
+  },
+  JOB_PAYMENTS: {
+    CREATE: 'job-payments.create',
+    READ: 'job-payments.read',
+  },
+  ACCOUNTING: {
+    VIEW: 'accounting.view',
+  },
+  GENERAL_PAYMENTS: {
+    CREATE: 'general-payments.create',
+    READ: 'general-payments.read',
+  },
 } as const;
 
 export type PermissionType =

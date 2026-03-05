@@ -1,13 +1,9 @@
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  ForbiddenException,
-} from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 import { PERMISSIONS_KEY } from '../decorators/require-permissions.decorator';
 import { JwtPayload } from '@contexts/auth/infrastructure/strategies/jwt.strategy';
+import { ForbiddenDomainException } from '@shared/domain/exceptions/forbidden.exception';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -28,7 +24,7 @@ export class PermissionsGuard implements CanActivate {
       .getRequest<Request & { user: JwtPayload }>();
 
     if (!user || !user.permissions) {
-      throw new ForbiddenException('User permissions not found');
+      throw new ForbiddenDomainException('User permissions not found');
     }
 
     const hasPermission = requiredPermissions.some((permission) =>
@@ -36,7 +32,7 @@ export class PermissionsGuard implements CanActivate {
     );
 
     if (!hasPermission) {
-      throw new ForbiddenException('Insufficient permissions');
+      throw new ForbiddenDomainException();
     }
 
     return true;

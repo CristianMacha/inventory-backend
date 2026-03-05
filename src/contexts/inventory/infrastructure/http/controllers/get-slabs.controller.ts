@@ -1,5 +1,5 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
   ApiTags,
@@ -18,13 +18,20 @@ import {
   toPaginationParams,
 } from '../dtos/get-slabs-query.dto';
 import { GetReturnableSlabsQueryDto } from '../dtos/get-returnable-slabs-query.dto';
+import { CreateRemnantSlabDto } from '../dtos/create-remnant-slab.dto';
+import { CreateRemnantSlabCommand } from '../../../application/commands/create-remnant-slab/create-remnant-slab.command';
+import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
+import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 import type { PaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
 
 @ApiBearerAuth()
 @ApiTags('Slabs')
 @Controller('slabs')
 export class GetSlabsController {
-  constructor(private readonly queryBus: QueryBus) {}
+  constructor(
+    private readonly queryBus: QueryBus,
+    private readonly commandBus: CommandBus,
+  ) {}
 
   @Get()
   @RequirePermissions(Permissions.SLABS.LIST)
@@ -41,7 +48,7 @@ export class GetSlabsController {
     @Query() query: GetSlabsQueryDto,
   ): Promise<PaginatedResult<ISlabOutputDto>> {
     return this.queryBus.execute(
-      new GetSlabsQuery(toPaginationParams(query), query.bundleId),
+      new GetSlabsQuery(toPaginationParams(query), query.bundleId, query.status, query.search, query.isRemnant),
     );
   }
 
@@ -62,5 +69,22 @@ export class GetSlabsController {
     return this.queryBus.execute(
       new GetReturnableSlabsQuery(query.purchaseInvoiceId, query.bundleId),
     );
+  }
+
+  @Post(':slabId/remnant')
+  @RequirePermissions(Permissions.SLABS.CREATE)
+  @ApiOperation({ summary: 'Create a remnant slab from a SOLD slab' })
+  @ApiResponse({ status: 201, description: 'Remnant slab created successfully', schema: { properties: { id: { type: 'string' } } } })
+  @ApiResponse({ status: 404, description: 'Parent slab not found' })
+  @ApiResponse({ status: 422, description: 'Parent slab is not SOLD or is already a remnant' })
+  async createRemnant(
+    @Param('slabId') slabId: string,
+    @Body() dto: CreateRemnantSlabDto,
+    @GetUser() user: AuthUserDto,
+  ): Promise<{ id: string }> {
+    const id = await this.commandBus.execute(
+      new CreateRemnantSlabCommand(slabId, dto.code, dto.widthCm, dto.heightCm, user.id, dto.description),
+    );
+    return { id };
   }
 }

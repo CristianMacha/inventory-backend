@@ -54,7 +54,11 @@ const PersistenceProviders: Provider[] = [
     forwardRef(() => InventoryModule),
   ],
   controllers: [JobsController],
-  providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders],
+  providers: [
+    ...CommandHandlers,
+    ...QueryHandlers,
+    ...PersistenceProviders,
+  ],
   exports: [...PersistenceProviders],
 })
 export class ProjectsModule {}

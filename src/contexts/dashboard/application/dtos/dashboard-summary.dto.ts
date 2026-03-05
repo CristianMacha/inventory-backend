@@ -27,6 +27,23 @@ class PurchasingMetricsDto {
   totalPurchaseInvoices: number;
 }
 
+class AccountingMetricsDto {
+  @ApiProperty({ description: 'Total ingress (job payments)', example: 5000.0 })
+  totalIngress: number;
+
+  @ApiProperty({
+    description: 'Total egress (invoice payments)',
+    example: 3000.0,
+  })
+  totalEgress: number;
+
+  @ApiProperty({
+    description: 'Cash balance (ingress - egress)',
+    example: 2000.0,
+  })
+  cashBalance: number;
+}
+
 export class DashboardSummaryDto {
   @ApiProperty({ description: 'Inventory metrics', type: InventoryMetricsDto })
   inventory: InventoryMetricsDto;
@@ -39,4 +56,10 @@ export class DashboardSummaryDto {
     type: PurchasingMetricsDto,
   })
   purchasing: PurchasingMetricsDto;
+
+  @ApiProperty({
+    description: 'Accounting metrics',
+    type: AccountingMetricsDto,
+  })
+  accounting: AccountingMetricsDto;
 }

@@ -20,7 +20,9 @@ export interface ISupplierReturnRepository {
   save(supplierReturn: SupplierReturn): Promise<void>;
   deleteItem(itemId: string): Promise<void>;
   findById(id: SupplierReturnId): Promise<SupplierReturn | null>;
-  findByIdWithRelations(id: SupplierReturnId): Promise<SupplierReturnWithRelations | null>;
+  findByIdWithRelations(
+    id: SupplierReturnId,
+  ): Promise<SupplierReturnWithRelations | null>;
   findPaginated(
     filters: SupplierReturnSearchFilters,
     pagination: PaginationParams,

@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsUUID, Max, Min } from 'class-validator';
+import { IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
@@ -10,10 +10,21 @@ import {
 } from '@shared/domain/pagination/pagination-params.interface';
 
 export class GetBundlesQueryDto {
-  @ApiPropertyOptional({ example: 'uuid-product', description: 'Filter by product' })
+  @ApiPropertyOptional({ description: 'Filter by product UUID' })
   @IsOptional()
   @IsUUID()
   productId?: string;
+
+  @ApiPropertyOptional({ description: 'Filter by supplier UUID' })
+  @IsOptional()
+  @IsUUID()
+  supplierId?: string;
+
+  @ApiPropertyOptional({ description: 'Search by lot number' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  search?: string;
 
   @ApiPropertyOptional({
     description: 'Page number (1-based)',
@@ -43,4 +54,3 @@ export class GetBundlesQueryDto {
 export function toPaginationParams(dto: GetBundlesQueryDto): PaginationParams {
   return normalizePaginationParams(dto.page, dto.limit);
 }
-

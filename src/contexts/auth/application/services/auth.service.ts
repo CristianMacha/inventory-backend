@@ -76,13 +76,42 @@ export class AuthService {
         if (role) roles.push(role);
       }
       const newUser = User.createFromProvider(identity, roles);
-      await this.userRepository.save(newUser);
-      user = newUser;
-      this.logger.info({
-        msg: 'New user auto-created via Firebase',
-        externalId: identity.sub,
-        email: identity.email,
-      });
+      try {
+        await this.userRepository.save(newUser);
+        user = newUser;
+        this.logger.info({
+          msg: 'New user auto-created via Firebase',
+          externalId: identity.sub,
+          email: identity.email,
+        });
+      } catch (err: unknown) {
+        const isDuplicateEntry =
+          err instanceof Error &&
+          'code' in err &&
+          (err as Record<string, unknown>)['code'] === 'ER_DUP_ENTRY';
+
+        if (!isDuplicateEntry) throw err;
+
+        // Race condition: another concurrent request already inserted this user.
+        // Retry the lookup so both requests return the same user.
+        this.logger.warn({
+          msg: 'Duplicate user creation race condition detected, retrying lookup',
+          externalId: identity.sub,
+          email: identity.email,
+        });
+
+        user = identity.email
+          ? await this.userRepository.findByEmail(identity.email)
+          : null;
+
+        if (!user) {
+          user = await this.userRepository.findByExternalId('firebase', identity.sub);
+        }
+
+        if (!user) {
+          throw err;
+        }
+      }
     }
 
     const permissions = user.roles.flatMap((r) =>

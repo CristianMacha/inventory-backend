@@ -19,13 +19,14 @@ export class PurchaseInvoiceResponseMapper {
       subtotal: invoice.subtotal,
       taxAmount: invoice.taxAmount,
       totalAmount: invoice.totalAmount,
+      paidAmount: invoice.paidAmount,
       status: invoice.status,
       notes: invoice.notes,
       createdBy: invoice.createdBy,
       updatedBy: invoice.updatedBy,
       createdAt: invoice.createdAt.toISOString(),
       updatedAt: invoice.updatedAt.toISOString(),
-      itemCount: invoice.items.length,
+      itemCount: invoice.itemCount,
     };
   }
 

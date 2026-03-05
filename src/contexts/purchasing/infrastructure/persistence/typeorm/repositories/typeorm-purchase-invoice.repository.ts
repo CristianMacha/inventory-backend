@@ -51,9 +51,10 @@ export class TypeOrmPurchaseInvoiceRepository implements IPurchaseInvoiceReposit
   ): Promise<PurchaseInvoice | null> {
     const entity = await this.repository.findOne({
       where: { invoiceNumber },
-      relations: ['items'],
     });
-    return entity ? PurchaseInvoiceMapper.toDomain(entity) : null;
+    if (!entity) return null;
+    entity.items = [];
+    return PurchaseInvoiceMapper.toDomain(entity);
   }
 
   async findPaginated(
@@ -63,7 +64,7 @@ export class TypeOrmPurchaseInvoiceRepository implements IPurchaseInvoiceReposit
     const { page, limit } = pagination;
     const qb = this.repository
       .createQueryBuilder('invoice')
-      .leftJoinAndSelect('invoice.items', 'items');
+      .loadRelationCountAndMap('invoice.itemCount', 'invoice.items');
 
     if (filters.supplierId) {
       qb.andWhere('invoice.supplierId = :supplierId', {
@@ -87,7 +88,7 @@ export class TypeOrmPurchaseInvoiceRepository implements IPurchaseInvoiceReposit
 
     const [entities, total] = await qb.getManyAndCount();
     return buildPaginatedResult(
-      entities.map((e) => PurchaseInvoiceMapper.toDomain(e)),
+      entities.map((e) => PurchaseInvoiceMapper.toDomainWithCount(e)),
       total,
       page,
       limit,

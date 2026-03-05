@@ -53,6 +53,9 @@ export class PurchaseInvoiceOutputDto {
   @ApiProperty({ example: 5400.0 })
   totalAmount: number;
 
+  @ApiProperty({ example: 0.0 })
+  paidAmount: number;
+
   @ApiProperty({
     enum: PurchaseInvoiceStatus,
     example: PurchaseInvoiceStatus.DRAFT,

@@ -1,9 +1,10 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
-import { ConflictException, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 
 import { CreatePurchaseInvoiceCommand } from './create-purchase-invoice.command';
 import { IPurchaseInvoiceRepository } from '../../../domain/repositories/purchase-invoice.repository';
 import { PurchaseInvoice } from '../../../domain/entities/purchase-invoice';
+import { DuplicateInvoiceNumberException } from '../../../domain/errors/duplicate-invoice-number.exception';
 import { PURCHASING_TOKENS } from '../../purchasing.tokens';
 
 @CommandHandler(CreatePurchaseInvoiceCommand)
@@ -27,9 +28,7 @@ export class CreatePurchaseInvoiceHandler implements ICommandHandler<CreatePurch
     const existing =
       await this.invoiceRepository.findByInvoiceNumber(invoiceNumber);
     if (existing) {
-      throw new ConflictException(
-        `Invoice with number "${invoiceNumber}" already exists`,
-      );
+      throw new DuplicateInvoiceNumberException(invoiceNumber);
     }
 
     const invoice = PurchaseInvoice.create(

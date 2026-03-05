@@ -38,7 +38,7 @@ export class GetBundlesController {
     @Query() query: GetBundlesQueryDto,
   ): Promise<PaginatedResult<IBundleOutputDto>> {
     return this.queryBus.execute(
-      new GetBundlesQuery(toPaginationParams(query), query.productId),
+      new GetBundlesQuery(toPaginationParams(query), query.productId, query.supplierId, query.search),
     );
   }
 }

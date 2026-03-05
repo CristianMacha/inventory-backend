@@ -15,6 +15,7 @@ export class Slab {
   private _updatedBy: string;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
+  private readonly _parentSlabId: string | null;
 
   private constructor(
     id: SlabId,
@@ -27,6 +28,7 @@ export class Slab {
     updatedBy: string,
     createdAt: Date,
     updatedAt: Date,
+    parentSlabId: string | null = null,
   ) {
     this._id = id;
     this._bundleId = bundleId;
@@ -38,6 +40,7 @@ export class Slab {
     this._updatedBy = updatedBy;
     this._createdAt = createdAt;
     this._updatedAt = updatedAt;
+    this._parentSlabId = parentSlabId;
   }
 
   private static validateCode(code: string): void {
@@ -69,6 +72,31 @@ export class Slab {
     );
   }
 
+  static createRemnant(
+    bundleId: BundleId,
+    parentSlabId: string,
+    code: string,
+    dimensions: SlabDimensions,
+    description: string,
+    createdBy: string,
+  ): Slab {
+    Slab.validateCode(code);
+    const now = new Date();
+    return new Slab(
+      SlabId.generate(),
+      bundleId,
+      code,
+      dimensions,
+      SlabStatus.AVAILABLE,
+      description,
+      createdBy,
+      createdBy,
+      now,
+      now,
+      parentSlabId,
+    );
+  }
+
   static reconstitute(
     id: SlabId,
     bundleId: BundleId,
@@ -80,6 +108,7 @@ export class Slab {
     updatedBy: string,
     createdAt: Date,
     updatedAt: Date,
+    parentSlabId: string | null = null,
   ): Slab {
     return new Slab(
       id,
@@ -92,6 +121,7 @@ export class Slab {
       updatedBy,
       createdAt,
       updatedAt,
+      parentSlabId,
     );
   }
 
@@ -158,5 +188,9 @@ export class Slab {
 
   get updatedAt(): Date {
     return this._updatedAt;
+  }
+
+  get parentSlabId(): string | null {
+    return this._parentSlabId;
   }
 }

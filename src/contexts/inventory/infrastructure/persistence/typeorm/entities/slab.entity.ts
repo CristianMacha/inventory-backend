@@ -33,6 +33,10 @@ export class SlabEntity {
   @Column({ type: 'enum', enum: SlabStatus, default: SlabStatus.AVAILABLE })
   status: SlabStatus;
 
+  @Column({ type: 'varchar', length: 36, nullable: true, default: null })
+  @Index('IDX_slabs_parentSlabId')
+  parentSlabId: string | null;
+
   @Column({ type: 'text', nullable: true })
   description: string;
 

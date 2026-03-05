@@ -12,6 +12,9 @@ import { IJobRepository } from '@contexts/projects/domain/repositories/job.repos
 import { PROJECTS_TOKENS } from '@contexts/projects/application/projects.tokens';
 import { IPurchaseInvoiceRepository } from '@contexts/purchasing/domain/repositories/purchase-invoice.repository';
 import { PURCHASING_TOKENS } from '@contexts/purchasing/application/purchasing.tokens';
+import { IInvoicePaymentRepository } from '@contexts/accounting/domain/repositories/invoice-payment.repository';
+import { IJobPaymentRepository } from '@contexts/accounting/domain/repositories/job-payment.repository';
+import { ACCOUNTING_TOKENS } from '@contexts/accounting/application/accounting.tokens';
 
 @QueryHandler(GetDashboardSummaryQuery)
 export class GetDashboardSummaryHandler implements IQueryHandler<GetDashboardSummaryQuery> {
@@ -30,6 +33,10 @@ export class GetDashboardSummaryHandler implements IQueryHandler<GetDashboardSum
     private readonly jobRepository: IJobRepository,
     @Inject(PURCHASING_TOKENS.PURCHASE_INVOICE_REPOSITORY)
     private readonly purchaseInvoiceRepository: IPurchaseInvoiceRepository,
+    @Inject(ACCOUNTING_TOKENS.INVOICE_PAYMENT_REPOSITORY)
+    private readonly invoicePaymentRepository: IInvoicePaymentRepository,
+    @Inject(ACCOUNTING_TOKENS.JOB_PAYMENT_REPOSITORY)
+    private readonly jobPaymentRepository: IJobPaymentRepository,
   ) {}
 
   async execute(): Promise<DashboardSummaryDto> {
@@ -41,6 +48,8 @@ export class GetDashboardSummaryHandler implements IQueryHandler<GetDashboardSum
       totalSlabs,
       totalJobs,
       totalPurchaseInvoices,
+      totalEgress,
+      totalIngress,
     ] = await Promise.all([
       this.productRepository.count(),
       this.brandRepository.count(),
@@ -49,6 +58,8 @@ export class GetDashboardSummaryHandler implements IQueryHandler<GetDashboardSum
       this.slabRepository.count(),
       this.jobRepository.count(),
       this.purchaseInvoiceRepository.count(),
+      this.invoicePaymentRepository.sumAll(),
+      this.jobPaymentRepository.sumAll(),
     ]);
 
     return {
@@ -64,6 +75,11 @@ export class GetDashboardSummaryHandler implements IQueryHandler<GetDashboardSum
       },
       purchasing: {
         totalPurchaseInvoices,
+      },
+      accounting: {
+        totalIngress,
+        totalEgress,
+        cashBalance: totalIngress - totalEgress,
       },
     };
   }

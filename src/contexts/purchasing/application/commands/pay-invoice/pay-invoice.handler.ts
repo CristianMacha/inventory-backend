@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 
 import { PayInvoiceCommand } from './pay-invoice.command';
@@ -12,6 +12,7 @@ export class PayInvoiceHandler implements ICommandHandler<PayInvoiceCommand> {
   constructor(
     @Inject(PURCHASING_TOKENS.PURCHASE_INVOICE_REPOSITORY)
     private readonly invoiceRepository: IPurchaseInvoiceRepository,
+    private readonly eventBus: EventBus,
   ) {}
 
   async execute(command: PayInvoiceCommand): Promise<void> {
@@ -26,5 +27,7 @@ export class PayInvoiceHandler implements ICommandHandler<PayInvoiceCommand> {
 
     invoice.pay(userId);
     await this.invoiceRepository.save(invoice);
+    this.eventBus.publishAll(invoice.getUncommittedEvents());
+    invoice.commit();
   }
 }

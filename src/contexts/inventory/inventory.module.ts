@@ -70,6 +70,7 @@ import { CreateSlabHandler } from './application/commands/create-slab/create-sla
 import { CreateBundleWithSlabsHandler } from './application/commands/create-bundle-with-slabs/create-bundle-with-slabs.handler';
 import { LinkBundleInvoiceHandler } from './application/commands/link-bundle-invoice/link-bundle-invoice.handler';
 import { UnlinkBundleInvoiceHandler } from './application/commands/unlink-bundle-invoice/unlink-bundle-invoice.handler';
+import { CreateRemnantSlabHandler } from './application/commands/create-remnant-slab/create-remnant-slab.handler';
 import { CreateBundleWithSlabsController } from './infrastructure/http/controllers/create-bundle-with-slabs.controller';
 import { GetLevelsController } from './infrastructure/http/controllers/get-levels.controller';
 import { GetFinishesController } from './infrastructure/http/controllers/get-finishes.controller';
@@ -118,6 +119,7 @@ const CommandHandlers = [
   UpdateLevelHandler,
   CreateSupplierHandler,
   UpdateSupplierHandler,
+  CreateRemnantSlabHandler,
 ];
 
 const QueryHandlers = [

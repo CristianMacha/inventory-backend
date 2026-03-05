@@ -40,6 +40,9 @@ export class PurchaseInvoiceEntity {
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
   totalAmount: number;
 
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
+  paidAmount: number;
+
   @Column({
     type: 'enum',
     enum: PurchaseInvoiceStatus,

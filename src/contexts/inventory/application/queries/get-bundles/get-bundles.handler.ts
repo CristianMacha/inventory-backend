@@ -20,9 +20,14 @@ export class GetBundlesHandler implements IQueryHandler<GetBundlesQuery> {
   async execute(
     query: GetBundlesQuery,
   ): Promise<PaginatedResult<IBundleOutputDto>> {
+    const filters =
+      query.productId || query.supplierId || query.search
+        ? { productId: query.productId, supplierId: query.supplierId, search: query.search }
+        : undefined;
+
     const result = await this.bundleRepository.findPaginatedWithRelations(
       query.pagination,
-      query.productId,
+      filters,
     );
     return buildPaginatedResult(
       result.data.map(({ bundle, productName, supplierName, invoiceNumber }) =>

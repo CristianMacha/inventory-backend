@@ -63,7 +63,10 @@ export class TypeOrmSupplierReturnRepository implements ISupplierReturnRepositor
         .findOne({ where: { id: entity.supplierId }, select: ['id', 'name'] }),
       this.dataSource
         .getRepository(PurchaseInvoiceEntity)
-        .findOne({ where: { id: entity.purchaseInvoiceId }, select: ['id', 'invoiceNumber'] }),
+        .findOne({
+          where: { id: entity.purchaseInvoiceId },
+          select: ['id', 'invoiceNumber'],
+        }),
     ]);
 
     return {
@@ -95,7 +98,9 @@ export class TypeOrmSupplierReturnRepository implements ISupplierReturnRepositor
       );
 
     if (filters.supplierId) {
-      qb.andWhere('ret.supplierId = :supplierId', { supplierId: filters.supplierId });
+      qb.andWhere('ret.supplierId = :supplierId', {
+        supplierId: filters.supplierId,
+      });
     }
     if (filters.status) {
       qb.andWhere('ret.status = :status', { status: filters.status });

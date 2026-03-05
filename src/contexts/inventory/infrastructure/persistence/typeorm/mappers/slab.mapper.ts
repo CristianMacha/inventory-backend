@@ -17,6 +17,7 @@ export class SlabMapper {
       entity.updatedBy,
       entity.createdAt,
       entity.updatedAt,
+      entity.parentSlabId ?? null,
     );
   }
 
@@ -29,6 +30,7 @@ export class SlabMapper {
     entity.heightCm = domain.dimensions.height;
     entity.status = domain.status;
     entity.description = domain.description;
+    entity.parentSlabId = domain.parentSlabId;
     entity.createdBy = domain.createdBy;
     entity.updatedBy = domain.updatedBy;
     entity.createdAt = domain.createdAt;

@@ -112,7 +112,9 @@ export class JobsController {
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   @RequirePermissions(Permissions.JOBS.UPDATE)
-  @ApiOperation({ summary: 'Update job details (name, client info, dates, tax, notes)' })
+  @ApiOperation({
+    summary: 'Update job details (name, client info, dates, tax, notes)',
+  })
   @ApiParam({ name: 'id', description: 'Job UUID' })
   @ApiResponse({ status: 200, type: MessageResponseDto })
   @ApiResponse({ status: 404, description: 'Job not found' })
@@ -166,7 +168,9 @@ export class JobsController {
 
   @Post(':id/items/bulk')
   @RequirePermissions(Permissions.JOBS.UPDATE)
-  @ApiOperation({ summary: 'Add multiple slab items to a job in one operation' })
+  @ApiOperation({
+    summary: 'Add multiple slab items to a job in one operation',
+  })
   @ApiParam({ name: 'id', description: 'Job UUID' })
   @ApiResponse({ status: 201, type: JobItemOutputDto, isArray: true })
   async addBulkItems(

@@ -24,11 +24,12 @@ export class JobResponseMapper {
       subtotal: job.subtotal,
       taxAmount: job.taxAmount,
       totalAmount: job.totalAmount,
+      paidAmount: job.paidAmount,
       createdBy: job.createdBy,
       updatedBy: job.updatedBy,
       createdAt: job.createdAt.toISOString(),
       updatedAt: job.updatedAt.toISOString(),
-      itemCount: job.items.length,
+      itemCount: job.itemCount,
     };
   }
 

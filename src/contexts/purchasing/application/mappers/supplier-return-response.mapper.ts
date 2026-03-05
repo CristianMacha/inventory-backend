@@ -56,7 +56,11 @@ export class SupplierReturnResponseMapper {
     }));
 
     return {
-      ...SupplierReturnResponseMapper.toResponse(domain, supplierName, invoiceNumber),
+      ...SupplierReturnResponseMapper.toResponse(
+        domain,
+        supplierName,
+        invoiceNumber,
+      ),
       items,
     };
   }

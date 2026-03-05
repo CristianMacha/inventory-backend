@@ -5,6 +5,7 @@ import { PurchaseInvoiceEntity } from '@contexts/purchasing/infrastructure/persi
 
 import {
   IBundleRepository,
+  BundleFilters,
   BundleWithRelations,
   BundleWithSlabs,
   BundleWithProductName,
@@ -145,7 +146,7 @@ export class TypeOrmBundleRepository implements IBundleRepository {
 
   async findPaginatedWithRelations(
     params: PaginationParams,
-    productId?: string,
+    filters?: BundleFilters,
   ): Promise<PaginatedResult<BundleWithRelations>> {
     const { page, limit } = params;
     const qb = this.repository
@@ -162,8 +163,14 @@ export class TypeOrmBundleRepository implements IBundleRepository {
       .skip((page - 1) * limit)
       .take(limit);
 
-    if (productId) {
-      qb.andWhere('bundle.productId = :productId', { productId });
+    if (filters?.productId) {
+      qb.andWhere('bundle.productId = :productId', { productId: filters.productId });
+    }
+    if (filters?.supplierId) {
+      qb.andWhere('bundle.supplierId = :supplierId', { supplierId: filters.supplierId });
+    }
+    if (filters?.search) {
+      qb.andWhere('bundle.lotNumber LIKE :search', { search: `%${filters.search}%` });
     }
 
     const [entities, total] = await qb.getManyAndCount();

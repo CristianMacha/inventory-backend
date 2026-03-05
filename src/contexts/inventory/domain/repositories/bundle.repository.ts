@@ -4,6 +4,12 @@ import { BundleId } from '../value-objects/bundle-id';
 import type { PaginationParams } from '@shared/domain/pagination/pagination-params.interface';
 import type { PaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
 
+export interface BundleFilters {
+  productId?: string;
+  supplierId?: string;
+  search?: string;
+}
+
 export interface BundleWithRelations {
   bundle: Bundle;
   productName: string;
@@ -34,7 +40,7 @@ export interface IBundleRepository {
   findPaginated(params: PaginationParams): Promise<PaginatedResult<Bundle>>;
   findPaginatedWithRelations(
     params: PaginationParams,
-    productId?: string,
+    filters?: BundleFilters,
   ): Promise<PaginatedResult<BundleWithRelations>>;
   count(): Promise<number>;
 }

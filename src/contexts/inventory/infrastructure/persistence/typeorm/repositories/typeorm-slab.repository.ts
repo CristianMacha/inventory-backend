@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import {
   ISlabRepository,
   SlabFilters,
+  SlabJobInfo,
   ReturnableSlabWithBundle,
 } from '@contexts/inventory/domain/repositories/slab.repository';
 import { Slab } from '@contexts/inventory/domain/entities/slab';
@@ -43,6 +44,19 @@ export class TypeOrmSlabRepository implements ISlabRepository {
     return entities.map((e) => SlabMapper.toDomain(e));
   }
 
+  async findSlabInfoByIds(ids: string[]): Promise<SlabJobInfo[]> {
+    if (ids.length === 0) return [];
+    return this.repository
+      .createQueryBuilder('s')
+      .select('s.id', 'slabId')
+      .addSelect('s.code', 'slabCode')
+      .addSelect('p.name', 'productName')
+      .innerJoin('bundles', 'b', 'b.id = s.bundleId')
+      .innerJoin('products', 'p', 'p.id = b.productId')
+      .where('s.id IN (:...ids)', { ids })
+      .getRawMany<SlabJobInfo>();
+  }
+
   async findById(id: SlabId): Promise<Slab | null> {
     const entity = await this.repository.findOne({
       where: { id: id.getValue() },
@@ -69,13 +83,26 @@ export class TypeOrmSlabRepository implements ISlabRepository {
     filters?: SlabFilters,
   ): Promise<PaginatedResult<Slab>> {
     const { page, limit } = params;
-    const where = filters?.bundleId ? { bundleId: filters.bundleId } : {};
-    const [entities, total] = await this.repository.findAndCount({
-      where,
-      order: { createdAt: 'DESC' },
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+    const qb = this.repository.createQueryBuilder('s').where('1=1');
+
+    if (filters?.bundleId) {
+      qb.andWhere('s.bundleId = :bundleId', { bundleId: filters.bundleId });
+    }
+    if (filters?.status) {
+      qb.andWhere('s.status = :status', { status: filters.status });
+    }
+    if (filters?.search) {
+      qb.andWhere('s.code LIKE :search', { search: `%${filters.search}%` });
+    }
+    if (filters?.isRemnant === true) {
+      qb.andWhere('s.parentSlabId IS NOT NULL');
+    } else if (filters?.isRemnant === false) {
+      qb.andWhere('s.parentSlabId IS NULL');
+    }
+
+    qb.orderBy('s.createdAt', 'DESC').skip((page - 1) * limit).take(limit);
+
+    const [entities, total] = await qb.getManyAndCount();
     return buildPaginatedResult(
       entities.map((e) => SlabMapper.toDomain(e)),
       total,

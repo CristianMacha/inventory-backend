@@ -35,6 +35,7 @@ export class PurchaseInvoiceMapper {
       Number(entity.taxAmount),
       Number(entity.totalAmount),
       entity.status,
+      Number(entity.paidAmount),
       entity.notes ?? '',
       items,
       entity.createdBy,
@@ -42,6 +43,12 @@ export class PurchaseInvoiceMapper {
       toDate(entity.createdAt)!,
       toDate(entity.updatedAt)!,
     );
+  }
+
+  static toDomainWithCount(entity: PurchaseInvoiceEntity & { itemCount?: number }): PurchaseInvoice {
+    const domain = PurchaseInvoiceMapper.toDomain({ ...entity, items: [] });
+    domain.setItemCount(entity.itemCount ?? 0);
+    return domain;
   }
 
   static toPersistence(domain: PurchaseInvoice): PurchaseInvoiceEntity {
@@ -54,6 +61,7 @@ export class PurchaseInvoiceMapper {
     entity.subtotal = domain.subtotal;
     entity.taxAmount = domain.taxAmount;
     entity.totalAmount = domain.totalAmount;
+    entity.paidAmount = domain.paidAmount;
     entity.status = domain.status;
     entity.notes = domain.notes;
     entity.createdBy = domain.createdBy;

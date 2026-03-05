@@ -57,6 +57,9 @@ export class JobEntity {
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
   totalAmount: number;
 
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
+  paidAmount: number;
+
   @Column({ type: 'varchar', length: 255, nullable: false })
   createdBy: string;
 
@@ -81,6 +84,9 @@ export class JobEntity {
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date | null;
 
-  @OneToMany('JobItemEntity', 'job', { cascade: true, orphanedRowAction: 'delete' })
+  @OneToMany('JobItemEntity', 'job', {
+    cascade: true,
+    orphanedRowAction: 'delete',
+  })
   items: JobItemEntity[];
 }

@@ -93,7 +93,9 @@ export class GetProductsController {
 
   @Get('select')
   @RequirePermissions(Permissions.PRODUCTS.READ)
-  @ApiOperation({ summary: 'List all products for select dropdowns (id + name)' })
+  @ApiOperation({
+    summary: 'List all products for select dropdowns (id + name)',
+  })
   @ApiResponse({ status: 200, type: ProductSelectOutputDto, isArray: true })
   async getForSelect(): Promise<ProductSelectOutputDto[]> {
     return this.queryBus.execute(new GetProductsSelectQuery());

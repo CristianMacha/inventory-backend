@@ -12,6 +12,7 @@ export class SlabResponseMapper {
       dimensions: slab.dimensions.toString(),
       status: slab.status,
       description: slab.description,
+      parentSlabId: slab.parentSlabId,
       createdBy: slab.createdBy,
       updatedBy: slab.updatedBy,
       createdAt: slab.createdAt.toISOString(),

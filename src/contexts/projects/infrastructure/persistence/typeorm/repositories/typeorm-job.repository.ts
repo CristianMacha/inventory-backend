@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 
@@ -18,6 +18,8 @@ import {
   buildPaginatedResult,
   type PaginatedResult,
 } from '@shared/domain/pagination/paginated-result.interface';
+import { ISlabRepository } from '@contexts/inventory/domain/repositories/slab.repository';
+import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
 
 @Injectable()
 export class TypeOrmJobRepository implements IJobRepository {
@@ -27,17 +29,21 @@ export class TypeOrmJobRepository implements IJobRepository {
     @InjectRepository(JobItemEntity)
     private readonly itemRepository: Repository<JobItemEntity>,
     private readonly dataSource: DataSource,
+    @Inject(INVENTORY_TOKENS.SLAB_REPOSITORY)
+    private readonly slabRepository: ISlabRepository,
   ) {}
 
   async save(job: Job): Promise<void> {
     const entity = JobMapper.toPersistence(job);
-    // Save job scalar fields + upsert items explicitly — do NOT let TypeORM
-    // diff the items array via cascade, as it would nullify missing items.
+    // Save job scalar fields + upsert items explicitly in a single transaction.
+    // Do NOT let TypeORM diff the items array via cascade, as it would nullify missing items.
     const { items, ...jobFields } = entity;
-    await this.repository.save(jobFields as JobEntity);
-    if (items && items.length > 0) {
-      await this.itemRepository.save(items);
-    }
+    await this.dataSource.transaction(async (manager) => {
+      await manager.save(JobEntity, jobFields as JobEntity);
+      if (items && items.length > 0) {
+        await manager.save(JobItemEntity, items);
+      }
+    });
   }
 
   async removeItem(itemId: string): Promise<void> {
@@ -52,9 +58,7 @@ export class TypeOrmJobRepository implements IJobRepository {
     return entity ? JobMapper.toDomain(entity) : null;
   }
 
-  async findByIdWithItemDetails(
-    id: JobId,
-  ): Promise<JobWithItemDetails | null> {
+  async findByIdWithItemDetails(id: JobId): Promise<JobWithItemDetails | null> {
     const entity = await this.repository.findOne({
       where: { id: id.getValue() },
       relations: ['items'],
@@ -69,18 +73,8 @@ export class TypeOrmJobRepository implements IJobRepository {
 
     const slabIds = entity.items.map((i) => i.slabId);
 
-    const rows = await this.dataSource
-      .createQueryBuilder()
-      .select('s.id', 'slabId')
-      .addSelect('s.code', 'slabCode')
-      .addSelect('p.name', 'productName')
-      .from('slabs', 's')
-      .innerJoin('bundles', 'b', 'b.id = s.bundleId')
-      .innerJoin('products', 'p', 'p.id = b.productId')
-      .where('s.id IN (:...slabIds)', { slabIds })
-      .getRawMany<{ slabId: string; slabCode: string; productName: string }>();
-
-    const slabInfoMap = new Map(rows.map((r) => [r.slabId, r]));
+    const slabInfoList = await this.slabRepository.findSlabInfoByIds(slabIds);
+    const slabInfoMap = new Map(slabInfoList.map((r) => [r.slabId, r]));
 
     const itemDetails: JobItemDetails[] = entity.items.map((item) => {
       const info = slabInfoMap.get(item.slabId);
@@ -105,7 +99,7 @@ export class TypeOrmJobRepository implements IJobRepository {
     const { page, limit } = pagination;
     const qb = this.repository
       .createQueryBuilder('job')
-      .leftJoinAndSelect('job.items', 'items');
+      .loadRelationCountAndMap('job.itemCount', 'job.items');
 
     if (filters.status) {
       qb.andWhere('job.status = :status', { status: filters.status });
@@ -124,7 +118,7 @@ export class TypeOrmJobRepository implements IJobRepository {
 
     const [entities, total] = await qb.getManyAndCount();
     return buildPaginatedResult(
-      entities.map((e) => JobMapper.toDomain(e)),
+      entities.map((e) => JobMapper.toDomainWithCount(e as JobEntity & { itemCount?: number })),
       total,
       page,
       limit,

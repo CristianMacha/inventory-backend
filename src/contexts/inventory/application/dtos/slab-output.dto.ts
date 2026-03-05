@@ -26,6 +26,9 @@ export class ISlabOutputDto {
   @ApiProperty({ example: 'Losa sin defectos', required: false })
   description: string;
 
+  @ApiProperty({ example: 'uuid-parent-slab', nullable: true, required: false })
+  parentSlabId: string | null;
+
   @ApiProperty({ example: 'uuid-user' })
   createdBy: string;
 

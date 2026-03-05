@@ -64,6 +64,9 @@ export class JobOutputDto {
   @ApiProperty({ example: 2700.0 })
   totalAmount: number;
 
+  @ApiProperty({ example: 0.0 })
+  paidAmount: number;
+
   @ApiProperty({ example: 'uuid-user' })
   createdBy: string;
 

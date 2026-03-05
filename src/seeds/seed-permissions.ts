@@ -116,6 +116,38 @@ const PERMISSIONS = [
     name: Permissions.SUPPLIER_RETURNS.CANCEL,
     description: 'Cancel supplier returns',
   },
+  // Invoice Payments
+  {
+    name: Permissions.INVOICE_PAYMENTS.CREATE,
+    description: 'Record payments for purchase invoices',
+  },
+  {
+    name: Permissions.INVOICE_PAYMENTS.READ,
+    description: 'View invoice payment history',
+  },
+  // Job Payments
+  {
+    name: Permissions.JOB_PAYMENTS.CREATE,
+    description: 'Record client payments for jobs',
+  },
+  {
+    name: Permissions.JOB_PAYMENTS.READ,
+    description: 'View job payment history',
+  },
+  // General Payments
+  {
+    name: Permissions.GENERAL_PAYMENTS.CREATE,
+    description: 'Record general payments (income or expense)',
+  },
+  {
+    name: Permissions.GENERAL_PAYMENTS.READ,
+    description: 'View general payments history',
+  },
+  // Accounting
+  {
+    name: Permissions.ACCOUNTING.VIEW,
+    description: 'View cashflow and accounting summary',
+  },
   // Settings
   { name: Permissions.SETTINGS.READ, description: 'Read settings' },
   // Profile

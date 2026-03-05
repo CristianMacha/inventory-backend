@@ -4,5 +4,7 @@ export class GetBundlesQuery {
   constructor(
     public readonly pagination: PaginationParams,
     public readonly productId?: string,
+    public readonly supplierId?: string,
+    public readonly search?: string,
   ) {}
 }

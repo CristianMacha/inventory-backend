@@ -20,8 +20,10 @@ export class PurchaseInvoice extends AggregateRoot {
   private _taxAmount: number;
   private _totalAmount: number;
   private _status: PurchaseInvoiceStatus;
+  private _paidAmount: number;
   private _notes: string;
   private _items: PurchaseInvoiceItem[];
+  private _itemCount: number | null;
   private readonly _createdBy: string;
   private _updatedBy: string;
   private readonly _createdAt: Date;
@@ -37,6 +39,7 @@ export class PurchaseInvoice extends AggregateRoot {
     taxAmount: number,
     totalAmount: number,
     status: PurchaseInvoiceStatus,
+    paidAmount: number,
     notes: string,
     items: PurchaseInvoiceItem[],
     createdBy: string,
@@ -54,8 +57,10 @@ export class PurchaseInvoice extends AggregateRoot {
     this._taxAmount = taxAmount;
     this._totalAmount = totalAmount;
     this._status = status;
+    this._paidAmount = paidAmount;
     this._notes = notes;
     this._items = items;
+    this._itemCount = null;
     this._createdBy = createdBy;
     this._updatedBy = updatedBy;
     this._createdAt = createdAt;
@@ -88,6 +93,7 @@ export class PurchaseInvoice extends AggregateRoot {
       0,
       0,
       PurchaseInvoiceStatus.DRAFT,
+      0,
       notes,
       [],
       createdBy,
@@ -116,6 +122,7 @@ export class PurchaseInvoice extends AggregateRoot {
     taxAmount: number,
     totalAmount: number,
     status: PurchaseInvoiceStatus,
+    paidAmount: number,
     notes: string,
     items: PurchaseInvoiceItem[],
     createdBy: string,
@@ -133,6 +140,7 @@ export class PurchaseInvoice extends AggregateRoot {
       taxAmount,
       totalAmount,
       status,
+      paidAmount,
       notes,
       items,
       createdBy,
@@ -251,6 +259,16 @@ export class PurchaseInvoice extends AggregateRoot {
     this._totalAmount = this._subtotal + this._taxAmount;
   }
 
+  public applyPayment(amount: number, userId: string): void {
+    this._paidAmount += amount;
+    this._status =
+      this._paidAmount >= this._totalAmount
+        ? PurchaseInvoiceStatus.PAID
+        : PurchaseInvoiceStatus.PARTIALLY_PAID;
+    this._updatedBy = userId;
+    this._updatedAt = new Date();
+  }
+
   get id(): PurchaseInvoiceId {
     return this._id;
   }
@@ -278,11 +296,20 @@ export class PurchaseInvoice extends AggregateRoot {
   get status(): PurchaseInvoiceStatus {
     return this._status;
   }
+  get paidAmount(): number {
+    return this._paidAmount;
+  }
   get notes(): string {
     return this._notes;
   }
   get items(): ReadonlyArray<PurchaseInvoiceItem> {
     return this._items;
+  }
+  get itemCount(): number {
+    return this._itemCount ?? this._items.length;
+  }
+  setItemCount(count: number): void {
+    this._itemCount = count;
   }
   get createdBy(): string {
     return this._createdBy;
