@@ -8,7 +8,6 @@ import { TypeOrmRoleRepository } from './infrastructure/persistence/typeorm/repo
 import { TypeOrmPermissionRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-permission.repository';
 import { UserEntity } from './infrastructure/persistence/typeorm/entities/user.entity';
 import { GetUsersController } from './infrastructure/http/controllers/get-users.controller';
-import { CreateUserController } from './infrastructure/http/controllers/create-user.controller';
 import { UpdateUserController } from './infrastructure/http/controllers/update-user.controller';
 import { CreateRoleController } from './infrastructure/http/controllers/create-role.controller';
 import { PermissionEntity } from './infrastructure/persistence/typeorm/entities/permission.entity';
@@ -22,17 +21,17 @@ import { GetUserMenuController } from './infrastructure/http/controllers/get-use
 import { UpdateUserHandler } from './application/commands/update-user/update-user.handler';
 import { GetUsersHandler } from './application/queries/get-users/get-users.handler';
 import { CreateRoleHandler } from './application/commands/create-role/create-role.handler';
-import { CreateUserHandler } from './application/commands/create-user/create-user.handler';
 import { GetPermissionsHandler } from './application/queries/get-permissions/get-permissions.handler';
 import { GetRolesHandler } from './application/queries/get-roles/get-roles.handler';
 import { UpdateRoleHandler } from './application/commands/update-role/update-role.handler';
 import { GetUserAuthenticationHandler } from './application/queries/get-user-authentication/get-user-authentication.handler';
 import { GetUserMenuHandler } from './application/queries/get-user-menu/get-user-menu.handler';
+import { GetRolesPaginatedHandler } from './application/queries/get-roles-paginated/get-roles-paginated.handler';
+import { GetRolesPaginatedController } from './infrastructure/http/controllers/get-roles-paginated.controller';
 
 import { SharedInfrastructureModule } from '../../shared/infrastructure/shared-infrastructure.module';
 
 const CommandHandlers = [
-  CreateUserHandler,
   UpdateUserHandler,
   CreateRoleHandler,
   UpdateRoleHandler,
@@ -44,6 +43,7 @@ const QueryHandlers = [
   GetPermissionsHandler,
   GetUserAuthenticationHandler,
   GetUserMenuHandler,
+  GetRolesPaginatedHandler,
 ];
 
 const PersistenceProviders: Provider[] = [
@@ -68,7 +68,6 @@ const PersistenceProviders: Provider[] = [
     SharedInfrastructureModule,
   ],
   controllers: [
-    CreateUserController,
     GetUsersController,
     UpdateUserController,
     CreateRoleController,
@@ -77,6 +76,7 @@ const PersistenceProviders: Provider[] = [
     GetPermissionsController,
     GetUserAuthenticationController,
     GetUserMenuController,
+    GetRolesPaginatedController,
   ],
   providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders],
   exports: [...PersistenceProviders],

@@ -28,6 +28,9 @@ export class BundleEntity {
   @Column({ type: 'uuid', nullable: true })
   purchaseInvoiceId: string | null;
 
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  imagePublicId: string | null;
+
   @Column({ type: 'varchar', length: 255, nullable: true })
   lotNumber: string;
 

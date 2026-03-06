@@ -22,6 +22,7 @@ export class PurchaseInvoice extends AggregateRoot {
   private _status: PurchaseInvoiceStatus;
   private _paidAmount: number;
   private _notes: string;
+  private _documentPath: string | null;
   private _items: PurchaseInvoiceItem[];
   private _itemCount: number | null;
   private readonly _createdBy: string;
@@ -41,6 +42,7 @@ export class PurchaseInvoice extends AggregateRoot {
     status: PurchaseInvoiceStatus,
     paidAmount: number,
     notes: string,
+    documentPath: string | null,
     items: PurchaseInvoiceItem[],
     createdBy: string,
     updatedBy: string,
@@ -59,6 +61,7 @@ export class PurchaseInvoice extends AggregateRoot {
     this._status = status;
     this._paidAmount = paidAmount;
     this._notes = notes;
+    this._documentPath = documentPath;
     this._items = items;
     this._itemCount = null;
     this._createdBy = createdBy;
@@ -95,6 +98,7 @@ export class PurchaseInvoice extends AggregateRoot {
       PurchaseInvoiceStatus.DRAFT,
       0,
       notes,
+      null,
       [],
       createdBy,
       createdBy,
@@ -124,6 +128,7 @@ export class PurchaseInvoice extends AggregateRoot {
     status: PurchaseInvoiceStatus,
     paidAmount: number,
     notes: string,
+    documentPath: string | null,
     items: PurchaseInvoiceItem[],
     createdBy: string,
     updatedBy: string,
@@ -142,6 +147,7 @@ export class PurchaseInvoice extends AggregateRoot {
       status,
       paidAmount,
       notes,
+      documentPath,
       items,
       createdBy,
       updatedBy,
@@ -248,6 +254,12 @@ export class PurchaseInvoice extends AggregateRoot {
     this._updatedAt = new Date();
   }
 
+  public attachDocument(path: string, userId: string): void {
+    this._documentPath = path;
+    this._updatedBy = userId;
+    this._updatedAt = new Date();
+  }
+
   public updateDueDate(dueDate: Date | null, userId: string): void {
     this._dueDate = dueDate;
     this._updatedBy = userId;
@@ -301,6 +313,9 @@ export class PurchaseInvoice extends AggregateRoot {
   }
   get notes(): string {
     return this._notes;
+  }
+  get documentPath(): string | null {
+    return this._documentPath;
   }
   get items(): ReadonlyArray<PurchaseInvoiceItem> {
     return this._items;

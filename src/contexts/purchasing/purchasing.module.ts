@@ -37,6 +37,14 @@ import { GetSupplierReturnByIdHandler } from './application/queries/get-supplier
 import { GetSupplierReturnsSelectHandler } from './application/queries/get-supplier-returns-select/get-supplier-returns-select.handler';
 import { PurchaseInvoicesController } from './infrastructure/http/controllers/purchase-invoices.controller';
 import { SupplierReturnsController } from './infrastructure/http/controllers/supplier-returns.controller';
+import { UploadInvoiceDocumentHandler } from './application/commands/upload-invoice-document/upload-invoice-document.handler';
+import { GetInvoiceDocumentUrlHandler } from './application/queries/get-invoice-document-url/get-invoice-document-url.handler';
+import { UploadInvoiceDocumentController } from './infrastructure/http/controllers/upload-invoice-document.controller';
+import { GetInvoiceDocumentUrlController } from './infrastructure/http/controllers/get-invoice-document-url.controller';
+import { UploadSupplierReturnDocumentHandler } from './application/commands/upload-supplier-return-document/upload-supplier-return-document.handler';
+import { GetSupplierReturnDocumentUrlHandler } from './application/queries/get-supplier-return-document-url/get-supplier-return-document-url.handler';
+import { UploadSupplierReturnDocumentController } from './infrastructure/http/controllers/upload-supplier-return-document.controller';
+import { GetSupplierReturnDocumentUrlController } from './infrastructure/http/controllers/get-supplier-return-document-url.controller';
 
 const CommandHandlers = [
   CreatePurchaseInvoiceHandler,
@@ -51,6 +59,8 @@ const CommandHandlers = [
   SendSupplierReturnHandler,
   CreditSupplierReturnHandler,
   CancelSupplierReturnHandler,
+  UploadInvoiceDocumentHandler,
+  UploadSupplierReturnDocumentHandler,
 ];
 
 const QueryHandlers = [
@@ -61,6 +71,8 @@ const QueryHandlers = [
   GetSupplierReturnsHandler,
   GetSupplierReturnByIdHandler,
   GetSupplierReturnsSelectHandler,
+  GetInvoiceDocumentUrlHandler,
+  GetSupplierReturnDocumentUrlHandler,
 ];
 
 const PersistenceProviders: Provider[] = [
@@ -86,12 +98,15 @@ const PersistenceProviders: Provider[] = [
     SharedInfrastructureModule,
     forwardRef(() => InventoryModule),
   ],
-  controllers: [PurchaseInvoicesController, SupplierReturnsController],
-  providers: [
-    ...CommandHandlers,
-    ...QueryHandlers,
-    ...PersistenceProviders,
+  controllers: [
+    PurchaseInvoicesController,
+    SupplierReturnsController,
+    UploadInvoiceDocumentController,
+    GetInvoiceDocumentUrlController,
+    UploadSupplierReturnDocumentController,
+    GetSupplierReturnDocumentUrlController,
   ],
+  providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders],
   exports: [...PersistenceProviders],
 })
 export class PurchasingModule {}

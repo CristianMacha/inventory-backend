@@ -1,22 +1,33 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserOutputDto } from '../../../application/dtos/user.output.dto';
+import {
+  UserOutputDto,
+  UserAuthOutputDto,
+  UserRoleDto,
+} from '../../../application/dtos/user.output.dto';
+
+export class UserRolePresentationDto extends UserRoleDto {
+  @ApiProperty({ example: 'uuid-here' })
+  declare id: string;
+
+  @ApiProperty({ example: 'admin' })
+  declare name: string;
+}
 
 export class UserPresentationDto extends UserOutputDto {
-  @ApiProperty({
-    example: 'd0b8f1c4-9a7f-4b0c-8d1e-2f3b4c5d6e7f',
-    description: 'Identificador único del usuario',
-  })
-  declare readonly id: string;
+  @ApiProperty({ example: 'uuid-here' })
+  declare id: string;
 
-  @ApiProperty({
-    example: 'John Doe',
-    description: 'Nombre del usuario',
-  })
-  declare readonly name: string;
+  @ApiProperty({ example: 'John Doe' })
+  declare name: string;
 
-  @ApiProperty({
-    example: 'john.doe@example.com',
-    description: 'Correo electrónico del usuario',
-  })
-  declare readonly email: string;
+  @ApiProperty({ example: 'john@example.com' })
+  declare email: string;
+
+  @ApiProperty({ type: [UserRolePresentationDto] })
+  declare roles: UserRolePresentationDto[];
+}
+
+export class UserAuthPresentationDto extends UserAuthOutputDto {
+  @ApiProperty({ example: ['users.read', 'roles.read'] })
+  declare permissions: string[];
 }

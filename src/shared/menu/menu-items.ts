@@ -163,7 +163,7 @@ export const MENU_ITEMS: MenuItem[] = [
         id: 'roles',
         label: 'Roles',
         icon: 'shield',
-        path: '/users/roles',
+        path: '/roles',
         permission: Permissions.ROLES.READ,
       },
     ],

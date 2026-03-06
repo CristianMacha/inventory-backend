@@ -4,6 +4,7 @@ import { Inject } from '@nestjs/common';
 import { GetProductDetailQuery } from './get-product-detail.query';
 import { IProductRepository } from '@contexts/inventory/domain/repositories/product.repository';
 import { IBundleRepository } from '@contexts/inventory/domain/repositories/bundle.repository';
+import { IProductImageRepository } from '@contexts/inventory/domain/repositories/product-image.repository';
 import { ProductId } from '@contexts/inventory/domain/value-objects/product-id';
 import { ResourceNotFoundException } from '@shared/domain/exceptions/resource-not-found.exception';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
@@ -18,6 +19,8 @@ export class GetProductDetailHandler implements IQueryHandler<GetProductDetailQu
     private readonly productRepository: IProductRepository,
     @Inject(INVENTORY_TOKENS.BUNDLE_REPOSITORY)
     private readonly bundleRepository: IBundleRepository,
+    @Inject(INVENTORY_TOKENS.PRODUCT_IMAGE_REPOSITORY)
+    private readonly productImageRepository: IProductImageRepository,
   ) {}
 
   async execute(query: GetProductDetailQuery): Promise<ProductDetailOutputDto> {
@@ -29,8 +32,10 @@ export class GetProductDetailHandler implements IQueryHandler<GetProductDetailQu
       throw new ResourceNotFoundException('Product', query.productId);
     }
 
-    const bundlesWithSlabs =
-      await this.bundleRepository.findByProductIdWithSlabs(query.productId);
+    const [bundlesWithSlabs, images] = await Promise.all([
+      this.bundleRepository.findByProductIdWithSlabs(query.productId),
+      this.productImageRepository.findByProductId(query.productId),
+    ]);
 
     const productOutput = ProductResponseMapper.toResponse(
       productResult.product,
@@ -42,6 +47,12 @@ export class GetProductDetailHandler implements IQueryHandler<GetProductDetailQu
 
     return {
       ...productOutput,
+      images: images.map((img) => ({
+        id: img.id,
+        publicId: img.publicId,
+        isPrimary: img.isPrimary,
+        sortOrder: img.sortOrder,
+      })),
       bundles: bundlesWithSlabs.map(
         ({ bundle, slabs, supplierName, invoiceNumber }) => ({
           id: bundle.id.getValue(),

@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { GetProductDetailHandler } from './get-product-detail.handler';
 import { IProductRepository } from '@contexts/inventory/domain/repositories/product.repository';
 import { IBundleRepository } from '@contexts/inventory/domain/repositories/bundle.repository';
+import { IProductImageRepository } from '@contexts/inventory/domain/repositories/product-image.repository';
 import { GetProductDetailQuery } from './get-product-detail.query';
 import { ResourceNotFoundException } from '@shared/domain/exceptions/resource-not-found.exception';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
@@ -10,6 +11,7 @@ describe('GetProductDetailHandler', () => {
   let handler: GetProductDetailHandler;
   let productRepository: jest.Mocked<IProductRepository>;
   let bundleRepository: jest.Mocked<IBundleRepository>;
+  let productImageRepository: jest.Mocked<IProductImageRepository>;
 
   const mockProduct = {
     id: { getValue: () => 'product-1' },
@@ -41,12 +43,22 @@ describe('GetProductDetailHandler', () => {
             findByProductIdWithSlabs: jest.fn(),
           },
         },
+        {
+          provide: INVENTORY_TOKENS.PRODUCT_IMAGE_REPOSITORY,
+          useValue: {
+            findByProductId: jest.fn().mockResolvedValue([]),
+          },
+        },
       ],
     }).compile();
 
     handler = module.get<GetProductDetailHandler>(GetProductDetailHandler);
     productRepository = module.get(INVENTORY_TOKENS.PRODUCT_REPOSITORY);
     bundleRepository = module.get(INVENTORY_TOKENS.BUNDLE_REPOSITORY);
+    productImageRepository = module.get(
+      INVENTORY_TOKENS.PRODUCT_IMAGE_REPOSITORY,
+    );
+    void productImageRepository;
   });
 
   it('should return product detail with bundles and slabs', async () => {
@@ -67,6 +79,8 @@ describe('GetProductDetailHandler', () => {
           supplierId: { getValue: () => 'sup-1' },
           lotNumber: 'LOT-001',
           thicknessCm: 2,
+          purchaseInvoiceId: null,
+          imagePublicId: null,
           createdBy: 'user-1',
           updatedBy: 'user-1',
           createdAt: new Date(),

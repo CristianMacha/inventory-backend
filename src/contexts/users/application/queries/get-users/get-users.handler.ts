@@ -1,11 +1,15 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { Inject } from '@nestjs/common';
 
 import { GetUsersQuery } from './get-users.query';
-import { Inject } from '@nestjs/common';
 import { IUserRepository } from '@contexts/users/domain/repositories/user.repository';
 import { UserResponseMapper } from '@contexts/users/application/mappers/user-response.mapper';
 import { UserOutputDto } from '@contexts/users/application/dtos/user.output.dto';
 import { USERS_TOKENS } from '@contexts/users/users.tokens';
+import {
+  buildPaginatedResult,
+  type PaginatedResult,
+} from '@shared/domain/pagination/paginated-result.interface';
 
 @QueryHandler(GetUsersQuery)
 export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
@@ -14,10 +18,22 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
     private readonly usersReadRepository: IUserRepository,
   ) {}
 
-  async execute(query: GetUsersQuery): Promise<UserOutputDto[]> {
-    const entities =
-      await this.usersReadRepository.findAllWithRolesPermissions();
+  async execute(query: GetUsersQuery): Promise<PaginatedResult<UserOutputDto>> {
+    const filters =
+      query.search || query.roleId
+        ? { search: query.search, roleId: query.roleId }
+        : undefined;
 
-    return entities.map((e) => UserResponseMapper.toResponse(e));
+    const result = await this.usersReadRepository.findPaginated(
+      query.pagination,
+      filters,
+    );
+
+    return buildPaginatedResult(
+      result.data.map((u) => UserResponseMapper.toResponse(u)),
+      result.total,
+      result.page,
+      result.limit,
+    );
   }
 }

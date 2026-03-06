@@ -36,6 +36,9 @@ export class SupplierReturnEntity {
   @Column({ type: 'text', nullable: true })
   notes: string;
 
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  documentPath: string | null;
+
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
   creditAmount: number;
 

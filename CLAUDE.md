@@ -6,24 +6,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Development
-npm run start:dev          # Hot-reload dev server
-npm run build              # nest build && tsc-alias (alias resolution required)
+pnpm run start:dev          # Hot-reload dev server
+pnpm run build              # nest build && tsc-alias (alias resolution required)
 
 # Testing
-npm test                   # Run all unit tests
-npm run test:watch         # Watch mode
-npm run test:cov           # Coverage report
+pnpm test                   # Run all unit tests
+pnpm run test:watch         # Watch mode
+pnpm run test:cov           # Coverage report
 jest path/to/file.spec.ts  # Run a single test file
 
 # Database
-npm run migration:generate -- src/migrations/<name>  # Auto-generate from entity changes
-npm run migration:run      # Apply pending migrations
-npm run migration:revert   # Rollback last migration
-npm run seed:permissions   # Seed permissions and admin role
+pnpm run migration:generate -- src/migrations/<name>  # Auto-generate from entity changes
+pnpm run migration:run      # Apply pending migrations
+pnpm run migration:revert   # Rollback last migration
+pnpm run seed:permissions   # Seed permissions and admin role
 
 # Code quality
-npm run lint               # ESLint with auto-fix
-npm run format             # Prettier
+pnpm run lint               # ESLint with auto-fix
+pnpm run format             # Prettier
 ```
 
 ## Architecture
@@ -120,6 +120,7 @@ class Supplier {
 ### Shared Module
 
 `src/shared/` contains cross-cutting concerns:
+
 - `domain/` — `DomainException`, `IHasher`, `IUuidGenerator`, pagination types
 - `infrastructure/` — `SharedInfrastructureModule` (bcrypt, uuid adapters, health check, global filters)
 - `authorization/permissions.ts` — All permission constants

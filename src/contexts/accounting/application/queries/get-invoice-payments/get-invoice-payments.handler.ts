@@ -12,9 +12,7 @@ import { InvoicePaymentResponseMapper } from '../../mappers/invoice-payment-resp
 import { ResourceNotFoundException } from '@shared/domain/exceptions/resource-not-found.exception';
 
 @QueryHandler(GetInvoicePaymentsQuery)
-export class GetInvoicePaymentsHandler
-  implements IQueryHandler<GetInvoicePaymentsQuery>
-{
+export class GetInvoicePaymentsHandler implements IQueryHandler<GetInvoicePaymentsQuery> {
   constructor(
     @Inject(ACCOUNTING_TOKENS.INVOICE_PAYMENT_REPOSITORY)
     private readonly invoicePaymentRepository: IInvoicePaymentRepository,

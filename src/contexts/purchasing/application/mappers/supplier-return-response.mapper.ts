@@ -21,6 +21,7 @@ export class SupplierReturnResponseMapper {
       returnDate: domain.returnDate.toISOString(),
       status: domain.status,
       notes: domain.notes,
+      documentPath: domain.documentPath,
       creditAmount: domain.creditAmount,
       createdBy: domain.createdBy,
       updatedBy: domain.updatedBy,

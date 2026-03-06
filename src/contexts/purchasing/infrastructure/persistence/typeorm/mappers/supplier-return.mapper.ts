@@ -32,6 +32,7 @@ export class SupplierReturnMapper {
       toDate(entity.returnDate)!,
       entity.status,
       entity.notes ?? '',
+      entity.documentPath ?? null,
       items,
       Number(entity.creditAmount),
       entity.createdBy,
@@ -49,6 +50,7 @@ export class SupplierReturnMapper {
     entity.returnDate = domain.returnDate;
     entity.status = domain.status;
     entity.notes = domain.notes;
+    entity.documentPath = domain.documentPath;
     entity.creditAmount = domain.creditAmount;
     entity.createdBy = domain.createdBy;
     entity.updatedBy = domain.updatedBy;

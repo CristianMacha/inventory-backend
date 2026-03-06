@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { SupplierReturnStatus } from '../../domain/enums/supplier-return-status.enum';
 import { ReturnReason } from '../../domain/enums/return-reason.enum';
 
@@ -52,6 +52,9 @@ export class SupplierReturnOutputDto {
 
   @ApiProperty()
   notes: string;
+
+  @ApiPropertyOptional({ nullable: true })
+  documentPath: string | null;
 
   @ApiProperty()
   creditAmount: number;

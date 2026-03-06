@@ -8,7 +8,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { UserOutputDto } from '@contexts/users/application/dtos/user.output.dto';
+import { UserAuthOutputDto } from '@contexts/users/application/dtos/user.output.dto';
+import { UserAuthPresentationDto } from '../dtos/user-presentation.dto';
 import { GetUserAuthenticationQuery } from '@contexts/users/application/queries/get-user-authentication/get-user-authentication.query';
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
 import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
@@ -20,18 +21,15 @@ export class GetUserAuthenticationController {
   constructor(private readonly queryBus: QueryBus) {}
 
   @Get('me')
-  @ApiOperation({ summary: 'Get authenticated user information' })
+  @ApiOperation({ summary: 'Get authenticated user profile with permissions' })
   @ApiOkResponse({
-    type: UserOutputDto,
-    description: 'Authenticated user information',
+    type: UserAuthPresentationDto,
+    description: 'Authenticated user info with roles and permissions',
   })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized. Valid JWT token required.',
-  })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async getAuthenticatedUser(
     @GetUser() user: AuthUserDto,
-  ): Promise<UserOutputDto> {
+  ): Promise<UserAuthOutputDto> {
     const query = new GetUserAuthenticationQuery(user.id);
     return await this.queryBus.execute(query);
   }

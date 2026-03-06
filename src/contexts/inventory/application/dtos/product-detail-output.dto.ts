@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IProductOutputDto } from './product-output.dto';
 import { ISlabOutputDto } from './slab-output.dto';
+import { ProductImageOutputDto } from './product-image-output.dto';
 
 export class BundleInProductDetailDto {
   @ApiProperty({ example: 'uuid-bundle' })
@@ -43,4 +44,7 @@ export class BundleInProductDetailDto {
 export class ProductDetailOutputDto extends IProductOutputDto {
   @ApiProperty({ type: [BundleInProductDetailDto] })
   bundles: BundleInProductDetailDto[];
+
+  @ApiProperty({ type: [ProductImageOutputDto] })
+  images: ProductImageOutputDto[];
 }

@@ -37,6 +37,7 @@ export class PurchaseInvoiceMapper {
       entity.status,
       Number(entity.paidAmount),
       entity.notes ?? '',
+      entity.documentPath ?? null,
       items,
       entity.createdBy,
       entity.updatedBy,
@@ -45,7 +46,9 @@ export class PurchaseInvoiceMapper {
     );
   }
 
-  static toDomainWithCount(entity: PurchaseInvoiceEntity & { itemCount?: number }): PurchaseInvoice {
+  static toDomainWithCount(
+    entity: PurchaseInvoiceEntity & { itemCount?: number },
+  ): PurchaseInvoice {
     const domain = PurchaseInvoiceMapper.toDomain({ ...entity, items: [] });
     domain.setItemCount(entity.itemCount ?? 0);
     return domain;
@@ -64,6 +67,7 @@ export class PurchaseInvoiceMapper {
     entity.paidAmount = domain.paidAmount;
     entity.status = domain.status;
     entity.notes = domain.notes;
+    entity.documentPath = domain.documentPath;
     entity.createdBy = domain.createdBy;
     entity.updatedBy = domain.updatedBy;
     entity.createdAt = domain.createdAt;

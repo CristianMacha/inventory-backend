@@ -100,7 +100,9 @@ export class TypeOrmSlabRepository implements ISlabRepository {
       qb.andWhere('s.parentSlabId IS NULL');
     }
 
-    qb.orderBy('s.createdAt', 'DESC').skip((page - 1) * limit).take(limit);
+    qb.orderBy('s.createdAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit);
 
     const [entities, total] = await qb.getManyAndCount();
     return buildPaginatedResult(

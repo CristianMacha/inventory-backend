@@ -105,7 +105,10 @@ export class AuthService {
           : null;
 
         if (!user) {
-          user = await this.userRepository.findByExternalId('firebase', identity.sub);
+          user = await this.userRepository.findByExternalId(
+            'firebase',
+            identity.sub,
+          );
         }
 
         if (!user) {

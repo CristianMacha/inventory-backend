@@ -118,7 +118,9 @@ export class TypeOrmJobRepository implements IJobRepository {
 
     const [entities, total] = await qb.getManyAndCount();
     return buildPaginatedResult(
-      entities.map((e) => JobMapper.toDomainWithCount(e as JobEntity & { itemCount?: number })),
+      entities.map((e) =>
+        JobMapper.toDomainWithCount(e as JobEntity & { itemCount?: number }),
+      ),
       total,
       page,
       limit,

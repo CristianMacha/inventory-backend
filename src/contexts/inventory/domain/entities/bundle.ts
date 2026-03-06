@@ -13,6 +13,7 @@ export class Bundle {
   private _lotNumber: string;
   private _thicknessCm: number;
   private _purchaseInvoiceId: string | null;
+  private _imagePublicId: string | null;
   private readonly _createdBy: string;
   private _updatedBy: string;
   private readonly _createdAt: Date;
@@ -25,6 +26,7 @@ export class Bundle {
     lotNumber: string,
     thicknessCm: number,
     purchaseInvoiceId: string | null,
+    imagePublicId: string | null,
     createdBy: string,
     updatedBy: string,
     createdAt: Date,
@@ -36,6 +38,7 @@ export class Bundle {
     this._lotNumber = lotNumber;
     this._thicknessCm = thicknessCm;
     this._purchaseInvoiceId = purchaseInvoiceId;
+    this._imagePublicId = imagePublicId;
     this._createdBy = createdBy;
     this._updatedBy = updatedBy;
     this._createdAt = createdAt;
@@ -72,6 +75,7 @@ export class Bundle {
       lotNumber,
       thicknessCm,
       purchaseInvoiceId,
+      null,
       createdBy,
       createdBy,
       now,
@@ -86,6 +90,7 @@ export class Bundle {
     lotNumber: string,
     thicknessCm: number,
     purchaseInvoiceId: string | null,
+    imagePublicId: string | null,
     createdBy: string,
     updatedBy: string,
     createdAt: Date,
@@ -98,6 +103,7 @@ export class Bundle {
       lotNumber,
       thicknessCm,
       purchaseInvoiceId,
+      imagePublicId,
       createdBy,
       updatedBy,
       createdAt,
@@ -131,6 +137,12 @@ export class Bundle {
     this._updatedAt = new Date();
   }
 
+  public updateImagePublicId(publicId: string | null, userId: string): void {
+    this._imagePublicId = publicId;
+    this._updatedBy = userId;
+    this._updatedAt = new Date();
+  }
+
   public unlinkInvoice(userId: string): void {
     if (this._purchaseInvoiceId === null) {
       throw new BundleNotLinkedToInvoiceException(this._id.getValue());
@@ -157,6 +169,9 @@ export class Bundle {
   }
   get purchaseInvoiceId(): string | null {
     return this._purchaseInvoiceId;
+  }
+  get imagePublicId(): string | null {
+    return this._imagePublicId;
   }
   get createdBy(): string {
     return this._createdBy;

@@ -48,7 +48,13 @@ export class GetSlabsController {
     @Query() query: GetSlabsQueryDto,
   ): Promise<PaginatedResult<ISlabOutputDto>> {
     return this.queryBus.execute(
-      new GetSlabsQuery(toPaginationParams(query), query.bundleId, query.status, query.search, query.isRemnant),
+      new GetSlabsQuery(
+        toPaginationParams(query),
+        query.bundleId,
+        query.status,
+        query.search,
+        query.isRemnant,
+      ),
     );
   }
 
@@ -74,16 +80,30 @@ export class GetSlabsController {
   @Post(':slabId/remnant')
   @RequirePermissions(Permissions.SLABS.CREATE)
   @ApiOperation({ summary: 'Create a remnant slab from a SOLD slab' })
-  @ApiResponse({ status: 201, description: 'Remnant slab created successfully', schema: { properties: { id: { type: 'string' } } } })
+  @ApiResponse({
+    status: 201,
+    description: 'Remnant slab created successfully',
+    schema: { properties: { id: { type: 'string' } } },
+  })
   @ApiResponse({ status: 404, description: 'Parent slab not found' })
-  @ApiResponse({ status: 422, description: 'Parent slab is not SOLD or is already a remnant' })
+  @ApiResponse({
+    status: 422,
+    description: 'Parent slab is not SOLD or is already a remnant',
+  })
   async createRemnant(
     @Param('slabId') slabId: string,
     @Body() dto: CreateRemnantSlabDto,
     @GetUser() user: AuthUserDto,
   ): Promise<{ id: string }> {
     const id = await this.commandBus.execute(
-      new CreateRemnantSlabCommand(slabId, dto.code, dto.widthCm, dto.heightCm, user.id, dto.description),
+      new CreateRemnantSlabCommand(
+        slabId,
+        dto.code,
+        dto.widthCm,
+        dto.heightCm,
+        user.id,
+        dto.description,
+      ),
     );
     return { id };
   }

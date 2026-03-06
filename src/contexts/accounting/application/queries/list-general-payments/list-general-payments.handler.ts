@@ -14,8 +14,11 @@ export class ListGeneralPaymentsHandler implements IQueryHandler<ListGeneralPaym
     private readonly generalPaymentRepository: IGeneralPaymentRepository,
   ) {}
 
-  async execute(query: ListGeneralPaymentsQuery): Promise<GeneralPaymentsPageDto> {
-    const { pagination, type, category, paymentMethod, fromDate, toDate } = query;
+  async execute(
+    query: ListGeneralPaymentsQuery,
+  ): Promise<GeneralPaymentsPageDto> {
+    const { pagination, type, category, paymentMethod, fromDate, toDate } =
+      query;
 
     const result = await this.generalPaymentRepository.findPaginated(
       { type, category, paymentMethod, fromDate, toDate },

@@ -16,6 +16,7 @@ export class SupplierReturn extends AggregateRoot {
   private _returnDate: Date;
   private _status: SupplierReturnStatus;
   private _notes: string;
+  private _documentPath: string | null;
   private _items: SupplierReturnItem[];
   private _creditAmount: number;
   private readonly _createdBy: string;
@@ -30,6 +31,7 @@ export class SupplierReturn extends AggregateRoot {
     returnDate: Date,
     status: SupplierReturnStatus,
     notes: string,
+    documentPath: string | null,
     items: SupplierReturnItem[],
     creditAmount: number,
     createdBy: string,
@@ -44,6 +46,7 @@ export class SupplierReturn extends AggregateRoot {
     this._returnDate = returnDate;
     this._status = status;
     this._notes = notes;
+    this._documentPath = documentPath;
     this._items = items;
     this._creditAmount = creditAmount;
     this._createdBy = createdBy;
@@ -67,6 +70,7 @@ export class SupplierReturn extends AggregateRoot {
       returnDate,
       SupplierReturnStatus.DRAFT,
       notes,
+      null,
       [],
       0,
       createdBy,
@@ -92,6 +96,7 @@ export class SupplierReturn extends AggregateRoot {
     returnDate: Date,
     status: SupplierReturnStatus,
     notes: string,
+    documentPath: string | null,
     items: SupplierReturnItem[],
     creditAmount: number,
     createdBy: string,
@@ -106,6 +111,7 @@ export class SupplierReturn extends AggregateRoot {
       returnDate,
       status,
       notes,
+      documentPath,
       items,
       creditAmount,
       createdBy,
@@ -182,6 +188,12 @@ export class SupplierReturn extends AggregateRoot {
     );
   }
 
+  public attachDocument(path: string, userId: string): void {
+    this._documentPath = path;
+    this._updatedBy = userId;
+    this._updatedAt = new Date();
+  }
+
   public cancel(userId: string): void {
     if (this._status === SupplierReturnStatus.CREDITED) {
       throw new InvalidReturnTransitionException(
@@ -218,6 +230,9 @@ export class SupplierReturn extends AggregateRoot {
   }
   get notes(): string {
     return this._notes;
+  }
+  get documentPath(): string | null {
+    return this._documentPath;
   }
   get items(): ReadonlyArray<SupplierReturnItem> {
     return this._items;

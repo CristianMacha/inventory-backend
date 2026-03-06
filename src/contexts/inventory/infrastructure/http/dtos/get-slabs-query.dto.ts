@@ -1,4 +1,14 @@
-import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Max,
+  MaxLength,
+  Min,
+} from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
@@ -27,7 +37,9 @@ export class GetSlabsQueryDto {
   @MaxLength(100)
   search?: string;
 
-  @ApiPropertyOptional({ description: 'Filter only remnants (true) or only originals (false)' })
+  @ApiPropertyOptional({
+    description: 'Filter only remnants (true) or only originals (false)',
+  })
   @IsOptional()
   @Transform(({ value }) => {
     if (value === true || value === 'true') return true;

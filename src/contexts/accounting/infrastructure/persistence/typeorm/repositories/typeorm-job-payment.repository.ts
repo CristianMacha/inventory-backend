@@ -89,7 +89,9 @@ export class TypeOrmJobPaymentRepository implements IJobPaymentRepository {
       ]);
 
     if (filters.paymentMethod) {
-      qb.andWhere('p.paymentMethod = :paymentMethod', { paymentMethod: filters.paymentMethod });
+      qb.andWhere('p.paymentMethod = :paymentMethod', {
+        paymentMethod: filters.paymentMethod,
+      });
     }
     if (filters.fromDate) {
       qb.andWhere('p.paymentDate >= :fromDate', { fromDate: filters.fromDate });

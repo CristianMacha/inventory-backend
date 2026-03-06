@@ -23,12 +23,21 @@ export class GetCashflowSummaryHandler implements IQueryHandler<GetCashflowSumma
   async execute(query: GetCashflowSummaryQuery): Promise<CashflowSummaryDto> {
     const { fromDate, toDate } = query;
 
-    const [jobIncome, invoiceExpenses, generalIncome, generalExpenses] = await Promise.all([
-      this.jobPaymentRepository.sumAll(fromDate, toDate),
-      this.invoicePaymentRepository.sumAll(fromDate, toDate),
-      this.generalPaymentRepository.sumByType(PaymentType.INCOME, fromDate, toDate),
-      this.generalPaymentRepository.sumByType(PaymentType.EXPENSE, fromDate, toDate),
-    ]);
+    const [jobIncome, invoiceExpenses, generalIncome, generalExpenses] =
+      await Promise.all([
+        this.jobPaymentRepository.sumAll(fromDate, toDate),
+        this.invoicePaymentRepository.sumAll(fromDate, toDate),
+        this.generalPaymentRepository.sumByType(
+          PaymentType.INCOME,
+          fromDate,
+          toDate,
+        ),
+        this.generalPaymentRepository.sumByType(
+          PaymentType.EXPENSE,
+          fromDate,
+          toDate,
+        ),
+      ]);
 
     const totalIngress = jobIncome + generalIncome;
     const totalEgress = invoiceExpenses + generalExpenses;

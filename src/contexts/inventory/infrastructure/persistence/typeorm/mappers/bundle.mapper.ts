@@ -13,6 +13,7 @@ export class BundleMapper {
       entity.lotNumber,
       Number(entity.thicknessCm),
       entity.purchaseInvoiceId ?? null,
+      entity.imagePublicId ?? null,
       entity.createdBy,
       entity.updatedBy,
       entity.createdAt,
@@ -26,6 +27,7 @@ export class BundleMapper {
     entity.productId = domain.productId.getValue();
     entity.supplierId = domain.supplierId.getValue();
     entity.purchaseInvoiceId = domain.purchaseInvoiceId;
+    entity.imagePublicId = domain.imagePublicId;
     entity.lotNumber = domain.lotNumber;
     entity.thicknessCm = domain.thicknessCm;
     entity.createdBy = domain.createdBy;

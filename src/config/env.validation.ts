@@ -18,4 +18,8 @@ export const envValidation = Joi.object({
   FIREBASE_SERVICE_ACCOUNT_JSON: Joi.string().optional(),
   FIREBASE_DEFAULT_ROLE_NAME: Joi.string().optional(),
   ALLOWED_ORIGINS: Joi.string().optional(),
+  CLOUDINARY_CLOUD_NAME: Joi.string().required(),
+  CLOUDINARY_API_KEY: Joi.string().required(),
+  CLOUDINARY_API_SECRET: Joi.string().required(),
+  FIREBASE_STORAGE_BUCKET: Joi.string().required(),
 });

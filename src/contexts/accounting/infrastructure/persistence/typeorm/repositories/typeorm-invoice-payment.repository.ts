@@ -89,7 +89,9 @@ export class TypeOrmInvoicePaymentRepository implements IInvoicePaymentRepositor
       ]);
 
     if (filters.paymentMethod) {
-      qb.andWhere('p.paymentMethod = :paymentMethod', { paymentMethod: filters.paymentMethod });
+      qb.andWhere('p.paymentMethod = :paymentMethod', {
+        paymentMethod: filters.paymentMethod,
+      });
     }
     if (filters.fromDate) {
       qb.andWhere('p.paymentDate >= :fromDate', { fromDate: filters.fromDate });
@@ -122,7 +124,8 @@ export class TypeOrmInvoicePaymentRepository implements IInvoicePaymentRepositor
       invoiceId: r.invoiceId,
       invoiceNumber: r.invoiceNumber,
       amount: Number(r.amount),
-      paymentMethod: r.paymentMethod as InvoicePaymentWithContext['paymentMethod'],
+      paymentMethod:
+        r.paymentMethod as InvoicePaymentWithContext['paymentMethod'],
       paymentDate: new Date(r.paymentDate),
       reference: r.reference,
       createdBy: r.createdBy,

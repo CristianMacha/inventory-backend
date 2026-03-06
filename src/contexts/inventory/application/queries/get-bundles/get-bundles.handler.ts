@@ -22,7 +22,11 @@ export class GetBundlesHandler implements IQueryHandler<GetBundlesQuery> {
   ): Promise<PaginatedResult<IBundleOutputDto>> {
     const filters =
       query.productId || query.supplierId || query.search
-        ? { productId: query.productId, supplierId: query.supplierId, search: query.search }
+        ? {
+            productId: query.productId,
+            supplierId: query.supplierId,
+            search: query.search,
+          }
         : undefined;
 
     const result = await this.bundleRepository.findPaginatedWithRelations(

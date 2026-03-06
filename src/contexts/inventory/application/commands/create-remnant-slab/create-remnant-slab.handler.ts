@@ -13,9 +13,7 @@ import { SlabIsAlreadyRemnantException } from '../../../domain/errors/slab-is-al
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
 
 @CommandHandler(CreateRemnantSlabCommand)
-export class CreateRemnantSlabHandler
-  implements ICommandHandler<CreateRemnantSlabCommand>
-{
+export class CreateRemnantSlabHandler implements ICommandHandler<CreateRemnantSlabCommand> {
   constructor(
     @Inject(INVENTORY_TOKENS.SLAB_REPOSITORY)
     private readonly slabRepository: ISlabRepository,

@@ -12,9 +12,7 @@ import { JobPaymentResponseMapper } from '../../mappers/job-payment-response.map
 import { ResourceNotFoundException } from '@shared/domain/exceptions/resource-not-found.exception';
 
 @QueryHandler(GetJobPaymentsQuery)
-export class GetJobPaymentsHandler
-  implements IQueryHandler<GetJobPaymentsQuery>
-{
+export class GetJobPaymentsHandler implements IQueryHandler<GetJobPaymentsQuery> {
   constructor(
     @Inject(ACCOUNTING_TOKENS.JOB_PAYMENT_REPOSITORY)
     private readonly jobPaymentRepository: IJobPaymentRepository,
@@ -22,7 +20,9 @@ export class GetJobPaymentsHandler
     private readonly jobRepository: IJobRepository,
   ) {}
 
-  async execute(query: GetJobPaymentsQuery): Promise<JobPaymentsWithSummaryDto> {
+  async execute(
+    query: GetJobPaymentsQuery,
+  ): Promise<JobPaymentsWithSummaryDto> {
     const { jobId } = query;
 
     const [job, payments] = await Promise.all([

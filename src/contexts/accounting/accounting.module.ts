@@ -31,7 +31,11 @@ import { JobPaymentsController } from './infrastructure/http/controllers/job-pay
 import { CashflowController } from './infrastructure/http/controllers/cashflow.controller';
 import { GeneralPaymentsController } from './infrastructure/http/controllers/general-payments.controller';
 
-const CommandHandlers = [RecordInvoicePaymentHandler, RecordJobPaymentHandler, RecordGeneralPaymentHandler];
+const CommandHandlers = [
+  RecordInvoicePaymentHandler,
+  RecordJobPaymentHandler,
+  RecordGeneralPaymentHandler,
+];
 
 const QueryHandlers = [
   GetInvoicePaymentsHandler,
@@ -60,7 +64,11 @@ const PersistenceProviders: Provider[] = [
 @Module({
   imports: [
     CqrsModule,
-    TypeOrmModule.forFeature([InvoicePaymentEntity, JobPaymentEntity, GeneralPaymentEntity]),
+    TypeOrmModule.forFeature([
+      InvoicePaymentEntity,
+      JobPaymentEntity,
+      GeneralPaymentEntity,
+    ]),
     SharedInfrastructureModule,
     forwardRef(() => PurchasingModule),
     forwardRef(() => ProjectsModule),

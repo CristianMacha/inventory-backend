@@ -164,13 +164,19 @@ export class TypeOrmBundleRepository implements IBundleRepository {
       .take(limit);
 
     if (filters?.productId) {
-      qb.andWhere('bundle.productId = :productId', { productId: filters.productId });
+      qb.andWhere('bundle.productId = :productId', {
+        productId: filters.productId,
+      });
     }
     if (filters?.supplierId) {
-      qb.andWhere('bundle.supplierId = :supplierId', { supplierId: filters.supplierId });
+      qb.andWhere('bundle.supplierId = :supplierId', {
+        supplierId: filters.supplierId,
+      });
     }
     if (filters?.search) {
-      qb.andWhere('bundle.lotNumber LIKE :search', { search: `%${filters.search}%` });
+      qb.andWhere('bundle.lotNumber LIKE :search', {
+        search: `%${filters.search}%`,
+      });
     }
 
     const [entities, total] = await qb.getManyAndCount();

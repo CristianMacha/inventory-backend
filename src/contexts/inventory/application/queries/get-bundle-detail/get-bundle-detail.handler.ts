@@ -34,6 +34,7 @@ export class GetBundleDetailHandler implements IQueryHandler<GetBundleDetailQuer
       thicknessCm: bundle.thicknessCm,
       purchaseInvoiceId: bundle.purchaseInvoiceId,
       invoiceNumber,
+      imagePublicId: bundle.imagePublicId,
       slabs: slabs.map((slab) => SlabResponseMapper.toResponse(slab)),
       createdBy: bundle.createdBy,
       updatedBy: bundle.updatedBy,

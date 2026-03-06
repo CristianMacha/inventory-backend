@@ -61,12 +61,10 @@ export class TypeOrmSupplierReturnRepository implements ISupplierReturnRepositor
       this.dataSource
         .getRepository(SupplierEntity)
         .findOne({ where: { id: entity.supplierId }, select: ['id', 'name'] }),
-      this.dataSource
-        .getRepository(PurchaseInvoiceEntity)
-        .findOne({
-          where: { id: entity.purchaseInvoiceId },
-          select: ['id', 'invoiceNumber'],
-        }),
+      this.dataSource.getRepository(PurchaseInvoiceEntity).findOne({
+        where: { id: entity.purchaseInvoiceId },
+        select: ['id', 'invoiceNumber'],
+      }),
     ]);
 
     return {

@@ -53,6 +53,9 @@ export class PurchaseInvoiceEntity {
   @Column({ type: 'text', nullable: true })
   notes: string;
 
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  documentPath: string | null;
+
   @Column({ type: 'varchar', length: 255, nullable: false })
   createdBy: string;
 

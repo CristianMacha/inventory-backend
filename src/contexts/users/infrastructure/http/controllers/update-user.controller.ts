@@ -18,6 +18,8 @@ import {
 
 import { UpdateUserCommand } from '../../../application/commands/update-user/update-user.command';
 import { UpdateUserDto } from '../dtos/update-user.dto';
+import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
+import { Permissions } from '@shared/authorization/permissions';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -26,6 +28,7 @@ export class UpdateUserController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Patch(':id')
+  @RequirePermissions(Permissions.USERS.UPDATE)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update user details' })
   @ApiParam({

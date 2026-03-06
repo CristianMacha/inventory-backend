@@ -8,4 +8,5 @@ export const INVENTORY_TOKENS = {
   FINISH_REPOSITORY: Symbol('FinishRepository'),
   SUPPLIER_REPOSITORY: Symbol('SupplierRepository'),
   PRODUCT_SUPPLIER_REPOSITORY: Symbol('ProductSupplierRepository'),
+  PRODUCT_IMAGE_REPOSITORY: Symbol('ProductImageRepository'),
 } as const;

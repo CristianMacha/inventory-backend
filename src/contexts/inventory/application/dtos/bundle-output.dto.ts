@@ -28,6 +28,9 @@ export class IBundleOutputDto {
   @ApiPropertyOptional({ example: 'INV-2026-001', nullable: true })
   invoiceNumber: string | null;
 
+  @ApiPropertyOptional({ example: 'bundles/abc123', nullable: true })
+  imagePublicId: string | null;
+
   @ApiProperty({ example: 'uuid-user' })
   createdBy: string;
 

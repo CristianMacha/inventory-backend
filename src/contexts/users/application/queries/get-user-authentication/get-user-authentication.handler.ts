@@ -6,7 +6,7 @@ import { IUserRepository } from '@contexts/users/domain/repositories/user.reposi
 import { ResourceNotFoundException } from '@shared/domain/exceptions/resource-not-found.exception';
 import { UserResponseMapper } from '../../mappers/user-response.mapper';
 import { UserId } from '@contexts/users/domain/value-objects/user-id';
-import { UserOutputDto } from '../../dtos/user.output.dto';
+import { UserAuthOutputDto } from '../../dtos/user.output.dto';
 import { USERS_TOKENS } from '@contexts/users/users.tokens';
 
 @QueryHandler(GetUserAuthenticationQuery)
@@ -15,12 +15,12 @@ export class GetUserAuthenticationHandler implements IQueryHandler<GetUserAuthen
     @Inject(USERS_TOKENS.USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
   ) {}
-  async execute(query: GetUserAuthenticationQuery): Promise<UserOutputDto> {
+  async execute(query: GetUserAuthenticationQuery): Promise<UserAuthOutputDto> {
     const user = await this.userRepository.findById(UserId.create(query.id));
     if (!user) {
       throw new ResourceNotFoundException('User', query.id);
     }
 
-    return UserResponseMapper.toResponse(user);
+    return UserResponseMapper.toAuthResponse(user);
   }
 }

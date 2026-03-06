@@ -18,6 +18,7 @@ export class BundleResponseMapper {
       thicknessCm: bundle.thicknessCm,
       purchaseInvoiceId: bundle.purchaseInvoiceId,
       invoiceNumber,
+      imagePublicId: bundle.imagePublicId,
       createdBy: bundle.createdBy,
       updatedBy: bundle.updatedBy,
       createdAt: bundle.createdAt.toISOString(),

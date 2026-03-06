@@ -10,9 +10,7 @@ import {
 } from '../../../domain/repositories/invoice-payment.repository';
 
 @QueryHandler(ListInvoicePaymentsQuery)
-export class ListInvoicePaymentsHandler
-  implements IQueryHandler<ListInvoicePaymentsQuery>
-{
+export class ListInvoicePaymentsHandler implements IQueryHandler<ListInvoicePaymentsQuery> {
   constructor(
     @Inject(ACCOUNTING_TOKENS.INVOICE_PAYMENT_REPOSITORY)
     private readonly invoicePaymentRepository: IInvoicePaymentRepository,

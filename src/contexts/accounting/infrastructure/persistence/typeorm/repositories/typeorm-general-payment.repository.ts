@@ -66,7 +66,11 @@ export class TypeOrmGeneralPaymentRepository implements IGeneralPaymentRepositor
     );
   }
 
-  async sumByType(type: PaymentType, fromDate?: Date, toDate?: Date): Promise<number> {
+  async sumByType(
+    type: PaymentType,
+    fromDate?: Date,
+    toDate?: Date,
+  ): Promise<number> {
     const qb = this.repo
       .createQueryBuilder('p')
       .select('COALESCE(SUM(p.amount), 0)', 'total')

@@ -1,10 +1,12 @@
-import { Repository } from 'typeorm';
-
 import { GetUsersHandler } from './get-users.handler';
-import { UserEntity } from '../../../infrastructure/persistence/typeorm/entities/user.entity';
 import { GetUsersQuery } from './get-users.query';
 import { IUserRepository } from '@contexts/users/domain/repositories/user.repository';
 import { User } from '@contexts/users/domain/entities/user';
+import {
+  DEFAULT_LIMIT,
+  DEFAULT_PAGE,
+} from '@shared/domain/pagination/pagination-params.interface';
+import { buildPaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
 
 describe('GetUsersHandler', () => {
   let handler: GetUsersHandler;
@@ -12,14 +14,14 @@ describe('GetUsersHandler', () => {
 
   beforeEach(() => {
     usersReadRepositoryMock = {
-      find: jest.fn(),
+      findPaginated: jest.fn(),
       findAllWithRolesPermissions: jest.fn(),
     } as unknown as jest.Mocked<IUserRepository>;
 
     handler = new GetUsersHandler(usersReadRepositoryMock);
   });
 
-  it('It should return a list of UserResponseDto', async () => {
+  it('should return a paginated list of UserOutputDto', async () => {
     const entityList: User[] = [
       {
         id: { getValue: () => '1' },
@@ -29,23 +31,28 @@ describe('GetUsersHandler', () => {
       } as unknown as User,
       {
         id: { getValue: () => '2' },
-        name: 'cristian',
-        email: 'cristian@gmail.com',
+        name: 'pedro',
+        email: 'pedro@gmail.com',
         roles: [],
       } as unknown as User,
     ];
-    usersReadRepositoryMock.findAllWithRolesPermissions.mockResolvedValue(
-      entityList,
+
+    usersReadRepositoryMock.findPaginated.mockResolvedValue(
+      buildPaginatedResult(
+        entityList,
+        entityList.length,
+        DEFAULT_PAGE,
+        DEFAULT_LIMIT,
+      ),
     );
 
-    const result = await handler.execute(new GetUsersQuery());
+    const result = await handler.execute(
+      new GetUsersQuery({ page: DEFAULT_PAGE, limit: DEFAULT_LIMIT }),
+    );
 
-    expect(
-      usersReadRepositoryMock.findAllWithRolesPermissions,
-    ).toHaveBeenCalledTimes(1);
-    expect(result.length).toBe(entityList.length);
-
-    expect(result[0]).toHaveProperty('email', 'cristian@gmail.com');
-    expect(result[0]).not.toHaveProperty('password');
+    expect(usersReadRepositoryMock.findPaginated).toHaveBeenCalledTimes(1);
+    expect(result.data.length).toBe(entityList.length);
+    expect(result.data[0]).toHaveProperty('email', 'cristian@gmail.com');
+    expect(result.data[0]).not.toHaveProperty('password');
   });
 });

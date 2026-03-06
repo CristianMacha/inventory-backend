@@ -15,6 +15,7 @@ import { LevelEntity } from './infrastructure/persistence/typeorm/entities/level
 import { FinishEntity } from './infrastructure/persistence/typeorm/entities/finish.entity';
 import { SupplierEntity } from './infrastructure/persistence/typeorm/entities/supplier.entity';
 import { ProductSupplierEntity } from './infrastructure/persistence/typeorm/entities/product-supplier.entity';
+import { ProductImageEntity } from './infrastructure/persistence/typeorm/entities/product-image.entity';
 
 import { TypeOrmBrandRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-brand.repository';
 import { TypeOrmCategoryRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-category.repository';
@@ -25,6 +26,7 @@ import { TypeOrmLevelRepository } from './infrastructure/persistence/typeorm/rep
 import { TypeOrmFinishRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-finish.repository';
 import { TypeOrmSupplierRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-supplier.repository';
 import { TypeOrmProductSupplierRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-product-supplier.repository';
+import { TypeOrmProductImageRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-product-image.repository';
 
 import { CreateBrandHandler } from './application/commands/create-brand/create-brand.handler';
 import { CreateCategoryHandler } from './application/commands/create-category/create-category.handler';
@@ -71,6 +73,9 @@ import { CreateBundleWithSlabsHandler } from './application/commands/create-bund
 import { LinkBundleInvoiceHandler } from './application/commands/link-bundle-invoice/link-bundle-invoice.handler';
 import { UnlinkBundleInvoiceHandler } from './application/commands/unlink-bundle-invoice/unlink-bundle-invoice.handler';
 import { CreateRemnantSlabHandler } from './application/commands/create-remnant-slab/create-remnant-slab.handler';
+import { UploadProductImageHandler } from './application/commands/upload-product-image/upload-product-image.handler';
+import { DeleteProductImageHandler } from './application/commands/delete-product-image/delete-product-image.handler';
+import { UploadBundleImageHandler } from './application/commands/upload-bundle-image/upload-bundle-image.handler';
 import { CreateBundleWithSlabsController } from './infrastructure/http/controllers/create-bundle-with-slabs.controller';
 import { GetLevelsController } from './infrastructure/http/controllers/get-levels.controller';
 import { GetFinishesController } from './infrastructure/http/controllers/get-finishes.controller';
@@ -90,6 +95,9 @@ import { UpdateSupplierController } from './infrastructure/http/controllers/upda
 
 import { GetBundleDetailHandler } from './application/queries/get-bundle-detail/get-bundle-detail.handler';
 import { GetBundleDetailController } from './infrastructure/http/controllers/get-bundle-detail.controller';
+import { UploadProductImageController } from './infrastructure/http/controllers/upload-product-image.controller';
+import { DeleteProductImageController } from './infrastructure/http/controllers/delete-product-image.controller';
+import { UploadBundleImageController } from './infrastructure/http/controllers/upload-bundle-image.controller';
 import { LinkBundleInvoiceController } from './infrastructure/http/controllers/link-bundle-invoice.controller';
 import { UnlinkBundleInvoiceController } from './infrastructure/http/controllers/unlink-bundle-invoice.controller';
 import { GetReturnableSlabsHandler } from './application/queries/get-returnable-slabs/get-returnable-slabs.handler';
@@ -120,6 +128,9 @@ const CommandHandlers = [
   CreateSupplierHandler,
   UpdateSupplierHandler,
   CreateRemnantSlabHandler,
+  UploadProductImageHandler,
+  DeleteProductImageHandler,
+  UploadBundleImageHandler,
 ];
 
 const QueryHandlers = [
@@ -180,6 +191,10 @@ const PersistenceProviders: Provider[] = [
     provide: INVENTORY_TOKENS.PRODUCT_SUPPLIER_REPOSITORY,
     useClass: TypeOrmProductSupplierRepository,
   },
+  {
+    provide: INVENTORY_TOKENS.PRODUCT_IMAGE_REPOSITORY,
+    useClass: TypeOrmProductImageRepository,
+  },
 ];
 
 @Module({
@@ -195,6 +210,7 @@ const PersistenceProviders: Provider[] = [
       FinishEntity,
       SupplierEntity,
       ProductSupplierEntity,
+      ProductImageEntity,
     ]),
     SharedInfrastructureModule,
     forwardRef(() => PurchasingModule),
@@ -228,6 +244,9 @@ const PersistenceProviders: Provider[] = [
     GetBundleDetailController,
     LinkBundleInvoiceController,
     UnlinkBundleInvoiceController,
+    UploadProductImageController,
+    DeleteProductImageController,
+    UploadBundleImageController,
   ],
   providers: [
     ...CommandHandlers,

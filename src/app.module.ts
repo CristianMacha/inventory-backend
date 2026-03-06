@@ -19,6 +19,7 @@ import { AccountingModule } from '@contexts/accounting/accounting.module';
 import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
 import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { HealthModule } from '@shared/infrastructure/health/health.module';
+import { StorageModule } from '@shared/storage/storage.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { HealthModule } from '@shared/infrastructure/health/health.module';
       },
     ]),
     DatabaseModule,
+    StorageModule,
     UsersModule,
     AuthModule,
     InventoryModule,

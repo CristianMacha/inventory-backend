@@ -7,17 +7,23 @@ import { IGeneralPaymentRepository } from '../../../domain/repositories/general-
 import { GeneralPayment } from '../../../domain/entities/general-payment';
 
 @CommandHandler(RecordGeneralPaymentCommand)
-export class RecordGeneralPaymentHandler
-  implements ICommandHandler<RecordGeneralPaymentCommand>
-{
+export class RecordGeneralPaymentHandler implements ICommandHandler<RecordGeneralPaymentCommand> {
   constructor(
     @Inject(ACCOUNTING_TOKENS.GENERAL_PAYMENT_REPOSITORY)
     private readonly generalPaymentRepository: IGeneralPaymentRepository,
   ) {}
 
   async execute(command: RecordGeneralPaymentCommand): Promise<string> {
-    const { type, category, description, amount, paymentMethod, paymentDate, reference, userId } =
-      command;
+    const {
+      type,
+      category,
+      description,
+      amount,
+      paymentMethod,
+      paymentDate,
+      reference,
+      userId,
+    } = command;
 
     const payment = GeneralPayment.create(
       type,
