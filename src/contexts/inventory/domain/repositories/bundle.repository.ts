@@ -10,6 +10,11 @@ export interface BundleFilters {
   search?: string;
 }
 
+export interface BundleSelectFilters {
+  supplierId?: string;
+  unlinked?: boolean;
+}
+
 export interface BundleWithRelations {
   bundle: Bundle;
   productName: string;
@@ -20,6 +25,7 @@ export interface BundleWithRelations {
 export interface BundleWithSlabs {
   bundle: Bundle;
   slabs: Slab[];
+  productName: string;
   supplierName: string;
   invoiceNumber: string | null;
 }
@@ -31,11 +37,13 @@ export interface BundleWithProductName {
 
 export interface IBundleRepository {
   save(bundle: Bundle): Promise<void>;
+  findForSelect(filters: BundleSelectFilters): Promise<BundleWithRelations[]>;
   saveWithSlabs(bundle: Bundle, slabs: Slab[]): Promise<void>;
   findById(id: BundleId): Promise<Bundle | null>;
   findByIdWithProductName(id: BundleId): Promise<BundleWithProductName | null>;
   findByIdWithSlabs(id: BundleId): Promise<BundleWithSlabs | null>;
   findByProductIdWithSlabs(productId: string): Promise<BundleWithSlabs[]>;
+  findAvailableByProductId(productId: string): Promise<BundleWithSlabs[]>;
   findAll(): Promise<Bundle[]>;
   findPaginated(params: PaginationParams): Promise<PaginatedResult<Bundle>>;
   findPaginatedWithRelations(

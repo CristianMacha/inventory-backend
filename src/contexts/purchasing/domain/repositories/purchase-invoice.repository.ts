@@ -26,15 +26,21 @@ export interface InvoiceItemWithBundleInfo {
   totalCost: number;
 }
 
+export interface PurchaseInvoiceWithSupplier {
+  invoice: PurchaseInvoice;
+  supplierName: string;
+}
+
 export interface IPurchaseInvoiceRepository {
   save(invoice: PurchaseInvoice): Promise<void>;
   deleteItem(itemId: string): Promise<void>;
   findById(id: PurchaseInvoiceId): Promise<PurchaseInvoice | null>;
+  findByIdWithSupplier(id: PurchaseInvoiceId): Promise<PurchaseInvoiceWithSupplier | null>;
   findByInvoiceNumber(invoiceNumber: string): Promise<PurchaseInvoice | null>;
   findPaginated(
     filters: PurchaseInvoiceSearchFilters,
     pagination: PaginationParams,
-  ): Promise<PaginatedResult<PurchaseInvoice>>;
+  ): Promise<PaginatedResult<PurchaseInvoiceWithSupplier>>;
   getBundleCostSummary(bundleId: string): Promise<BundleCostSummary | null>;
   findItemsWithBundleInfo(
     invoiceId: string,

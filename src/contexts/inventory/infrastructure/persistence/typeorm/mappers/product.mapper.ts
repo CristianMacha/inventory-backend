@@ -13,6 +13,7 @@ export class ProductMapper {
       entity.name,
       entity.description,
       entity.isActive,
+      entity.isOnline,
       CategoryId.create(entity.categoryId),
       LevelId.create(entity.levelId),
       FinishId.create(entity.finishId),
@@ -30,6 +31,7 @@ export class ProductMapper {
     entity.name = domain.name;
     entity.description = domain.description;
     entity.isActive = domain.isActive;
+    entity.isOnline = domain.isOnline;
     entity.categoryId = domain.categoryId.getValue();
     entity.levelId = domain.levelId.getValue();
     entity.finishId = domain.finishId.getValue();

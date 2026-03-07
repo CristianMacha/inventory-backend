@@ -12,6 +12,7 @@ export class Product extends AggregateRoot {
   private _name: string;
   private _description: string;
   private _isActive: boolean;
+  private _isOnline: boolean;
   private _categoryId: CategoryId;
   private _levelId: LevelId;
   private _finishId: FinishId;
@@ -26,6 +27,7 @@ export class Product extends AggregateRoot {
     name: string,
     description: string,
     isActive: boolean,
+    isOnline: boolean,
     categoryId: CategoryId,
     levelId: LevelId,
     finishId: FinishId,
@@ -40,6 +42,7 @@ export class Product extends AggregateRoot {
     this._name = name;
     this._description = description;
     this._isActive = isActive;
+    this._isOnline = isOnline;
     this._categoryId = categoryId;
     this._levelId = levelId;
     this._finishId = finishId;
@@ -72,6 +75,7 @@ export class Product extends AggregateRoot {
       name,
       description,
       true,
+      false,
       categoryId,
       levelId,
       finishId,
@@ -98,6 +102,7 @@ export class Product extends AggregateRoot {
     name: string,
     description: string,
     isActive: boolean,
+    isOnline: boolean,
     categoryId: CategoryId,
     levelId: LevelId,
     finishId: FinishId,
@@ -112,6 +117,7 @@ export class Product extends AggregateRoot {
       name,
       description,
       isActive,
+      isOnline,
       categoryId,
       levelId,
       finishId,
@@ -166,6 +172,12 @@ export class Product extends AggregateRoot {
     this._updatedAt = new Date();
   }
 
+  public setOnline(isOnline: boolean, userId: string): void {
+    this._isOnline = isOnline;
+    this._updatedBy = userId;
+    this._updatedAt = new Date();
+  }
+
   get id(): ProductId {
     return this._id;
   }
@@ -180,6 +192,10 @@ export class Product extends AggregateRoot {
 
   get isActive(): boolean {
     return this._isActive;
+  }
+
+  get isOnline(): boolean {
+    return this._isOnline;
   }
 
   get categoryId(): CategoryId {

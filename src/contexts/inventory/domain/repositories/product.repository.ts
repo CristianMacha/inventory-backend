@@ -14,6 +14,14 @@ export interface ProductWithRelations {
   finish: { id: string; name: string };
 }
 
+export interface CatalogFilters {
+  categoryId?: string;
+  levelId?: string;
+  finishId?: string;
+  brandId?: string;
+  search?: string;
+}
+
 export interface IProductRepository {
   findAll(): Promise<Product[] | null>;
   findById(id: ProductId): Promise<Product | null>;
@@ -27,6 +35,10 @@ export interface IProductRepository {
   ): Promise<PaginatedResult<Product>>;
   findPaginatedWithRelations(
     filters: ProductSearchFilters,
+    pagination: PaginationParams,
+  ): Promise<PaginatedResult<ProductWithRelations>>;
+  findPaginatedCatalog(
+    filters: CatalogFilters,
     pagination: PaginationParams,
   ): Promise<PaginatedResult<ProductWithRelations>>;
   findForSelect(): Promise<{ id: string; name: string }[]>;

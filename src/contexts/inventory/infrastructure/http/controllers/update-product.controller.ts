@@ -64,6 +64,7 @@ export class UpdateProductController {
         dto.levelId,
         dto.finishId,
         dto.isActive,
+        dto.isOnline,
       ),
     );
 

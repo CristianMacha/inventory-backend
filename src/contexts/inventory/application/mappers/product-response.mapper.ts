@@ -20,6 +20,7 @@ export class ProductResponseMapper {
       name: product.name,
       description: product.description,
       isActive: product.isActive,
+      isOnline: product.isOnline,
       ...(brand && { brand }),
       category,
       level,

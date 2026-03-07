@@ -38,6 +38,9 @@ export class PurchaseInvoiceOutputDto {
   @ApiProperty({ example: 'uuid-supplier' })
   supplierId: string;
 
+  @ApiProperty({ example: 'Proveedor ABC' })
+  supplierName: string;
+
   @ApiProperty({ example: '2026-01-15' })
   invoiceDate: string;
 

@@ -5,6 +5,12 @@ export class BundleDetailOutputDto {
   @ApiProperty({ example: 'uuid-bundle' })
   id: string;
 
+  @ApiProperty({ example: 'uuid-product' })
+  productId: string;
+
+  @ApiProperty({ example: 'Granito Blanco Polar' })
+  productName: string;
+
   @ApiProperty({ example: 'uuid-supplier' })
   supplierId: string;
 

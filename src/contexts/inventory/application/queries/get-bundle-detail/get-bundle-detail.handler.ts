@@ -24,10 +24,12 @@ export class GetBundleDetailHandler implements IQueryHandler<GetBundleDetailQuer
       throw new ResourceNotFoundException('Bundle', query.bundleId);
     }
 
-    const { bundle, slabs, supplierName, invoiceNumber } = result;
+    const { bundle, slabs, productName, supplierName, invoiceNumber } = result;
 
     return {
       id: bundle.id.getValue(),
+      productId: bundle.productId.getValue(),
+      productName,
       supplierId: bundle.supplierId.getValue(),
       supplierName,
       lotNumber: bundle.lotNumber,

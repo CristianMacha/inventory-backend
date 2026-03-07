@@ -9,5 +9,6 @@ export class UpdateProductCommand {
     public readonly levelId?: string,
     public readonly finishId?: string,
     public readonly isActive?: boolean,
+    public readonly isOnline?: boolean,
   ) {}
 }

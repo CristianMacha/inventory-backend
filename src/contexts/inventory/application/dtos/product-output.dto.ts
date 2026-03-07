@@ -45,6 +45,9 @@ export class IProductOutputDto {
   @ApiProperty({ example: true })
   isActive: boolean;
 
+  @ApiProperty({ example: false })
+  isOnline: boolean;
+
   @ApiProperty({ type: () => ProductBrandDto, required: false })
   brand?: ProductBrandDto;
 

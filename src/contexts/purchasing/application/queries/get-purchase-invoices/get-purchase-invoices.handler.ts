@@ -28,8 +28,8 @@ export class GetPurchaseInvoicesHandler implements IQueryHandler<GetPurchaseInvo
     );
     return {
       ...result,
-      data: result.data.map((invoice) =>
-        PurchaseInvoiceResponseMapper.toResponse(invoice),
+      data: result.data.map(({ invoice, supplierName }) =>
+        PurchaseInvoiceResponseMapper.toResponse(invoice, supplierName),
       ),
     };
   }

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 import {
   IPurchaseInvoiceRepository,
   PurchaseInvoiceSearchFilters,
+  PurchaseInvoiceWithSupplier,
   BundleCostSummary,
   InvoiceItemWithBundleInfo,
 } from '../../../../domain/repositories/purchase-invoice.repository';
@@ -14,6 +15,7 @@ import { PurchaseInvoiceStatus } from '../../../../domain/enums/purchase-invoice
 import { PurchaseInvoiceEntity } from '../entities/purchase-invoice.entity';
 import { PurchaseInvoiceItemEntity } from '../entities/purchase-invoice-item.entity';
 import { PurchaseInvoiceMapper } from '../mappers/purchase-invoice.mapper';
+import { SupplierEntity } from '@contexts/inventory/infrastructure/persistence/typeorm/entities/supplier.entity';
 import type { PaginationParams } from '@shared/domain/pagination/pagination-params.interface';
 import {
   buildPaginatedResult,
@@ -27,6 +29,7 @@ export class TypeOrmPurchaseInvoiceRepository implements IPurchaseInvoiceReposit
     private readonly repository: Repository<PurchaseInvoiceEntity>,
     @InjectRepository(PurchaseInvoiceItemEntity)
     private readonly itemRepository: Repository<PurchaseInvoiceItemEntity>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async save(invoice: PurchaseInvoice): Promise<void> {
@@ -46,6 +49,28 @@ export class TypeOrmPurchaseInvoiceRepository implements IPurchaseInvoiceReposit
     return entity ? PurchaseInvoiceMapper.toDomain(entity) : null;
   }
 
+  async findByIdWithSupplier(
+    id: PurchaseInvoiceId,
+  ): Promise<PurchaseInvoiceWithSupplier | null> {
+    const entity = await this.repository
+      .createQueryBuilder('invoice')
+      .leftJoinAndMapOne(
+        'invoice.supplier',
+        SupplierEntity,
+        'supplier',
+        'supplier.id = invoice.supplierId',
+      )
+      .leftJoinAndSelect('invoice.items', 'items')
+      .where('invoice.id = :id', { id: id.getValue() })
+      .getOne();
+
+    if (!entity) return null;
+    return {
+      invoice: PurchaseInvoiceMapper.toDomain(entity),
+      supplierName: (entity as any).supplier?.name ?? '',
+    };
+  }
+
   async findByInvoiceNumber(
     invoiceNumber: string,
   ): Promise<PurchaseInvoice | null> {
@@ -60,11 +85,17 @@ export class TypeOrmPurchaseInvoiceRepository implements IPurchaseInvoiceReposit
   async findPaginated(
     filters: PurchaseInvoiceSearchFilters,
     pagination: PaginationParams,
-  ): Promise<PaginatedResult<PurchaseInvoice>> {
+  ): Promise<PaginatedResult<PurchaseInvoiceWithSupplier>> {
     const { page, limit } = pagination;
     const qb = this.repository
       .createQueryBuilder('invoice')
-      .loadRelationCountAndMap('invoice.itemCount', 'invoice.items');
+      .loadRelationCountAndMap('invoice.itemCount', 'invoice.items')
+      .leftJoinAndMapOne(
+        'invoice.supplier',
+        SupplierEntity,
+        'supplier',
+        'supplier.id = invoice.supplierId',
+      );
 
     if (filters.supplierId) {
       qb.andWhere('invoice.supplierId = :supplierId', {
@@ -88,7 +119,10 @@ export class TypeOrmPurchaseInvoiceRepository implements IPurchaseInvoiceReposit
 
     const [entities, total] = await qb.getManyAndCount();
     return buildPaginatedResult(
-      entities.map((e) => PurchaseInvoiceMapper.toDomainWithCount(e)),
+      entities.map((e) => ({
+        invoice: PurchaseInvoiceMapper.toDomainWithCount(e),
+        supplierName: (e as any).supplier?.name ?? '',
+      })),
       total,
       page,
       limit,

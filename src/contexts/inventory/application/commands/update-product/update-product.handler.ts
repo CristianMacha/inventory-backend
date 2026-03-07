@@ -40,6 +40,7 @@ export class UpdateProductHandler implements ICommandHandler<UpdateProductComman
       levelId,
       finishId,
       isActive,
+      isOnline,
       updatedBy,
     } = command;
 
@@ -106,6 +107,10 @@ export class UpdateProductHandler implements ICommandHandler<UpdateProductComman
 
     if (isActive !== undefined) {
       product.setActive(isActive, updatedBy);
+    }
+
+    if (isOnline !== undefined) {
+      product.setOnline(isOnline, updatedBy);
     }
 
     await this.productRepository.save(product);

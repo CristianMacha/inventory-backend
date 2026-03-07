@@ -19,17 +19,18 @@ export class GetPurchaseInvoiceByIdHandler implements IQueryHandler<GetPurchaseI
   async execute(
     query: GetPurchaseInvoiceByIdQuery,
   ): Promise<PurchaseInvoiceDetailOutputDto> {
-    const invoice = await this.invoiceRepository.findById(
+    const result = await this.invoiceRepository.findByIdWithSupplier(
       PurchaseInvoiceId.create(query.id),
     );
-    if (!invoice) {
+    if (!result) {
       throw new ResourceNotFoundException('PurchaseInvoice', query.id);
     }
 
     const itemsWithBundleInfo =
       await this.invoiceRepository.findItemsWithBundleInfo(query.id);
     return PurchaseInvoiceResponseMapper.toDetailResponse(
-      invoice,
+      result.invoice,
+      result.supplierName,
       itemsWithBundleInfo,
     );
   }

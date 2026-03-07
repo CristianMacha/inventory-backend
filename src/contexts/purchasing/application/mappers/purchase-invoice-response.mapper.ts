@@ -7,11 +7,12 @@ import {
 } from '../dtos/purchase-invoice-output.dto';
 
 export class PurchaseInvoiceResponseMapper {
-  static toResponse(invoice: PurchaseInvoice): PurchaseInvoiceOutputDto {
+  static toResponse(invoice: PurchaseInvoice, supplierName: string): PurchaseInvoiceOutputDto {
     return {
       id: invoice.id.getValue(),
       invoiceNumber: invoice.invoiceNumber,
       supplierId: invoice.supplierId,
+      supplierName,
       invoiceDate: invoice.invoiceDate.toISOString().split('T')[0],
       dueDate: invoice.dueDate
         ? invoice.dueDate.toISOString().split('T')[0]
@@ -32,10 +33,11 @@ export class PurchaseInvoiceResponseMapper {
 
   static toDetailResponse(
     invoice: PurchaseInvoice,
+    supplierName: string,
     itemsWithBundleInfo: InvoiceItemWithBundleInfo[],
   ): PurchaseInvoiceDetailOutputDto {
     return {
-      ...PurchaseInvoiceResponseMapper.toResponse(invoice),
+      ...PurchaseInvoiceResponseMapper.toResponse(invoice, supplierName),
       items: itemsWithBundleInfo.map(
         PurchaseInvoiceResponseMapper.itemWithBundleInfoToResponse,
       ),

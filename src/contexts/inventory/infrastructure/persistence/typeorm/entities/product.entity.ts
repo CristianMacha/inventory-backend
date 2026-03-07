@@ -33,6 +33,9 @@ export class ProductEntity {
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
+  @Column({ type: 'boolean', default: false })
+  isOnline: boolean;
+
   @Column('uuid')
   categoryId: string;
 

@@ -6,6 +6,7 @@ import { Product } from '@contexts/inventory/domain/entities/product';
 import {
   IProductRepository,
   ProductWithRelations,
+  CatalogFilters,
 } from '@contexts/inventory/domain/repositories/product.repository';
 import type { ProductSearchFilters } from '@contexts/inventory/domain/repositories/product-search-filters.interface';
 import type { PaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
@@ -130,6 +131,51 @@ export class TypeOrmProductRepository implements IProductRepository {
       qb.andWhere('product.categoryId IN (:...categoryIds)', {
         categoryIds: filters.categoryIds,
       });
+    }
+
+    const skip = (pagination.page - 1) * pagination.limit;
+    qb.orderBy('product.name', 'ASC').skip(skip).take(pagination.limit);
+
+    const [entities, total] = await qb.getManyAndCount();
+    const data = entities.map((e) => this.mapEntityToProductWithRelations(e));
+    return buildPaginatedResult(data, total, pagination.page, pagination.limit);
+  }
+
+  async findPaginatedCatalog(
+    filters: CatalogFilters,
+    pagination: PaginationParams,
+  ): Promise<PaginatedResult<ProductWithRelations>> {
+    const qb = this.typeOrmRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.level', 'level')
+      .leftJoinAndSelect('product.finish', 'finish')
+      .where('product.isOnline = :isOnline', { isOnline: true })
+      .andWhere('product.isActive = :isActive', { isActive: true });
+
+    if (filters.search?.trim()) {
+      const term = `%${filters.search.trim()}%`;
+      qb.andWhere(
+        '(product.name LIKE :term OR product.description LIKE :term)',
+        { term },
+      );
+    }
+    if (filters.categoryId) {
+      qb.andWhere('product.categoryId = :categoryId', {
+        categoryId: filters.categoryId,
+      });
+    }
+    if (filters.levelId) {
+      qb.andWhere('product.levelId = :levelId', { levelId: filters.levelId });
+    }
+    if (filters.finishId) {
+      qb.andWhere('product.finishId = :finishId', {
+        finishId: filters.finishId,
+      });
+    }
+    if (filters.brandId) {
+      qb.andWhere('product.brandId = :brandId', { brandId: filters.brandId });
     }
 
     const skip = (pagination.page - 1) * pagination.limit;

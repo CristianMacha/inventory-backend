@@ -46,4 +46,9 @@ export class UpdateProductDto {
   @IsBoolean()
   @IsOptional()
   readonly isActive?: boolean;
+
+  @ApiPropertyOptional({ example: false })
+  @IsBoolean()
+  @IsOptional()
+  readonly isOnline?: boolean;
 }

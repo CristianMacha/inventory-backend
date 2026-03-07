@@ -6,6 +6,7 @@ import { PurchaseInvoiceEntity } from '@contexts/purchasing/infrastructure/persi
 import {
   IBundleRepository,
   BundleFilters,
+  BundleSelectFilters,
   BundleWithRelations,
   BundleWithSlabs,
   BundleWithProductName,
@@ -49,28 +50,28 @@ export class TypeOrmBundleRepository implements IBundleRepository {
   }
 
   async findByIdWithSlabs(id: BundleId): Promise<BundleWithSlabs | null> {
-    const entity = await this.repository.findOne({
-      where: { id: id.getValue() },
-      relations: ['slabs', 'supplier'],
-    });
-    if (!entity) return null;
+    const entity = await this.repository
+      .createQueryBuilder('bundle')
+      .leftJoinAndSelect('bundle.slabs', 'slabs')
+      .leftJoinAndSelect('bundle.supplier', 'supplier')
+      .leftJoinAndSelect('bundle.product', 'product')
+      .leftJoinAndMapOne(
+        'bundle.invoice',
+        PurchaseInvoiceEntity,
+        'invoice',
+        'invoice.id = bundle.purchaseInvoiceId',
+      )
+      .where('bundle.id = :id', { id: id.getValue() })
+      .getOne();
 
-    let invoiceNumber: string | null = null;
-    if (entity.purchaseInvoiceId) {
-      const invoice = await this.dataSource
-        .getRepository(PurchaseInvoiceEntity)
-        .findOne({
-          where: { id: entity.purchaseInvoiceId },
-          select: ['id', 'invoiceNumber'],
-        });
-      invoiceNumber = invoice?.invoiceNumber ?? null;
-    }
+    if (!entity) return null;
 
     return {
       bundle: BundleMapper.toDomain(entity),
       slabs: (entity.slabs ?? []).map((s) => SlabMapper.toDomain(s)),
+      productName: entity.product?.name ?? '',
       supplierName: entity.supplier?.name ?? '',
-      invoiceNumber,
+      invoiceNumber: (entity as any).invoice?.invoiceNumber ?? null,
     };
   }
 
@@ -81,6 +82,7 @@ export class TypeOrmBundleRepository implements IBundleRepository {
       .createQueryBuilder('bundle')
       .leftJoinAndSelect('bundle.slabs', 'slabs')
       .leftJoinAndSelect('bundle.supplier', 'supplier')
+      .leftJoinAndSelect('bundle.product', 'product')
       .leftJoinAndMapOne(
         'bundle.invoice',
         PurchaseInvoiceEntity,
@@ -94,6 +96,38 @@ export class TypeOrmBundleRepository implements IBundleRepository {
     return entities.map((e) => ({
       bundle: BundleMapper.toDomain(e),
       slabs: (e.slabs ?? []).map((s) => SlabMapper.toDomain(s)),
+      productName: e.product?.name ?? '',
+      supplierName: e.supplier?.name ?? '',
+      invoiceNumber: (e as any).invoice?.invoiceNumber ?? null,
+    }));
+  }
+
+  async findAvailableByProductId(
+    productId: string,
+  ): Promise<BundleWithSlabs[]> {
+    const entities = await this.repository
+      .createQueryBuilder('bundle')
+      .innerJoinAndSelect(
+        'bundle.slabs',
+        'slabs',
+        "slabs.status = 'AVAILABLE'",
+      )
+      .leftJoinAndSelect('bundle.supplier', 'supplier')
+      .leftJoinAndSelect('bundle.product', 'product')
+      .leftJoinAndMapOne(
+        'bundle.invoice',
+        PurchaseInvoiceEntity,
+        'invoice',
+        'invoice.id = bundle.purchaseInvoiceId',
+      )
+      .where('bundle.productId = :productId', { productId })
+      .orderBy('bundle.createdAt', 'DESC')
+      .getMany();
+
+    return entities.map((e) => ({
+      bundle: BundleMapper.toDomain(e),
+      slabs: (e.slabs ?? []).map((s) => SlabMapper.toDomain(s)),
+      productName: e.product?.name ?? '',
       supplierName: e.supplier?.name ?? '',
       invoiceNumber: (e as any).invoice?.invoiceNumber ?? null,
     }));
@@ -187,6 +221,36 @@ export class TypeOrmBundleRepository implements IBundleRepository {
       invoiceNumber: (e as any).invoice?.invoiceNumber ?? null,
     }));
     return buildPaginatedResult(data, total, page, limit);
+  }
+
+  async findForSelect(filters: BundleSelectFilters): Promise<BundleWithRelations[]> {
+    const qb = this.repository
+      .createQueryBuilder('bundle')
+      .leftJoinAndSelect('bundle.product', 'product')
+      .leftJoinAndSelect('bundle.supplier', 'supplier')
+      .leftJoinAndMapOne(
+        'bundle.invoice',
+        PurchaseInvoiceEntity,
+        'invoice',
+        'invoice.id = bundle.purchaseInvoiceId',
+      )
+      .orderBy('bundle.lotNumber', 'ASC');
+
+    if (filters.supplierId) {
+      qb.andWhere('bundle.supplierId = :supplierId', { supplierId: filters.supplierId });
+    }
+
+    if (filters.unlinked) {
+      qb.andWhere('bundle.purchaseInvoiceId IS NULL');
+    }
+
+    const entities = await qb.getMany();
+    return entities.map((e) => ({
+      bundle: BundleMapper.toDomain(e),
+      productName: e.product?.name ?? '',
+      supplierName: e.supplier?.name ?? '',
+      invoiceNumber: (e as any).invoice?.invoiceNumber ?? null,
+    }));
   }
 
   async count(): Promise<number> {
