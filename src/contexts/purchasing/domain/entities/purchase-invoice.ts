@@ -185,11 +185,13 @@ export class PurchaseInvoice extends AggregateRoot {
     return item;
   }
 
-  public removeItem(itemId: string, userId: string): void {
-    this._items = this._items.filter((item) => item.id.getValue() !== itemId);
+  public removeItem(itemId: string, userId: string): string | null {
+    const item = this._items.find((i) => i.id.getValue() === itemId);
+    this._items = this._items.filter((i) => i.id.getValue() !== itemId);
     this.recalculateTotals();
     this._updatedBy = userId;
     this._updatedAt = new Date();
+    return item?.bundleId ?? null;
   }
 
   public receive(userId: string): void {

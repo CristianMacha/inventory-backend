@@ -3,6 +3,15 @@ import { BundleId } from '../value-objects/bundle-id';
 import { SlabStatus } from '../enums/slab-status.enum';
 import { SlabDimensions } from '../value-objects/slab-dimensions';
 import { InvalidEntityNameException } from '../errors/invalid-entity-name.exception';
+import { InvalidSlabStatusTransitionException } from '../errors/invalid-slab-status-transition.exception';
+
+const ALLOWED_TRANSITIONS: Record<SlabStatus, SlabStatus[]> = {
+  [SlabStatus.AVAILABLE]: [SlabStatus.RESERVED, SlabStatus.RETURNING],
+  [SlabStatus.RESERVED]: [SlabStatus.AVAILABLE, SlabStatus.SOLD],
+  [SlabStatus.RETURNING]: [SlabStatus.AVAILABLE, SlabStatus.RETURNED],
+  [SlabStatus.SOLD]: [],
+  [SlabStatus.RETURNED]: [],
+};
 
 export class Slab {
   private readonly _id: SlabId;
@@ -126,6 +135,9 @@ export class Slab {
   }
 
   public updateStatus(status: SlabStatus, userId: string): void {
+    if (!ALLOWED_TRANSITIONS[this._status].includes(status)) {
+      throw new InvalidSlabStatusTransitionException(this._status, status);
+    }
     this._status = status;
     this._updatedBy = userId;
     this._updatedAt = new Date();

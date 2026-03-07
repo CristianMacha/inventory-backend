@@ -30,7 +30,10 @@ export class UnlinkBundleInvoiceHandler implements ICommandHandler<UnlinkBundleI
 
     const slabs = await this.slabRepository.findByBundleId(bundleIdVO);
     const hasCommittedSlabs = slabs.some(
-      (s) => s.status === SlabStatus.SOLD || s.status === SlabStatus.RESERVED,
+      (s) =>
+        s.status === SlabStatus.SOLD ||
+        s.status === SlabStatus.RESERVED ||
+        s.status === SlabStatus.RETURNING,
     );
     if (hasCommittedSlabs) {
       throw new BundleHasCommittedSlabsException(bundleId);

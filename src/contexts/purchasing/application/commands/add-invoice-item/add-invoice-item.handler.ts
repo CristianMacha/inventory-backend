@@ -37,20 +37,17 @@ export class AddInvoiceItemHandler implements ICommandHandler<AddInvoiceItemComm
       throw new ResourceNotFoundException('PurchaseInvoice', invoiceId);
     }
 
-    let resolvedDescription = description;
-    if (!resolvedDescription) {
-      const bundleWithProduct =
-        await this.bundleRepository.findByIdWithProductName(
-          BundleId.create(bundleId),
-        );
-      if (!bundleWithProduct) {
-        throw new ResourceNotFoundException('Bundle', bundleId);
-      }
-      const { bundle, productName } = bundleWithProduct;
-      resolvedDescription = bundle.lotNumber
-        ? `${productName} - LOT ${bundle.lotNumber}`
-        : productName;
+    const bundleWithProduct = await this.bundleRepository.findByIdWithProductName(
+      BundleId.create(bundleId),
+    );
+    if (!bundleWithProduct) {
+      throw new ResourceNotFoundException('Bundle', bundleId);
     }
+    const { bundle, productName } = bundleWithProduct;
+
+    const resolvedDescription =
+      description ??
+      (bundle.lotNumber ? `${productName} - LOT ${bundle.lotNumber}` : productName);
 
     invoice.addItem(
       bundleId,
@@ -60,6 +57,9 @@ export class AddInvoiceItemHandler implements ICommandHandler<AddInvoiceItemComm
       quantity,
       userId,
     );
+    bundle.linkInvoice(invoiceId, userId);
+
     await this.invoiceRepository.save(invoice);
+    await this.bundleRepository.save(bundle);
   }
 }

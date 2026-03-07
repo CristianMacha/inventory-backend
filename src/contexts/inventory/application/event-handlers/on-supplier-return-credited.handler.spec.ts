@@ -8,14 +8,17 @@ import { SlabStatus } from '../../domain/enums/slab-status.enum';
 import { BundleId } from '../../domain/value-objects/bundle-id';
 import { SlabDimensions } from '../../domain/value-objects/slab-dimensions';
 
-const makeSlab = () =>
-  Slab.create(
+const makeSlab = () => {
+  const slab = Slab.create(
     BundleId.generate(),
     'SLB-001',
     new SlabDimensions(150, 280),
     '',
     'user-1',
   );
+  slab.updateStatus(SlabStatus.RETURNING, 'system');
+  return slab;
+};
 
 describe('OnSupplierReturnCreditedHandler', () => {
   let handler: OnSupplierReturnCreditedHandler;

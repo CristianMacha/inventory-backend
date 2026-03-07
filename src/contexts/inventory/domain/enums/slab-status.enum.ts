@@ -2,5 +2,6 @@ export enum SlabStatus {
   AVAILABLE = 'AVAILABLE',
   RESERVED = 'RESERVED',
   SOLD = 'SOLD',
+  RETURNING = 'RETURNING',
   RETURNED = 'RETURNED',
 }
