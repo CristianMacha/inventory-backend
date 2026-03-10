@@ -7,7 +7,10 @@ import {
 } from '../dtos/purchase-invoice-output.dto';
 
 export class PurchaseInvoiceResponseMapper {
-  static toResponse(invoice: PurchaseInvoice, supplierName: string): PurchaseInvoiceOutputDto {
+  static toResponse(
+    invoice: PurchaseInvoice,
+    supplierName: string,
+  ): PurchaseInvoiceOutputDto {
     return {
       id: invoice.id.getValue(),
       invoiceNumber: invoice.invoiceNumber,

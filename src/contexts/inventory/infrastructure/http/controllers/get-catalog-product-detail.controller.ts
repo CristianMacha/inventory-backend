@@ -1,11 +1,6 @@
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
-import {
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Public } from '@contexts/auth/infrastructure/decorators/public.decorator';
 import { GetCatalogProductDetailQuery } from '@contexts/inventory/application/queries/get-catalog-product-detail/get-catalog-product-detail.query';
@@ -19,7 +14,8 @@ export class GetCatalogProductDetailController {
   @Get(':id')
   @Public()
   @ApiOperation({
-    summary: 'Get public product detail with available bundles (no auth required)',
+    summary:
+      'Get public product detail with available bundles (no auth required)',
   })
   @ApiParam({ name: 'id', description: 'Product UUID' })
   @ApiResponse({

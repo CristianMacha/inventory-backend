@@ -8,9 +8,7 @@ import type { CatalogProductOutputDto } from '@contexts/inventory/application/dt
 import type { PaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
 
 @QueryHandler(GetCatalogProductsQuery)
-export class GetCatalogProductsHandler
-  implements IQueryHandler<GetCatalogProductsQuery>
-{
+export class GetCatalogProductsHandler implements IQueryHandler<GetCatalogProductsQuery> {
   constructor(
     @Inject(INVENTORY_TOKENS.PRODUCT_REPOSITORY)
     private readonly productRepository: IProductRepository,

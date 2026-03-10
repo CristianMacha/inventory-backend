@@ -21,7 +21,9 @@ class GetBundlesSelectQueryDto {
   @IsUUID()
   supplierId?: string;
 
-  @ApiPropertyOptional({ description: 'Only return bundles not linked to any invoice' })
+  @ApiPropertyOptional({
+    description: 'Only return bundles not linked to any invoice',
+  })
   @IsOptional()
   @Transform(({ value }) => value === 'true' || value === true)
   @IsBoolean()
@@ -38,7 +40,9 @@ export class GetBundlesSelectController {
   @RequirePermissions(Permissions.BUNDLES.LIST)
   @ApiOperation({ summary: 'Get bundles for select/dropdown (no pagination)' })
   @ApiResponse({ status: 200, type: IBundleOutputDto, isArray: true })
-  async run(@Query() query: GetBundlesSelectQueryDto): Promise<IBundleOutputDto[]> {
+  async run(
+    @Query() query: GetBundlesSelectQueryDto,
+  ): Promise<IBundleOutputDto[]> {
     return this.queryBus.execute(
       new GetBundlesSelectQuery(query.supplierId, query.unlinked),
     );

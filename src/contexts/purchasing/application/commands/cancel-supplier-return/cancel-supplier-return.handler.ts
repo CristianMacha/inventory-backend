@@ -38,7 +38,9 @@ export class CancelSupplierReturnHandler implements ICommandHandler<CancelSuppli
 
     if (wasSent) {
       for (const item of supplierReturn.items) {
-        const slab = await this.slabRepository.findById(SlabId.create(item.slabId));
+        const slab = await this.slabRepository.findById(
+          SlabId.create(item.slabId),
+        );
         if (slab && slab.status === SlabStatus.RETURNING) {
           slab.updateStatus(SlabStatus.AVAILABLE, userId);
           await this.slabRepository.save(slab);

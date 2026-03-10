@@ -34,7 +34,9 @@ export class SendSupplierReturnHandler implements ICommandHandler<SendSupplierRe
     await this.supplierReturnRepository.save(supplierReturn);
 
     for (const item of supplierReturn.items) {
-      const slab = await this.slabRepository.findById(SlabId.create(item.slabId));
+      const slab = await this.slabRepository.findById(
+        SlabId.create(item.slabId),
+      );
       if (slab) {
         slab.updateStatus(SlabStatus.RETURNING, userId);
         await this.slabRepository.save(slab);

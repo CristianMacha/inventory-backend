@@ -107,11 +107,7 @@ export class TypeOrmBundleRepository implements IBundleRepository {
   ): Promise<BundleWithSlabs[]> {
     const entities = await this.repository
       .createQueryBuilder('bundle')
-      .innerJoinAndSelect(
-        'bundle.slabs',
-        'slabs',
-        "slabs.status = 'AVAILABLE'",
-      )
+      .innerJoinAndSelect('bundle.slabs', 'slabs', "slabs.status = 'AVAILABLE'")
       .leftJoinAndSelect('bundle.supplier', 'supplier')
       .leftJoinAndSelect('bundle.product', 'product')
       .leftJoinAndMapOne(
@@ -223,7 +219,9 @@ export class TypeOrmBundleRepository implements IBundleRepository {
     return buildPaginatedResult(data, total, page, limit);
   }
 
-  async findForSelect(filters: BundleSelectFilters): Promise<BundleWithRelations[]> {
+  async findForSelect(
+    filters: BundleSelectFilters,
+  ): Promise<BundleWithRelations[]> {
     const qb = this.repository
       .createQueryBuilder('bundle')
       .leftJoinAndSelect('bundle.product', 'product')
@@ -237,7 +235,9 @@ export class TypeOrmBundleRepository implements IBundleRepository {
       .orderBy('bundle.lotNumber', 'ASC');
 
     if (filters.supplierId) {
-      qb.andWhere('bundle.supplierId = :supplierId', { supplierId: filters.supplierId });
+      qb.andWhere('bundle.supplierId = :supplierId', {
+        supplierId: filters.supplierId,
+      });
     }
 
     if (filters.unlinked) {

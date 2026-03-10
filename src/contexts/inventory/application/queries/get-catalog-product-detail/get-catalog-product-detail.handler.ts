@@ -9,9 +9,7 @@ import { ProductId } from '@contexts/inventory/domain/value-objects/product-id';
 import type { CatalogProductDetailOutputDto } from '@contexts/inventory/application/dtos/catalog-product-output.dto';
 
 @QueryHandler(GetCatalogProductDetailQuery)
-export class GetCatalogProductDetailHandler
-  implements IQueryHandler<GetCatalogProductDetailQuery>
-{
+export class GetCatalogProductDetailHandler implements IQueryHandler<GetCatalogProductDetailQuery> {
   constructor(
     @Inject(INVENTORY_TOKENS.PRODUCT_REPOSITORY)
     private readonly productRepository: IProductRepository,
@@ -39,9 +37,10 @@ export class GetCatalogProductDetailHandler
 
     const { product, brand, category, level, finish } = productWithRelations;
 
-    const bundlesWithSlabs = await this.bundleRepository.findAvailableByProductId(
-      product.id.getValue(),
-    );
+    const bundlesWithSlabs =
+      await this.bundleRepository.findAvailableByProductId(
+        product.id.getValue(),
+      );
 
     return {
       id: product.id.getValue(),

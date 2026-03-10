@@ -21,7 +21,12 @@ export class GetBundlesSelectHandler implements IQueryHandler<GetBundlesSelectQu
     });
 
     return results.map(({ bundle, productName, supplierName, invoiceNumber }) =>
-      BundleResponseMapper.toResponse(bundle, productName, supplierName, invoiceNumber),
+      BundleResponseMapper.toResponse(
+        bundle,
+        productName,
+        supplierName,
+        invoiceNumber,
+      ),
     );
   }
 }

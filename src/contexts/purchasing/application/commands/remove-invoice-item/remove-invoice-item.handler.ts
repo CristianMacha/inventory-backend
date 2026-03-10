@@ -34,7 +34,9 @@ export class RemoveInvoiceItemHandler implements ICommandHandler<RemoveInvoiceIt
     await this.invoiceRepository.save(invoice);
 
     if (bundleId) {
-      const bundle = await this.bundleRepository.findById(BundleId.create(bundleId));
+      const bundle = await this.bundleRepository.findById(
+        BundleId.create(bundleId),
+      );
       if (bundle) {
         bundle.unlinkInvoice(userId);
         await this.bundleRepository.save(bundle);
