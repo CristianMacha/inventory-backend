@@ -148,6 +148,80 @@ const PERMISSIONS = [
     name: Permissions.ACCOUNTING.VIEW,
     description: 'View cashflow and accounting summary',
   },
+  // Workshop Tools
+  {
+    name: Permissions.WORKSHOP_TOOLS.CREATE,
+    description: 'Create workshop tools',
+  },
+  {
+    name: Permissions.WORKSHOP_TOOLS.READ,
+    description: 'View workshop tool details',
+  },
+  {
+    name: Permissions.WORKSHOP_TOOLS.UPDATE,
+    description: 'Update workshop tools',
+  },
+  {
+    name: Permissions.WORKSHOP_TOOLS.DELETE,
+    description: 'Delete workshop tools',
+  },
+  { name: Permissions.WORKSHOP_TOOLS.LIST, description: 'List workshop tools' },
+  // Workshop Materials
+  {
+    name: Permissions.WORKSHOP_MATERIALS.CREATE,
+    description: 'Create workshop materials',
+  },
+  {
+    name: Permissions.WORKSHOP_MATERIALS.READ,
+    description: 'View workshop material details',
+  },
+  {
+    name: Permissions.WORKSHOP_MATERIALS.UPDATE,
+    description: 'Update workshop materials',
+  },
+  {
+    name: Permissions.WORKSHOP_MATERIALS.DELETE,
+    description: 'Delete workshop materials',
+  },
+  {
+    name: Permissions.WORKSHOP_MATERIALS.LIST,
+    description: 'List workshop materials',
+  },
+  // Workshop Categories
+  {
+    name: Permissions.WORKSHOP_CATEGORIES.CREATE,
+    description: 'Create workshop categories',
+  },
+  {
+    name: Permissions.WORKSHOP_CATEGORIES.UPDATE,
+    description: 'Update workshop categories',
+  },
+  {
+    name: Permissions.WORKSHOP_CATEGORIES.LIST,
+    description: 'List workshop categories',
+  },
+  // Workshop Suppliers
+  {
+    name: Permissions.WORKSHOP_SUPPLIERS.CREATE,
+    description: 'Create workshop suppliers',
+  },
+  {
+    name: Permissions.WORKSHOP_SUPPLIERS.UPDATE,
+    description: 'Update workshop suppliers',
+  },
+  {
+    name: Permissions.WORKSHOP_SUPPLIERS.LIST,
+    description: 'List workshop suppliers',
+  },
+  // Workshop Movements
+  {
+    name: Permissions.WORKSHOP_MOVEMENTS.CREATE,
+    description: 'Register workshop material/tool movements',
+  },
+  {
+    name: Permissions.WORKSHOP_MOVEMENTS.LIST,
+    description: 'List workshop movement history',
+  },
   // Settings
   { name: Permissions.SETTINGS.READ, description: 'Read settings' },
   // Profile

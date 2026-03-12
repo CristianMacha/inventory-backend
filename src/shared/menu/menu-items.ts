@@ -74,6 +74,42 @@ export const MENU_ITEMS: MenuItem[] = [
     ],
   },
   {
+    id: 'workshop',
+    label: 'Workshop',
+    icon: 'build',
+    permission: Permissions.WORKSHOP_TOOLS.LIST,
+    children: [
+      {
+        id: 'workshop-tools',
+        label: 'Tools',
+        icon: 'handyman',
+        path: '/workshop/tools',
+        permission: Permissions.WORKSHOP_TOOLS.LIST,
+      },
+      {
+        id: 'workshop-materials',
+        label: 'Materials',
+        icon: 'inventory-2',
+        path: '/workshop/materials',
+        permission: Permissions.WORKSHOP_MATERIALS.LIST,
+      },
+      {
+        id: 'workshop-categories',
+        label: 'Categories',
+        icon: 'category',
+        path: '/workshop/categories',
+        permission: Permissions.WORKSHOP_CATEGORIES.LIST,
+      },
+      {
+        id: 'workshop-suppliers',
+        label: 'Suppliers',
+        icon: 'supplier',
+        path: '/workshop/suppliers',
+        permission: Permissions.WORKSHOP_SUPPLIERS.LIST,
+      },
+    ],
+  },
+  {
     id: 'purchasing',
     label: 'Purchasing',
     icon: 'receipt',

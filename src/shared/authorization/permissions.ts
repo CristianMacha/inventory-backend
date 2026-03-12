@@ -107,6 +107,34 @@ export const Permissions = {
     CREATE: 'general-payments.create',
     READ: 'general-payments.read',
   },
+  WORKSHOP_TOOLS: {
+    CREATE: 'workshop-tools.create',
+    READ: 'workshop-tools.read',
+    UPDATE: 'workshop-tools.update',
+    DELETE: 'workshop-tools.delete',
+    LIST: 'workshop-tools.list',
+  },
+  WORKSHOP_MATERIALS: {
+    CREATE: 'workshop-materials.create',
+    READ: 'workshop-materials.read',
+    UPDATE: 'workshop-materials.update',
+    DELETE: 'workshop-materials.delete',
+    LIST: 'workshop-materials.list',
+  },
+  WORKSHOP_CATEGORIES: {
+    CREATE: 'workshop-categories.create',
+    UPDATE: 'workshop-categories.update',
+    LIST: 'workshop-categories.list',
+  },
+  WORKSHOP_SUPPLIERS: {
+    CREATE: 'workshop-suppliers.create',
+    UPDATE: 'workshop-suppliers.update',
+    LIST: 'workshop-suppliers.list',
+  },
+  WORKSHOP_MOVEMENTS: {
+    CREATE: 'workshop-movements.create',
+    LIST: 'workshop-movements.list',
+  },
 } as const;
 
 export type PermissionType =
