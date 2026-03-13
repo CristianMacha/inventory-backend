@@ -27,7 +27,7 @@ export class TypeOrmToolRepository implements IToolRepository {
       take: limit,
     });
     return buildPaginatedResult(
-      entities.map(ToolPersistenceMapper.toDomain),
+      entities.map((e) => ToolPersistenceMapper.toDomain(e)),
       total,
       page,
       limit,

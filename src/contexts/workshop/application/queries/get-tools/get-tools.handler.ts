@@ -18,7 +18,7 @@ export class GetToolsHandler implements IQueryHandler<GetToolsQuery> {
     const result = await this.toolRepository.findAll(query.pagination);
     return {
       ...result,
-      data: result.data.map(ToolMapper.toDto),
+      data: result.data.map((e) => ToolMapper.toDto(e)),
     };
   }
 }

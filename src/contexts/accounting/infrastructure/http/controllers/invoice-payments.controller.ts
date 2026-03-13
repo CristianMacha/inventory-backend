@@ -55,7 +55,7 @@ export class InvoicePaymentsController {
     @Body() dto: RecordInvoicePaymentDto,
     @GetUser() user: AuthUserDto,
   ) {
-    const id = await this.commandBus.execute(
+    await this.commandBus.execute(
       new RecordInvoicePaymentCommand(
         dto.invoiceId,
         dto.amount,
@@ -65,7 +65,7 @@ export class InvoicePaymentsController {
         user.id,
       ),
     );
-    return { statusCode: HttpStatus.CREATED, message: 'Payment recorded', id };
+    return { statusCode: HttpStatus.CREATED, message: 'Payment recorded' };
   }
 
   @Get('invoice/:invoiceId')

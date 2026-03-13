@@ -31,6 +31,9 @@ export class GetToolMovementsHandler implements IQueryHandler<GetToolMovementsQu
       query.toolId,
       query.pagination,
     );
-    return { ...result, data: result.data.map(ToolMovementMapper.toDto) };
+    return {
+      ...result,
+      data: result.data.map((e) => ToolMovementMapper.toDto(e)),
+    };
   }
 }

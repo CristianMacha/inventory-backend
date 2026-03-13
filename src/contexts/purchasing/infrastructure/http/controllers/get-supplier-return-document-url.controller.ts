@@ -26,7 +26,7 @@ export class GetSupplierReturnDocumentUrlController {
     status: 404,
     description: 'Supplier return or document not found',
   })
-  async run(@Param('returnId') returnId: string) {
+  async run(@Param('returnId') returnId: string): Promise<{ url: string }> {
     return this.queryBus.execute(
       new GetSupplierReturnDocumentUrlQuery(returnId),
     );

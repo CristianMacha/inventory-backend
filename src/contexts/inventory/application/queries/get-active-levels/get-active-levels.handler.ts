@@ -13,7 +13,7 @@ export class GetActiveLevelsHandler implements IQueryHandler<GetActiveLevelsQuer
     private readonly levelRepository: ILevelRepository,
   ) {}
 
-  async execute(_query: GetActiveLevelsQuery): Promise<ILevelOutputDto[]> {
+  async execute(): Promise<ILevelOutputDto[]> {
     const levels = await this.levelRepository.findAllActive();
     return levels.map((l) => LevelResponseMapper.toResponse(l));
   }

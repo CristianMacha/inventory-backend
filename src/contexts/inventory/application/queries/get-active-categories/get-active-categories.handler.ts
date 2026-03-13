@@ -13,9 +13,7 @@ export class GetActiveCategoriesHandler implements IQueryHandler<GetActiveCatego
     private readonly categoryRepository: ICategoryRepository,
   ) {}
 
-  async execute(
-    _query: GetActiveCategoriesQuery,
-  ): Promise<ICategoryOutputDto[]> {
+  async execute(): Promise<ICategoryOutputDto[]> {
     const categories = await this.categoryRepository.findAllActive();
     return categories.map((c) => CategoryResponseMapper.toResponse(c));
   }

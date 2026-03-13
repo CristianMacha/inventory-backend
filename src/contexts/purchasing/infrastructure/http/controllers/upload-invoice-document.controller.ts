@@ -64,7 +64,7 @@ export class UploadInvoiceDocumentController {
     file: Express.Multer.File,
     @GetUser() user: AuthUserDto,
   ) {
-    return this.commandBus.execute(
+    await this.commandBus.execute(
       new UploadInvoiceDocumentCommand(invoiceId, file, user.id),
     );
   }

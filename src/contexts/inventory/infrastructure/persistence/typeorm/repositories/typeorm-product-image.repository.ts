@@ -23,7 +23,7 @@ export class TypeOrmProductImageRepository implements IProductImageRepository {
       where: { productId },
       order: { sortOrder: 'ASC', createdAt: 'ASC' },
     });
-    return entities.map(ProductImageMapper.toDomain);
+    return entities.map((e) => ProductImageMapper.toDomain(e));
   }
 
   async findById(id: string): Promise<ProductImage | null> {

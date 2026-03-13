@@ -16,7 +16,7 @@ export class TypeOrmWorkshopSupplierRepository implements IWorkshopSupplierRepos
 
   async findAll(): Promise<WorkshopSupplier[]> {
     const entities = await this.repository.find({ order: { name: 'ASC' } });
-    return entities.map(WorkshopSupplierPersistenceMapper.toDomain);
+    return entities.map((e) => WorkshopSupplierPersistenceMapper.toDomain(e));
   }
 
   async findAllActive(): Promise<WorkshopSupplier[]> {
@@ -24,7 +24,7 @@ export class TypeOrmWorkshopSupplierRepository implements IWorkshopSupplierRepos
       where: { isActive: true },
       order: { name: 'ASC' },
     });
-    return entities.map(WorkshopSupplierPersistenceMapper.toDomain);
+    return entities.map((e) => WorkshopSupplierPersistenceMapper.toDomain(e));
   }
 
   async findById(id: WorkshopSupplierId): Promise<WorkshopSupplier | null> {

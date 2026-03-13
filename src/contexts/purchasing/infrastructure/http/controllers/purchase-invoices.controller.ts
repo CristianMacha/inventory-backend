@@ -69,7 +69,7 @@ export class PurchaseInvoicesController {
     @Body() dto: CreatePurchaseInvoiceDto,
     @GetUser() user: AuthUserDto,
   ) {
-    const id = await this.commandBus.execute(
+    await this.commandBus.execute(
       new CreatePurchaseInvoiceCommand(
         dto.invoiceNumber,
         dto.supplierId,
@@ -79,7 +79,7 @@ export class PurchaseInvoicesController {
         dto.notes,
       ),
     );
-    return { statusCode: HttpStatus.CREATED, message: 'Invoice created', id };
+    return { statusCode: HttpStatus.CREATED, message: 'Invoice created' };
   }
 
   @Get()

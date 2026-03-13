@@ -19,7 +19,7 @@ describe('GetBundlesHandler', () => {
     updatedBy: 'user-1',
     createdAt: new Date(),
     updatedAt: new Date(),
-  } as any;
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

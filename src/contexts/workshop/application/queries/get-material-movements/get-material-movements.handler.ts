@@ -32,6 +32,9 @@ export class GetMaterialMovementsHandler implements IQueryHandler<GetMaterialMov
       query.materialId,
       query.pagination,
     );
-    return { ...result, data: result.data.map(MaterialMovementMapper.toDto) };
+    return {
+      ...result,
+      data: result.data.map((e) => MaterialMovementMapper.toDto(e)),
+    };
   }
 }

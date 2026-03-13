@@ -26,7 +26,9 @@ export class ListGeneralPaymentsHandler implements IQueryHandler<ListGeneralPaym
     );
 
     return {
-      payments: result.data.map(GeneralPaymentResponseMapper.toResponse),
+      payments: result.data.map((e) =>
+        GeneralPaymentResponseMapper.toResponse(e),
+      ),
       total: result.total,
       page: result.page,
       limit: result.limit,

@@ -38,7 +38,7 @@ export class GetInvoicePaymentsHandler implements IQueryHandler<GetInvoicePaymen
     const remaining = invoice.totalAmount - totalPaid;
 
     return {
-      payments: payments.map(InvoicePaymentResponseMapper.toResponse),
+      payments: payments.map((e) => InvoicePaymentResponseMapper.toResponse(e)),
       totalPaid,
       remaining,
       invoiceTotalAmount: invoice.totalAmount,

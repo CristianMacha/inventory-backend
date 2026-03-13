@@ -14,7 +14,7 @@ export class GetBrandsHandler implements IQueryHandler<GetBrandsQuery> {
     private readonly brandRepository: IBrandRepository,
   ) {}
 
-  async execute(query: GetBrandsQuery): Promise<IBrandOutputDto[]> {
+  async execute(): Promise<IBrandOutputDto[]> {
     const brands = await this.brandRepository.findAll();
 
     return (brands ?? []).map((e) => BrandResponseMapper.toResponse(e));

@@ -48,6 +48,7 @@ import { MaterialMovementDto } from '../../../application/dtos/material-movement
 import { UploadMaterialImageCommand } from '../../../application/commands/upload-material-image/upload-material-image.command';
 import { DeleteMaterialImageCommand } from '../../../application/commands/delete-material-image/delete-material-image.command';
 import { FileValidationPipe } from '@shared/storage/pipes/file-validation.pipe';
+import { PaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
 
 const IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_10MB = 10 * 1024 * 1024;
@@ -91,7 +92,10 @@ export class MaterialsController {
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiResponse({ status: 200, type: MaterialDto, isArray: true })
-  async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
+  async findAll(
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ): Promise<PaginatedResult<MaterialDto>> {
     return this.queryBus.execute(
       new GetMaterialsQuery(normalizePaginationParams(page, limit)),
     );
@@ -180,7 +184,7 @@ export class MaterialsController {
     file: Express.Multer.File,
     @GetUser() user: AuthUserDto,
   ) {
-    return this.commandBus.execute(
+    await this.commandBus.execute(
       new UploadMaterialImageCommand(id, file, user.id),
     );
   }
@@ -236,7 +240,7 @@ export class MaterialsController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Query('page') page?: number,
     @Query('limit') limit?: number,
-  ) {
+  ): Promise<PaginatedResult<MaterialMovementDto>> {
     return this.queryBus.execute(
       new GetMaterialMovementsQuery(id, normalizePaginationParams(page, limit)),
     );

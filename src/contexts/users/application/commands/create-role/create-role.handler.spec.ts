@@ -6,6 +6,7 @@ import { CreateRoleCommand } from './create-role.command';
 import { ConflictException, BadRequestException } from '@nestjs/common';
 import { Permission } from '../../../domain/entities/permission';
 import { USERS_TOKENS } from '@contexts/users/users.tokens';
+import { Role } from '@contexts/users/domain/entities/role';
 
 describe('CreateRoleHandler', () => {
   let handler: CreateRoleHandler;
@@ -53,7 +54,9 @@ describe('CreateRoleHandler', () => {
 
   it('should throw ConflictException if role already exists', async () => {
     const command = new CreateRoleCommand('Admin', ['READ']);
-    roleRepository.findByName.mockResolvedValue({} as any);
+    roleRepository.findByName.mockResolvedValue(
+      {} as Role | Promise<Role | null> | null,
+    );
 
     await expect(handler.execute(command)).rejects.toThrow(ConflictException);
     expect(roleRepository.save).not.toHaveBeenCalled();

@@ -30,7 +30,7 @@ export class TypeOrmMaterialMovementRepository implements IMaterialMovementRepos
       take: limit,
     });
     return buildPaginatedResult(
-      entities.map(MaterialMovementPersistenceMapper.toDomain),
+      entities.map((e) => MaterialMovementPersistenceMapper.toDomain(e)),
       total,
       page,
       limit,

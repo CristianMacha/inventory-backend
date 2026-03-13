@@ -5,6 +5,7 @@ import { IUserRepository } from '../../../domain/repositories/user.repository';
 import { IRoleRepository } from '../../../domain/repositories/role.repository';
 import { CreateUserCommand } from './create-user.command';
 import { CreateUserHandler } from './create-user.handler';
+import { User } from '@contexts/users/domain/entities/user';
 
 describe('CreateUserHandler', () => {
   let handler: CreateUserHandler;
@@ -71,7 +72,9 @@ describe('CreateUserHandler', () => {
   });
 
   it('It should throw UserAlreadyExistsException if the user already exists.', async () => {
-    userRepositoryMock.findByEmail.mockResolvedValue({} as any);
+    userRepositoryMock.findByEmail.mockResolvedValue(
+      {} as User | Promise<User | null> | null,
+    );
 
     const command = new CreateUserCommand(
       'cristian@gmail.com',

@@ -38,7 +38,7 @@ export class GetJobPaymentsHandler implements IQueryHandler<GetJobPaymentsQuery>
     const remaining = job.totalAmount - totalPaid;
 
     return {
-      payments: payments.map(JobPaymentResponseMapper.toResponse),
+      payments: payments.map((e) => JobPaymentResponseMapper.toResponse(e)),
       totalPaid,
       remaining,
       jobTotalAmount: job.totalAmount,

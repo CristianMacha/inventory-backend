@@ -64,7 +64,7 @@ export class UploadBundleImageController {
     file: Express.Multer.File,
     @GetUser() user: AuthUserDto,
   ) {
-    return this.commandBus.execute(
+    await this.commandBus.execute(
       new UploadBundleImageCommand(bundleId, file, user.id),
     );
   }

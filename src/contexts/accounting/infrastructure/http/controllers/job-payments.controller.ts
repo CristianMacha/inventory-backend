@@ -54,7 +54,7 @@ export class JobPaymentsController {
   })
   @ApiResponse({ status: 404, description: 'Job not found' })
   async create(@Body() dto: RecordJobPaymentDto, @GetUser() user: AuthUserDto) {
-    const id = await this.commandBus.execute(
+    await this.commandBus.execute(
       new RecordJobPaymentCommand(
         dto.jobId,
         dto.amount,
@@ -64,7 +64,7 @@ export class JobPaymentsController {
         user.id,
       ),
     );
-    return { statusCode: HttpStatus.CREATED, message: 'Payment recorded', id };
+    return { statusCode: HttpStatus.CREATED, message: 'Payment recorded' };
   }
 
   @Get('job/:jobId')

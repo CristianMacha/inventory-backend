@@ -14,7 +14,7 @@ export class GetCategoriesHandler implements IQueryHandler<GetCategoriesQuery> {
     private readonly categoryRepository: ICategoryRepository,
   ) {}
 
-  async execute(query: GetCategoriesQuery): Promise<ICategoryOutputDto[]> {
+  async execute(): Promise<ICategoryOutputDto[]> {
     const categories = await this.categoryRepository.findAll();
 
     return (categories ?? []).map((category) =>

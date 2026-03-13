@@ -41,8 +41,8 @@ export class PurchaseInvoiceResponseMapper {
   ): PurchaseInvoiceDetailOutputDto {
     return {
       ...PurchaseInvoiceResponseMapper.toResponse(invoice, supplierName),
-      items: itemsWithBundleInfo.map(
-        PurchaseInvoiceResponseMapper.itemWithBundleInfoToResponse,
+      items: itemsWithBundleInfo.map((e) =>
+        PurchaseInvoiceResponseMapper.itemWithBundleInfoToResponse(e),
       ),
     };
   }

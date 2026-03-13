@@ -30,7 +30,7 @@ export class TypeOrmToolMovementRepository implements IToolMovementRepository {
       take: limit,
     });
     return buildPaginatedResult(
-      entities.map(ToolMovementPersistenceMapper.toDomain),
+      entities.map((e) => ToolMovementPersistenceMapper.toDomain(e)),
       total,
       page,
       limit,

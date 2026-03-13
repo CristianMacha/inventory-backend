@@ -7,7 +7,6 @@ import { PURCHASING_TOKENS } from '../../purchasing.tokens';
 import { ResourceNotFoundException } from '@shared/domain/exceptions/resource-not-found.exception';
 import { SupplierReturn } from '../../../domain/entities/supplier-return';
 import { ReturnReason } from '../../../domain/enums/return-reason.enum';
-import { SupplierReturnCreditedEvent } from '../../../domain/events/supplier-return-credited.event';
 import { InvalidReturnTransitionException } from '../../../domain/errors/invalid-return-transition.exception';
 
 const makeReturn = () => {

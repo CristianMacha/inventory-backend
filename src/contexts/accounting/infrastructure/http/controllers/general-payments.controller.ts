@@ -36,7 +36,7 @@ export class GeneralPaymentsController {
     @Body() dto: RecordGeneralPaymentDto,
     @GetUser() user: AuthUserDto,
   ) {
-    const id = await this.commandBus.execute(
+    await this.commandBus.execute(
       new RecordGeneralPaymentCommand(
         dto.type,
         dto.category,
@@ -48,7 +48,7 @@ export class GeneralPaymentsController {
         user.id,
       ),
     );
-    return { statusCode: HttpStatus.CREATED, message: 'Payment recorded', id };
+    return { statusCode: HttpStatus.CREATED, message: 'Payment recorded' };
   }
 
   @Get()

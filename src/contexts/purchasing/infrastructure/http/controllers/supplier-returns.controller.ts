@@ -66,7 +66,7 @@ export class SupplierReturnsController {
     @Body() dto: CreateSupplierReturnDto,
     @GetUser() user: AuthUserDto,
   ) {
-    const id = await this.commandBus.execute(
+    await this.commandBus.execute(
       new CreateSupplierReturnCommand(
         dto.purchaseInvoiceId,
         dto.supplierId,
@@ -78,7 +78,6 @@ export class SupplierReturnsController {
     return {
       statusCode: HttpStatus.CREATED,
       message: 'Supplier return created',
-      id,
     };
   }
 

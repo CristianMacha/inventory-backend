@@ -14,7 +14,7 @@ export class GetRolesHandler implements IQueryHandler<GetRolesQuery> {
     private readonly roleRepository: IRoleRepository,
   ) {}
 
-  async execute(query: GetRolesQuery): Promise<RoleOutputDto[]> {
+  async execute(): Promise<RoleOutputDto[]> {
     const roles = await this.roleRepository.findAll();
 
     return roles.map((e) => RoleResponseMapper.toResponse(e));

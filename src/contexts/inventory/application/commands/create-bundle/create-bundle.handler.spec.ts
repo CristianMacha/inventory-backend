@@ -10,6 +10,7 @@ import { Product } from '../../../domain/entities/product';
 import { Supplier } from '../../../domain/entities/supplier';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
 import { PURCHASING_TOKENS } from '@contexts/purchasing/application/purchasing.tokens';
+import { PurchaseInvoice } from '@contexts/purchasing/domain/entities/purchase-invoice';
 
 describe('CreateBundleHandler', () => {
   let handler: CreateBundleHandler;
@@ -77,7 +78,8 @@ describe('CreateBundleHandler', () => {
     const mockInvoice = {
       supplierId: 'sup1',
       invoiceNumber: 'INV-001',
-    } as any;
+    } as PurchaseInvoice | Promise<PurchaseInvoice | null> | null;
+
     const command = new CreateBundleCommand(
       'prod1',
       'user1',

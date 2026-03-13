@@ -70,7 +70,7 @@ export class JobsController {
   @ApiOperation({ summary: 'Create a new job/project' })
   @ApiResponse({ status: 201, description: 'Job created' })
   async create(@Body() dto: CreateJobDto, @GetUser() user: AuthUserDto) {
-    const id = await this.commandBus.execute(
+    await this.commandBus.execute(
       new CreateJobCommand(
         dto.projectName,
         dto.clientName,
@@ -82,7 +82,7 @@ export class JobsController {
         dto.scheduledDate ? new Date(dto.scheduledDate) : null,
       ),
     );
-    return { statusCode: HttpStatus.CREATED, message: 'Job created', id };
+    return { statusCode: HttpStatus.CREATED, message: 'Job created' };
   }
 
   @Get()

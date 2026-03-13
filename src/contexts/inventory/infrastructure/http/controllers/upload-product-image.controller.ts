@@ -63,7 +63,7 @@ export class UploadProductImageController {
     file: Express.Multer.File,
     @GetUser() user: AuthUserDto,
   ) {
-    return this.commandBus.execute(
+    await this.commandBus.execute(
       new UploadProductImageCommand(productId, file, user.id),
     );
   }

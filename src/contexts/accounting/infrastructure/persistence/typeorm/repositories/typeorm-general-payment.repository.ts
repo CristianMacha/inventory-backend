@@ -59,7 +59,7 @@ export class TypeOrmGeneralPaymentRepository implements IGeneralPaymentRepositor
 
     const [entities, total] = await qb.getManyAndCount();
     return buildPaginatedResult(
-      entities.map(GeneralPaymentMapper.toDomain),
+      entities.map((payment) => GeneralPaymentMapper.toDomain(payment)),
       total,
       page,
       limit,

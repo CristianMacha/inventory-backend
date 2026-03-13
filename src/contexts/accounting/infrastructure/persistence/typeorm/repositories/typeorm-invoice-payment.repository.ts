@@ -32,7 +32,7 @@ export class TypeOrmInvoicePaymentRepository implements IInvoicePaymentRepositor
       where: { invoiceId },
       order: { paymentDate: 'ASC', createdAt: 'ASC' },
     });
-    return entities.map(InvoicePaymentMapper.toDomain);
+    return entities.map((e) => InvoicePaymentMapper.toDomain(e));
   }
 
   async findPaginated(
@@ -61,7 +61,7 @@ export class TypeOrmInvoicePaymentRepository implements IInvoicePaymentRepositor
 
     const [entities, total] = await qb.getManyAndCount();
     return buildPaginatedResult(
-      entities.map(InvoicePaymentMapper.toDomain),
+      entities.map((e) => InvoicePaymentMapper.toDomain(e)),
       total,
       page,
       limit,

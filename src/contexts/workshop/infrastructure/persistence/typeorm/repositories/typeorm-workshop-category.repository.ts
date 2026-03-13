@@ -16,7 +16,7 @@ export class TypeOrmWorkshopCategoryRepository implements IWorkshopCategoryRepos
 
   async findAll(): Promise<WorkshopCategory[]> {
     const entities = await this.repository.find({ order: { name: 'ASC' } });
-    return entities.map(WorkshopCategoryPersistenceMapper.toDomain);
+    return entities.map((e) => WorkshopCategoryPersistenceMapper.toDomain(e));
   }
 
   async findById(id: WorkshopCategoryId): Promise<WorkshopCategory | null> {

@@ -25,7 +25,7 @@ describe('GetProductDetailHandler', () => {
     updatedAt: new Date(),
     createdBy: 'user-1',
     updatedBy: 'user-1',
-  } as any;
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -70,7 +70,7 @@ describe('GetProductDetailHandler', () => {
       category: { id: 'cat-1', name: 'Categoria A' } as any,
       level: null as any,
       finish: null as any,
-    } as any);
+    });
 
     bundleRepository.findByProductIdWithSlabs.mockResolvedValue([
       {
@@ -89,7 +89,7 @@ describe('GetProductDetailHandler', () => {
         slabs: [],
         supplierName: 'Proveedor A',
       },
-    ] as any);
+    ]);
 
     const result = await handler.execute(query);
 

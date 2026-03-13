@@ -28,7 +28,7 @@ const PersistenceProviders: Provider[] = [
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
           expiresIn: configService.get<number>('JWT_EXPIRATION_TIME', 3600),

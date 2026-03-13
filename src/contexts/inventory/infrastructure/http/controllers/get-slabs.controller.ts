@@ -94,8 +94,8 @@ export class GetSlabsController {
     @Param('slabId') slabId: string,
     @Body() dto: CreateRemnantSlabDto,
     @GetUser() user: AuthUserDto,
-  ): Promise<{ id: string }> {
-    const id = await this.commandBus.execute(
+  ) {
+    await this.commandBus.execute(
       new CreateRemnantSlabCommand(
         slabId,
         dto.code,
@@ -105,6 +105,5 @@ export class GetSlabsController {
         dto.description,
       ),
     );
-    return { id };
   }
 }

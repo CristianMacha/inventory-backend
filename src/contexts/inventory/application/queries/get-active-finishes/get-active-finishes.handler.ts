@@ -13,7 +13,7 @@ export class GetActiveFinishesHandler implements IQueryHandler<GetActiveFinishes
     private readonly finishRepository: IFinishRepository,
   ) {}
 
-  async execute(_query: GetActiveFinishesQuery): Promise<IFinishOutputDto[]> {
+  async execute(): Promise<IFinishOutputDto[]> {
     const finishes = await this.finishRepository.findAllActive();
     return finishes.map((f) => FinishResponseMapper.toResponse(f));
   }

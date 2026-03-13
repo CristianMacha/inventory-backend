@@ -23,7 +23,7 @@ export class GetInvoiceDocumentUrlController {
   })
   @ApiResponse({ status: 200, description: 'Returns signed URL' })
   @ApiResponse({ status: 404, description: 'Invoice or document not found' })
-  async run(@Param('invoiceId') invoiceId: string) {
+  async run(@Param('invoiceId') invoiceId: string): Promise<{ url: string }> {
     return this.queryBus.execute(new GetInvoiceDocumentUrlQuery(invoiceId));
   }
 }

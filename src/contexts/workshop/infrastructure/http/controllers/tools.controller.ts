@@ -47,6 +47,7 @@ import { ToolMovementDto } from '../../../application/dtos/tool-movement.dto';
 import { UploadToolImageCommand } from '../../../application/commands/upload-tool-image/upload-tool-image.command';
 import { DeleteToolImageCommand } from '../../../application/commands/delete-tool-image/delete-tool-image.command';
 import { FileValidationPipe } from '@shared/storage/pipes/file-validation.pipe';
+import { PaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
 
 const IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_10MB = 10 * 1024 * 1024;
@@ -88,7 +89,10 @@ export class ToolsController {
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiResponse({ status: 200, type: ToolDto, isArray: true })
-  async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
+  async findAll(
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ): Promise<PaginatedResult<ToolDto>> {
     return this.queryBus.execute(
       new GetToolsQuery(normalizePaginationParams(page, limit)),
     );
@@ -176,7 +180,7 @@ export class ToolsController {
     file: Express.Multer.File,
     @GetUser() user: AuthUserDto,
   ) {
-    return this.commandBus.execute(
+    await this.commandBus.execute(
       new UploadToolImageCommand(id, file, user.id),
     );
   }
@@ -232,7 +236,7 @@ export class ToolsController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Query('page') page?: number,
     @Query('limit') limit?: number,
-  ) {
+  ): Promise<PaginatedResult<ToolMovementDto>> {
     return this.queryBus.execute(
       new GetToolMovementsQuery(id, normalizePaginationParams(page, limit)),
     );

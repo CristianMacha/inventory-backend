@@ -4,6 +4,7 @@ import { CreateFinishHandler } from './create-finish.handler';
 import { IFinishRepository } from '../../../domain/repositories/finish.repository';
 import { CreateFinishCommand } from './create-finish.command';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
+import { Finish } from '@contexts/inventory/domain/entities/finish';
 
 describe('CreateFinishHandler', () => {
   let handler: CreateFinishHandler;
@@ -45,7 +46,10 @@ describe('CreateFinishHandler', () => {
 
   it('should throw ConflictException if finish with same name already exists', async () => {
     const command = new CreateFinishCommand('Pulido');
-    finishRepository.findByName.mockResolvedValue({ name: 'Pulido' } as any);
+    finishRepository.findByName.mockResolvedValue({ name: 'Pulido' } as
+      | Finish
+      | Promise<Finish | null>
+      | null);
 
     await expect(handler.execute(command)).rejects.toThrow(ConflictException);
     expect(finishRepository.save).not.toHaveBeenCalled();

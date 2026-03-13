@@ -66,6 +66,7 @@ export class RecordJobPaymentHandler implements ICommandHandler<RecordJobPayment
 
     job.applyPayment(amount, userId);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { items, ...jobFields } = JobMapper.toPersistence(job);
     const paymentEntity = JobPaymentMapper.toPersistence(payment);
 

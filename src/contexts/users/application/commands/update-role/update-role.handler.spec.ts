@@ -3,7 +3,7 @@ import { UpdateRoleHandler } from './update-role.handler';
 import { IRoleRepository } from '../../../domain/repositories/role.repository';
 import { IPermissionRepository } from '../../../domain/repositories/permission.repository';
 import { UpdateRoleCommand } from './update-role.command';
-import { ConflictException, BadRequestException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 import { ResourceNotFoundException } from '@shared/domain/exceptions/resource-not-found.exception';
 import { Role } from '../../../domain/entities/role';
 import { Permission } from '../../../domain/entities/permission';

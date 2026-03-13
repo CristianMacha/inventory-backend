@@ -32,7 +32,7 @@ export class TypeOrmJobPaymentRepository implements IJobPaymentRepository {
       where: { jobId },
       order: { paymentDate: 'ASC', createdAt: 'ASC' },
     });
-    return entities.map(JobPaymentMapper.toDomain);
+    return entities.map((e) => JobPaymentMapper.toDomain(e));
   }
 
   async findPaginated(
@@ -61,7 +61,7 @@ export class TypeOrmJobPaymentRepository implements IJobPaymentRepository {
 
     const [entities, total] = await qb.getManyAndCount();
     return buildPaginatedResult(
-      entities.map(JobPaymentMapper.toDomain),
+      entities.map((e) => JobPaymentMapper.toDomain(e)),
       total,
       page,
       limit,

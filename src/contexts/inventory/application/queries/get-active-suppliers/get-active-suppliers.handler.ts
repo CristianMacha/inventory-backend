@@ -13,9 +13,7 @@ export class GetActiveSuppliersHandler implements IQueryHandler<GetActiveSupplie
     private readonly supplierRepository: ISupplierRepository,
   ) {}
 
-  async execute(
-    _query: GetActiveSuppliersQuery,
-  ): Promise<ISupplierOutputDto[]> {
+  async execute(): Promise<ISupplierOutputDto[]> {
     const suppliers = await this.supplierRepository.findAllActive();
     return suppliers.map((s) => SupplierResponseMapper.toResponse(s));
   }

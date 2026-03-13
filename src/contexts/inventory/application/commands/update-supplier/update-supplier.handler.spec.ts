@@ -16,7 +16,7 @@ describe('UpdateSupplierHandler', () => {
     updateName: jest.fn(),
     updateAbbreviation: jest.fn(),
     setActive: jest.fn(),
-  } as any;
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -78,7 +78,7 @@ describe('UpdateSupplierHandler', () => {
     supplierRepository.findById.mockResolvedValue(mockSupplier);
     supplierRepository.findByName.mockResolvedValue({
       id: { getValue: () => 'other-id' },
-    } as any);
+    });
 
     await expect(handler.execute(command)).rejects.toThrow(ConflictException);
     expect(supplierRepository.save).not.toHaveBeenCalled();

@@ -68,15 +68,13 @@ export class RecordInvoicePaymentHandler implements ICommandHandler<RecordInvoic
 
     invoice.applyPayment(amount, userId);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { items, ...invoiceFields } =
       PurchaseInvoiceMapper.toPersistence(invoice);
     const paymentEntity = InvoicePaymentMapper.toPersistence(payment);
 
     await this.dataSource.transaction(async (manager) => {
-      await manager.save(
-        PurchaseInvoiceEntity,
-        invoiceFields as PurchaseInvoiceEntity,
-      );
+      await manager.save(PurchaseInvoiceEntity, invoiceFields);
       await manager.save(InvoicePaymentEntity, paymentEntity);
     });
 

@@ -64,7 +64,7 @@ export class UploadSupplierReturnDocumentController {
     file: Express.Multer.File,
     @GetUser() user: AuthUserDto,
   ) {
-    return this.commandBus.execute(
+    await this.commandBus.execute(
       new UploadSupplierReturnDocumentCommand(returnId, file, user.id),
     );
   }

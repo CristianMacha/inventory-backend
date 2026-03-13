@@ -14,7 +14,7 @@ export class GetPermissionsHandler implements IQueryHandler<GetPermissionsQuery>
     private readonly permissionRepository: IPermissionRepository,
   ) {}
 
-  async execute(query: GetPermissionsQuery): Promise<PermissionOutputDto[]> {
+  async execute(): Promise<PermissionOutputDto[]> {
     const permissions = await this.permissionRepository.findAll();
 
     return permissions.map((e) => PermissionResponseMapper.toResponse(e));

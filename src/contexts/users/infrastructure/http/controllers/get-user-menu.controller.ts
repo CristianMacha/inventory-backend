@@ -10,6 +10,7 @@ import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guar
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
 import { GetUserMenuQuery } from '../../../application/queries/get-user-menu/get-user-menu.query';
 import { MenuResponseDto } from '../../../application/dtos/menu-response.dto';
+import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 
 @ApiBearerAuth()
 @ApiTags('Users', 'Menu')
@@ -32,7 +33,7 @@ export class GetUserMenuController {
     status: 401,
     description: 'Unauthorized. Valid JWT token required.',
   })
-  async run(@GetUser() user: any): Promise<MenuResponseDto> {
+  async run(@GetUser() user: AuthUserDto): Promise<MenuResponseDto> {
     return this.queryBus.execute(new GetUserMenuQuery(user.id));
   }
 }

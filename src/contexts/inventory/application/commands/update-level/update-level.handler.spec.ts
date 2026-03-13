@@ -17,7 +17,7 @@ describe('UpdateLevelHandler', () => {
     updateSortOrder: jest.fn(),
     updateDescription: jest.fn(),
     setActive: jest.fn(),
-  } as any;
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

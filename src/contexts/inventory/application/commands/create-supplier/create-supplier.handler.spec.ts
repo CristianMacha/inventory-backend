@@ -4,6 +4,7 @@ import { CreateSupplierHandler } from './create-supplier.handler';
 import { ISupplierRepository } from '../../../domain/repositories/supplier.repository';
 import { CreateSupplierCommand } from './create-supplier.command';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
+import { Supplier } from '@contexts/inventory/domain/entities/supplier';
 
 describe('CreateSupplierHandler', () => {
   let handler: CreateSupplierHandler;
@@ -43,7 +44,7 @@ describe('CreateSupplierHandler', () => {
     const command = new CreateSupplierCommand('Proveedor ABC', 'user-1');
     supplierRepository.findByName.mockResolvedValue({
       name: 'Proveedor ABC',
-    } as any);
+    } as Supplier | Promise<Supplier | null> | null);
 
     await expect(handler.execute(command)).rejects.toThrow(ConflictException);
     expect(supplierRepository.save).not.toHaveBeenCalled();

@@ -9,7 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         return {
-          type: config.get<any>('DATABASE_TYPE', 'mysql'),
+          type: config.get('DATABASE_TYPE', 'mysql') as 'mysql',
           database: config.get<string>('DATABASE_NAME', 'test'),
           host: config.get<string>('DATABASE_HOST', 'localhost'),
           port: config.get<number>('DATABASE_PORT', 3306),

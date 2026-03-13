@@ -4,6 +4,7 @@ import { CreateLevelHandler } from './create-level.handler';
 import { ILevelRepository } from '../../../domain/repositories/level.repository';
 import { CreateLevelCommand } from './create-level.command';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
+import { Level } from '@contexts/inventory/domain/entities/level';
 
 describe('CreateLevelHandler', () => {
   let handler: CreateLevelHandler;
@@ -41,7 +42,10 @@ describe('CreateLevelHandler', () => {
 
   it('should throw ConflictException if level with same name already exists', async () => {
     const command = new CreateLevelCommand('Premium');
-    levelRepository.findByName.mockResolvedValue({ name: 'Premium' } as any);
+    levelRepository.findByName.mockResolvedValue({ name: 'Premium' } as
+      | Level
+      | Promise<Level | null>
+      | null);
 
     await expect(handler.execute(command)).rejects.toThrow(ConflictException);
     expect(levelRepository.save).not.toHaveBeenCalled();
