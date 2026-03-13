@@ -20,7 +20,7 @@ export class CreateBundleDto {
     description: 'Required if purchaseInvoiceId is not provided',
   })
   @IsUUID()
-  @ValidateIf((o) => !o.purchaseInvoiceId)
+  @ValidateIf((o: CreateBundleDto) => !o.purchaseInvoiceId)
   @IsNotEmpty()
   readonly supplierId?: string;
 

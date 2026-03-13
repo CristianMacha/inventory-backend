@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetBrandsHandler } from './get-brands.handler';
 import { IBrandRepository } from '@contexts/inventory/domain/repositories/brand.repository';
-import { GetBrandsQuery } from './get-brands.query';
 import { Brand } from '@contexts/inventory/domain/entities/brand';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
 
@@ -47,7 +46,7 @@ describe('GetBrandsHandler', () => {
     ] as unknown as Brand[];
     brandRepository.findAll.mockResolvedValue(brands);
 
-    const result = await handler.execute(new GetBrandsQuery());
+    const result = await handler.execute();
 
     expect(result).toHaveLength(2);
     expect(result[0].name).toBe('Brand1');
@@ -55,7 +54,7 @@ describe('GetBrandsHandler', () => {
 
   it('should return empty array if no brands found', async () => {
     brandRepository.findAll.mockResolvedValue(null);
-    const result = await handler.execute(new GetBrandsQuery());
+    const result = await handler.execute();
     expect(result).toEqual([]);
   });
 });

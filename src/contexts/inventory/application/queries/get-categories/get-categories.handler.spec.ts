@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetCategoriesHandler } from './get-categories.handler';
 import { ICategoryRepository } from '@contexts/inventory/domain/repositories/category.repository';
-import { GetCategoriesQuery } from './get-categories.query';
 import { Category } from '@contexts/inventory/domain/entities/category';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
 
@@ -39,7 +38,7 @@ describe('GetCategoriesHandler', () => {
     ] as unknown as Category[];
     categoryRepository.findAll.mockResolvedValue(categories);
 
-    const result = await handler.execute(new GetCategoriesQuery());
+    const result = await handler.execute();
 
     expect(result).toHaveLength(1);
     expect(result[0].name).toBe('Cat1');
@@ -47,7 +46,7 @@ describe('GetCategoriesHandler', () => {
 
   it('should return empty array if no categories found', async () => {
     categoryRepository.findAll.mockResolvedValue(null);
-    const result = await handler.execute(new GetCategoriesQuery());
+    const result = await handler.execute();
     expect(result).toEqual([]);
   });
 });

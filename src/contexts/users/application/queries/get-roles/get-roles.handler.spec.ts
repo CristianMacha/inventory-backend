@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetRolesHandler } from './get-roles.handler';
 import { IRoleRepository } from '@contexts/users/domain/repositories/role.repository';
-import { GetRolesQuery } from './get-roles.query';
 import { Role } from '@contexts/users/domain/entities/role';
 import { USERS_TOKENS } from '@contexts/users/users.tokens';
 
@@ -33,7 +32,7 @@ describe('GetRolesHandler', () => {
     ] as unknown as Role[];
     roleRepository.findAll.mockResolvedValue(roles);
 
-    const result = await handler.execute(new GetRolesQuery());
+    const result = await handler.execute();
 
     expect(result).toHaveLength(2);
     expect(result[0].name).toBe('Admin');

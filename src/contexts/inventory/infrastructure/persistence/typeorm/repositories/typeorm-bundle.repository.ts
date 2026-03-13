@@ -24,6 +24,10 @@ import {
   type PaginatedResult,
 } from '@shared/domain/pagination/paginated-result.interface';
 
+type BundleEntityWithInvoice = BundleEntity & {
+  invoice?: Pick<PurchaseInvoiceEntity, 'invoiceNumber'>;
+};
+
 @Injectable()
 export class TypeOrmBundleRepository implements IBundleRepository {
   constructor(
@@ -71,7 +75,8 @@ export class TypeOrmBundleRepository implements IBundleRepository {
       slabs: (entity.slabs ?? []).map((s) => SlabMapper.toDomain(s)),
       productName: entity.product?.name ?? '',
       supplierName: entity.supplier?.name ?? '',
-      invoiceNumber: (entity as any).invoice?.invoiceNumber ?? null,
+      invoiceNumber:
+        (entity as BundleEntityWithInvoice).invoice?.invoiceNumber ?? null,
     };
   }
 
@@ -98,7 +103,8 @@ export class TypeOrmBundleRepository implements IBundleRepository {
       slabs: (e.slabs ?? []).map((s) => SlabMapper.toDomain(s)),
       productName: e.product?.name ?? '',
       supplierName: e.supplier?.name ?? '',
-      invoiceNumber: (e as any).invoice?.invoiceNumber ?? null,
+      invoiceNumber:
+        (e as BundleEntityWithInvoice).invoice?.invoiceNumber ?? null,
     }));
   }
 
@@ -125,7 +131,8 @@ export class TypeOrmBundleRepository implements IBundleRepository {
       slabs: (e.slabs ?? []).map((s) => SlabMapper.toDomain(s)),
       productName: e.product?.name ?? '',
       supplierName: e.supplier?.name ?? '',
-      invoiceNumber: (e as any).invoice?.invoiceNumber ?? null,
+      invoiceNumber:
+        (e as BundleEntityWithInvoice).invoice?.invoiceNumber ?? null,
     }));
   }
 
@@ -214,7 +221,8 @@ export class TypeOrmBundleRepository implements IBundleRepository {
       bundle: BundleMapper.toDomain(e),
       productName: e.product?.name ?? '',
       supplierName: e.supplier?.name ?? '',
-      invoiceNumber: (e as any).invoice?.invoiceNumber ?? null,
+      invoiceNumber:
+        (e as BundleEntityWithInvoice).invoice?.invoiceNumber ?? null,
     }));
     return buildPaginatedResult(data, total, page, limit);
   }
@@ -249,7 +257,8 @@ export class TypeOrmBundleRepository implements IBundleRepository {
       bundle: BundleMapper.toDomain(e),
       productName: e.product?.name ?? '',
       supplierName: e.supplier?.name ?? '',
-      invoiceNumber: (e as any).invoice?.invoiceNumber ?? null,
+      invoiceNumber:
+        (e as BundleEntityWithInvoice).invoice?.invoiceNumber ?? null,
     }));
   }
 

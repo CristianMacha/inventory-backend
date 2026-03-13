@@ -5,6 +5,7 @@ import { IFinishRepository } from '../../../domain/repositories/finish.repositor
 import { UpdateFinishCommand } from './update-finish.command';
 import { ResourceNotFoundException } from '@shared/domain/exceptions/resource-not-found.exception';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
+import { Finish } from '../../../domain/entities/finish';
 
 describe('UpdateFinishHandler', () => {
   let handler: UpdateFinishHandler;
@@ -17,7 +18,7 @@ describe('UpdateFinishHandler', () => {
     updateAbbreviation: jest.fn(),
     updateDescription: jest.fn(),
     setActive: jest.fn(),
-  };
+  } as unknown as Finish;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -64,7 +65,7 @@ describe('UpdateFinishHandler', () => {
     finishRepository.findById.mockResolvedValue(mockFinish);
     finishRepository.findByName.mockResolvedValue({
       id: { getValue: () => 'other-id' },
-    } as any);
+    } as unknown as Finish);
 
     await expect(handler.execute(command)).rejects.toThrow(ConflictException);
     expect(finishRepository.save).not.toHaveBeenCalled();

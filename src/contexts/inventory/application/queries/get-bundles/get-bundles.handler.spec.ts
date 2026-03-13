@@ -3,6 +3,7 @@ import { GetBundlesHandler } from './get-bundles.handler';
 import { IBundleRepository } from '../../../domain/repositories/bundle.repository';
 import { GetBundlesQuery } from './get-bundles.query';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
+import { Bundle } from '../../../domain/entities/bundle';
 
 describe('GetBundlesHandler', () => {
   let handler: GetBundlesHandler;
@@ -19,7 +20,7 @@ describe('GetBundlesHandler', () => {
     updatedBy: 'user-1',
     createdAt: new Date(),
     updatedAt: new Date(),
-  };
+  } as unknown as Bundle;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

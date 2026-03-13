@@ -135,10 +135,11 @@ export class TypeOrmSlabRepository implements ISlabRepository {
     }
 
     const raw = await qb.getRawAndEntities();
+    const rawRows = raw.raw as { bundle_lotNumber: string }[];
 
     return raw.entities.map((entity, i) => ({
       slab: SlabMapper.toDomain(entity),
-      lotNumber: raw.raw[i]?.bundle_lotNumber ?? '',
+      lotNumber: rawRows[i]?.bundle_lotNumber ?? '',
     }));
   }
 

@@ -30,7 +30,7 @@ describe('CreateUserHandler', () => {
     } as unknown as jest.Mocked<IRoleRepository>;
 
     hasherMock = {
-      hash: jest.fn(async (password: string) => FAKE_HASH),
+      hash: jest.fn(() => Promise.resolve(FAKE_HASH)),
       compare: jest.fn(),
     } as unknown as jest.Mocked<IHasher>;
 

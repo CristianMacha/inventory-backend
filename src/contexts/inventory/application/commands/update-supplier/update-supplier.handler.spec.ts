@@ -5,6 +5,7 @@ import { ISupplierRepository } from '../../../domain/repositories/supplier.repos
 import { UpdateSupplierCommand } from './update-supplier.command';
 import { ResourceNotFoundException } from '@shared/domain/exceptions/resource-not-found.exception';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
+import { Supplier } from '../../../domain/entities/supplier';
 
 describe('UpdateSupplierHandler', () => {
   let handler: UpdateSupplierHandler;
@@ -16,7 +17,7 @@ describe('UpdateSupplierHandler', () => {
     updateName: jest.fn(),
     updateAbbreviation: jest.fn(),
     setActive: jest.fn(),
-  };
+  } as unknown as Supplier;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -78,7 +79,7 @@ describe('UpdateSupplierHandler', () => {
     supplierRepository.findById.mockResolvedValue(mockSupplier);
     supplierRepository.findByName.mockResolvedValue({
       id: { getValue: () => 'other-id' },
-    });
+    } as unknown as Supplier);
 
     await expect(handler.execute(command)).rejects.toThrow(ConflictException);
     expect(supplierRepository.save).not.toHaveBeenCalled();

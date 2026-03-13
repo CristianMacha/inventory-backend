@@ -22,6 +22,10 @@ import {
   type PaginatedResult,
 } from '@shared/domain/pagination/paginated-result.interface';
 
+type PurchaseInvoiceEntityWithSupplier = PurchaseInvoiceEntity & {
+  supplier?: Pick<SupplierEntity, 'name'>;
+};
+
 @Injectable()
 export class TypeOrmPurchaseInvoiceRepository implements IPurchaseInvoiceRepository {
   constructor(
@@ -67,7 +71,8 @@ export class TypeOrmPurchaseInvoiceRepository implements IPurchaseInvoiceReposit
     if (!entity) return null;
     return {
       invoice: PurchaseInvoiceMapper.toDomain(entity),
-      supplierName: (entity as any).supplier?.name ?? '',
+      supplierName:
+        (entity as PurchaseInvoiceEntityWithSupplier).supplier?.name ?? '',
     };
   }
 
@@ -121,7 +126,8 @@ export class TypeOrmPurchaseInvoiceRepository implements IPurchaseInvoiceReposit
     return buildPaginatedResult(
       entities.map((e) => ({
         invoice: PurchaseInvoiceMapper.toDomainWithCount(e),
-        supplierName: (e as any).supplier?.name ?? '',
+        supplierName:
+          (e as PurchaseInvoiceEntityWithSupplier).supplier?.name ?? '',
       })),
       total,
       page,

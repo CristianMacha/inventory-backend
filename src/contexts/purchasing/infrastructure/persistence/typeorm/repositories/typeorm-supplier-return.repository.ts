@@ -21,6 +21,11 @@ import {
   type PaginatedResult,
 } from '@shared/domain/pagination/paginated-result.interface';
 
+type SupplierReturnEntityWithRelations = SupplierReturnEntity & {
+  supplier?: Pick<SupplierEntity, 'name'>;
+  invoice?: Pick<PurchaseInvoiceEntity, 'invoiceNumber'>;
+};
+
 @Injectable()
 export class TypeOrmSupplierReturnRepository implements ISupplierReturnRepository {
   constructor(
@@ -116,8 +121,10 @@ export class TypeOrmSupplierReturnRepository implements ISupplierReturnRepositor
     const [entities, total] = await qb.getManyAndCount();
     const data = entities.map((e) => ({
       supplierReturn: SupplierReturnMapper.toDomain(e),
-      supplierName: (e as any).supplier?.name ?? '',
-      invoiceNumber: (e as any).invoice?.invoiceNumber ?? null,
+      supplierName:
+        (e as SupplierReturnEntityWithRelations).supplier?.name ?? '',
+      invoiceNumber:
+        (e as SupplierReturnEntityWithRelations).invoice?.invoiceNumber ?? null,
     }));
 
     return buildPaginatedResult(data, total, page, limit);

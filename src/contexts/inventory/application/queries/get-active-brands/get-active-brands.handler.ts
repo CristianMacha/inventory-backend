@@ -13,7 +13,7 @@ export class GetActiveBrandsHandler implements IQueryHandler<GetActiveBrandsQuer
     private readonly brandRepository: IBrandRepository,
   ) {}
 
-  async execute(_query: GetActiveBrandsQuery): Promise<IBrandOutputDto[]> {
+  async execute(): Promise<IBrandOutputDto[]> {
     const brands = await this.brandRepository.findAllActive();
     return brands.map((b) => BrandResponseMapper.toResponse(b));
   }

@@ -6,6 +6,8 @@ import { IProductImageRepository } from '@contexts/inventory/domain/repositories
 import { GetProductDetailQuery } from './get-product-detail.query';
 import { ResourceNotFoundException } from '@shared/domain/exceptions/resource-not-found.exception';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
+import type { ProductWithRelations } from '@contexts/inventory/domain/repositories/product.repository';
+import type { BundleWithSlabs } from '@contexts/inventory/domain/repositories/bundle.repository';
 
 describe('GetProductDetailHandler', () => {
   let handler: GetProductDetailHandler;
@@ -66,11 +68,11 @@ describe('GetProductDetailHandler', () => {
 
     productRepository.findByIdWithRelations.mockResolvedValue({
       product: mockProduct,
-      brand: { id: 'brand-1', name: 'Marca A' } as any,
-      category: { id: 'cat-1', name: 'Categoria A' } as any,
-      level: null as any,
-      finish: null as any,
-    });
+      brand: { id: 'brand-1', name: 'Marca A' },
+      category: { id: 'cat-1', name: 'Categoria A' },
+      level: null,
+      finish: null,
+    } as unknown as ProductWithRelations);
 
     bundleRepository.findByProductIdWithSlabs.mockResolvedValue([
       {
@@ -85,10 +87,12 @@ describe('GetProductDetailHandler', () => {
           updatedBy: 'user-1',
           createdAt: new Date(),
           updatedAt: new Date(),
-        } as any,
+        },
         slabs: [],
+        productName: 'Calacatta Gold',
         supplierName: 'Proveedor A',
-      },
+        invoiceNumber: null,
+      } as unknown as BundleWithSlabs,
     ]);
 
     const result = await handler.execute(query);

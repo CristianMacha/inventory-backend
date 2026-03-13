@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { EventBus } from '@nestjs/cqrs';
 import { CreateJobHandler } from './create-job.handler';
 import { IJobRepository } from '../../../domain/repositories/job.repository';
 import { CreateJobCommand } from './create-job.command';
@@ -20,6 +21,10 @@ describe('CreateJobHandler', () => {
             findById: jest.fn(),
             findPaginated: jest.fn(),
           },
+        },
+        {
+          provide: EventBus,
+          useValue: { publishAll: jest.fn() },
         },
       ],
     }).compile();

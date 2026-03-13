@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetPermissionsHandler } from './get-permissions.handler';
 import { IPermissionRepository } from '@contexts/users/domain/repositories/permission.repository';
-import { GetPermissionsQuery } from './get-permissions.query';
 import { Permission } from '@contexts/users/domain/entities/permission';
 import { USERS_TOKENS } from '@contexts/users/users.tokens';
 
@@ -37,7 +36,7 @@ describe('GetPermissionsHandler', () => {
     ] as unknown as Permission[];
     permissionRepository.findAll.mockResolvedValue(permissions);
 
-    const result = await handler.execute(new GetPermissionsQuery());
+    const result = await handler.execute();
 
     expect(result).toHaveLength(2);
     expect(result[0].name).toBe('READ');

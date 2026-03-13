@@ -56,8 +56,8 @@ export class GetUserMenuHandler implements IQueryHandler<GetUserMenuQuery> {
             return [{ ...item, children: filteredChildren }];
           }
           if (item.path) {
-            const { children: _children, ...itemWithoutChildren } = item;
-            return [itemWithoutChildren];
+            const { label, path, permission, icon, id } = item;
+            return [{ id, label, path, permission, icon }];
           }
           return [];
         }

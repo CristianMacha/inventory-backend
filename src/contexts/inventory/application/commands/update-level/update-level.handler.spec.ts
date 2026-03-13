@@ -5,6 +5,7 @@ import { ILevelRepository } from '../../../domain/repositories/level.repository'
 import { UpdateLevelCommand } from './update-level.command';
 import { ResourceNotFoundException } from '@shared/domain/exceptions/resource-not-found.exception';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
+import { Level } from '../../../domain/entities/level';
 
 describe('UpdateLevelHandler', () => {
   let handler: UpdateLevelHandler;
@@ -17,7 +18,7 @@ describe('UpdateLevelHandler', () => {
     updateSortOrder: jest.fn(),
     updateDescription: jest.fn(),
     setActive: jest.fn(),
-  };
+  } as unknown as Level;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -64,7 +65,7 @@ describe('UpdateLevelHandler', () => {
     levelRepository.findById.mockResolvedValue(mockLevel);
     levelRepository.findByName.mockResolvedValue({
       id: { getValue: () => 'other-id' },
-    } as any);
+    } as unknown as Level);
 
     await expect(handler.execute(command)).rejects.toThrow(ConflictException);
     expect(levelRepository.save).not.toHaveBeenCalled();

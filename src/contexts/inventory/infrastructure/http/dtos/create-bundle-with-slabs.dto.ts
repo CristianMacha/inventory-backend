@@ -45,7 +45,7 @@ export class CreateBundleWithSlabsDto {
     description: 'Required if purchaseInvoiceId is not provided',
   })
   @IsUUID()
-  @ValidateIf((o) => !o.purchaseInvoiceId)
+  @ValidateIf((o: CreateBundleWithSlabsDto) => !o.purchaseInvoiceId)
   @IsNotEmpty()
   supplierId?: string;
 
