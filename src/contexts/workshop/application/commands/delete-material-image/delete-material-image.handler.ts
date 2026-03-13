@@ -20,7 +20,8 @@ export class DeleteMaterialImageHandler implements ICommandHandler<DeleteMateria
   async execute(command: DeleteMaterialImageCommand): Promise<void> {
     const materialId = MaterialId.create(command.materialId);
     const material = await this.materialRepository.findById(materialId);
-    if (!material) throw new ResourceNotFoundException('Material', command.materialId);
+    if (!material)
+      throw new ResourceNotFoundException('Material', command.materialId);
 
     if (material.imagePublicId) {
       await this.cloudinaryService.delete(material.imagePublicId);

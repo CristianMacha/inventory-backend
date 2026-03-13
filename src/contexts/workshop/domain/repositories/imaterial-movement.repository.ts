@@ -3,7 +3,10 @@ import { PaginatedResult } from '@shared/domain/pagination/paginated-result.inte
 import { PaginationParams } from '@shared/domain/pagination/pagination-params.interface';
 
 export interface IMaterialMovementRepository {
-  findByMaterial(materialId: string, pagination: PaginationParams): Promise<PaginatedResult<MaterialMovement>>;
+  findByMaterial(
+    materialId: string,
+    pagination: PaginationParams,
+  ): Promise<PaginatedResult<MaterialMovement>>;
   getStockForMaterial(materialId: string): Promise<number>;
   save(movement: MaterialMovement): Promise<void>;
 }

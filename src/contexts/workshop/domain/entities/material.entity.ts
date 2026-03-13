@@ -1,5 +1,8 @@
 import { MaterialId } from '../value-objects/material-id';
-import { WorkshopItemNameEmptyException, InvalidPriceValueException } from '../errors/workshop.errors';
+import {
+  WorkshopItemNameEmptyException,
+  InvalidPriceValueException,
+} from '../errors/workshop.errors';
 
 export class Material {
   private readonly _id: MaterialId;
@@ -110,8 +113,19 @@ export class Material {
     updatedAt: Date,
   ): Material {
     return new Material(
-      id, name, description, unit, minStock, unitPrice,
-      categoryId, supplierId, imagePublicId, createdBy, updatedBy, createdAt, updatedAt,
+      id,
+      name,
+      description,
+      unit,
+      minStock,
+      unitPrice,
+      categoryId,
+      supplierId,
+      imagePublicId,
+      createdBy,
+      updatedBy,
+      createdAt,
+      updatedAt,
     );
   }
 
@@ -125,11 +139,20 @@ export class Material {
     categoryId?: string | null,
     supplierId?: string | null,
   ): void {
-    if (name !== undefined) { Material.validateName(name); this._name = name; }
+    if (name !== undefined) {
+      Material.validateName(name);
+      this._name = name;
+    }
     if (description !== undefined) this._description = description;
     if (unit !== undefined) this._unit = unit;
-    if (minStock !== undefined) { Material.validateMinStock(minStock); this._minStock = minStock; }
-    if (unitPrice !== undefined) { Material.validatePrice(unitPrice); this._unitPrice = unitPrice; }
+    if (minStock !== undefined) {
+      Material.validateMinStock(minStock);
+      this._minStock = minStock;
+    }
+    if (unitPrice !== undefined) {
+      Material.validatePrice(unitPrice);
+      this._unitPrice = unitPrice;
+    }
     if (categoryId !== undefined) this._categoryId = categoryId;
     if (supplierId !== undefined) this._supplierId = supplierId;
     this._updatedBy = updatedBy;
@@ -142,17 +165,43 @@ export class Material {
     this._updatedAt = new Date();
   }
 
-  get id(): MaterialId { return this._id; }
-  get name(): string { return this._name; }
-  get description(): string | null { return this._description; }
-  get unit(): string { return this._unit; }
-  get minStock(): number { return this._minStock; }
-  get unitPrice(): number | null { return this._unitPrice; }
-  get categoryId(): string | null { return this._categoryId; }
-  get supplierId(): string | null { return this._supplierId; }
-  get imagePublicId(): string | null { return this._imagePublicId; }
-  get createdBy(): string { return this._createdBy; }
-  get updatedBy(): string { return this._updatedBy; }
-  get createdAt(): Date { return this._createdAt; }
-  get updatedAt(): Date { return this._updatedAt; }
+  get id(): MaterialId {
+    return this._id;
+  }
+  get name(): string {
+    return this._name;
+  }
+  get description(): string | null {
+    return this._description;
+  }
+  get unit(): string {
+    return this._unit;
+  }
+  get minStock(): number {
+    return this._minStock;
+  }
+  get unitPrice(): number | null {
+    return this._unitPrice;
+  }
+  get categoryId(): string | null {
+    return this._categoryId;
+  }
+  get supplierId(): string | null {
+    return this._supplierId;
+  }
+  get imagePublicId(): string | null {
+    return this._imagePublicId;
+  }
+  get createdBy(): string {
+    return this._createdBy;
+  }
+  get updatedBy(): string {
+    return this._updatedBy;
+  }
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
 }

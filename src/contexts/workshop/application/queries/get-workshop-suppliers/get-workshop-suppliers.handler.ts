@@ -13,7 +13,9 @@ export class GetWorkshopSuppliersHandler implements IQueryHandler<GetWorkshopSup
     private readonly supplierRepository: IWorkshopSupplierRepository,
   ) {}
 
-  async execute(_query: GetWorkshopSuppliersQuery): Promise<WorkshopSupplierDto[]> {
+  async execute(
+    _query: GetWorkshopSuppliersQuery,
+  ): Promise<WorkshopSupplierDto[]> {
     const suppliers = await this.supplierRepository.findAll();
     return suppliers.map(WorkshopSupplierMapper.toDto);
   }

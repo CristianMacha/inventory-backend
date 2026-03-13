@@ -1,9 +1,22 @@
 import {
-  Body, Controller, Get, HttpCode, HttpStatus,
-  Param, ParseUUIDPipe, Patch, Post,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
@@ -31,7 +44,9 @@ export class WorkshopCategoriesController {
   @ApiResponse({ status: 201, description: 'Category created successfully' })
   @ApiResponse({ status: 409, description: 'Category name already exists' })
   async create(@Body() dto: CreateWorkshopCategoryDto): Promise<void> {
-    await this.commandBus.execute(new CreateWorkshopCategoryCommand(dto.name, dto.description));
+    await this.commandBus.execute(
+      new CreateWorkshopCategoryCommand(dto.name, dto.description),
+    );
   }
 
   @Get()
@@ -53,6 +68,8 @@ export class WorkshopCategoriesController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdateWorkshopCategoryDto,
   ): Promise<void> {
-    await this.commandBus.execute(new UpdateWorkshopCategoryCommand(id, dto.name, dto.description));
+    await this.commandBus.execute(
+      new UpdateWorkshopCategoryCommand(id, dto.name, dto.description),
+    );
   }
 }

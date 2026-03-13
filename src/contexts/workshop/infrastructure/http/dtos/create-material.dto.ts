@@ -1,5 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Min,
+} from 'class-validator';
 
 export class CreateMaterialDto {
   @ApiProperty({ example: 'Cemento Portland' })
@@ -23,7 +30,7 @@ export class CreateMaterialDto {
   @IsOptional()
   readonly minStock?: number;
 
-  @ApiPropertyOptional({ example: 12.50 })
+  @ApiPropertyOptional({ example: 12.5 })
   @IsNumber()
   @Min(0)
   @IsOptional()

@@ -27,7 +27,14 @@ export class ChangeToolStatusHandler implements ICommandHandler<ChangeToolStatus
     tool.update(updatedBy, undefined, undefined, newStatus);
     await this.toolRepository.save(tool);
 
-    const movement = ToolMovement.create(toolId, previousStatus, newStatus, updatedBy, jobId, notes);
+    const movement = ToolMovement.create(
+      toolId,
+      previousStatus,
+      newStatus,
+      updatedBy,
+      jobId,
+      notes,
+    );
     await this.movementRepository.save(movement);
   }
 }

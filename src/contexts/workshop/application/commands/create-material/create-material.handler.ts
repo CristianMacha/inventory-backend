@@ -13,14 +13,34 @@ export class CreateMaterialHandler implements ICommandHandler<CreateMaterialComm
   ) {}
 
   async execute(command: CreateMaterialCommand): Promise<void> {
-    const { name, unit, createdBy, description, minStock, unitPrice, categoryId, supplierId } = command;
+    const {
+      name,
+      unit,
+      createdBy,
+      description,
+      minStock,
+      unitPrice,
+      categoryId,
+      supplierId,
+    } = command;
 
     const existing = await this.materialRepository.findByName(name);
     if (existing) {
-      throw new ConflictException(`Material with name "${name}" already exists`);
+      throw new ConflictException(
+        `Material with name "${name}" already exists`,
+      );
     }
 
-    const material = Material.create(name, unit, createdBy, description, minStock, unitPrice, categoryId, supplierId);
+    const material = Material.create(
+      name,
+      unit,
+      createdBy,
+      description,
+      minStock,
+      unitPrice,
+      categoryId,
+      supplierId,
+    );
     await this.materialRepository.save(material);
   }
 }

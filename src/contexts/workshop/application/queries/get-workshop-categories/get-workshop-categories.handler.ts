@@ -13,7 +13,9 @@ export class GetWorkshopCategoriesHandler implements IQueryHandler<GetWorkshopCa
     private readonly categoryRepository: IWorkshopCategoryRepository,
   ) {}
 
-  async execute(_query: GetWorkshopCategoriesQuery): Promise<WorkshopCategoryDto[]> {
+  async execute(
+    _query: GetWorkshopCategoriesQuery,
+  ): Promise<WorkshopCategoryDto[]> {
     const categories = await this.categoryRepository.findAll();
     return categories.map(WorkshopCategoryMapper.toDto);
   }

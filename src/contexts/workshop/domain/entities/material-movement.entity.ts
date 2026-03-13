@@ -62,15 +62,40 @@ export class MaterialMovement {
     createdBy: string,
     createdAt: Date,
   ): MaterialMovement {
-    return new MaterialMovement(id, materialId, delta, reason, jobId, notes, createdBy, createdAt);
+    return new MaterialMovement(
+      id,
+      materialId,
+      delta,
+      reason,
+      jobId,
+      notes,
+      createdBy,
+      createdAt,
+    );
   }
 
-  get id(): MaterialMovementId { return this._id; }
-  get materialId(): string { return this._materialId; }
-  get delta(): number { return this._delta; }
-  get reason(): MaterialMovementReason { return this._reason; }
-  get jobId(): string | null { return this._jobId; }
-  get notes(): string | null { return this._notes; }
-  get createdBy(): string { return this._createdBy; }
-  get createdAt(): Date { return this._createdAt; }
+  get id(): MaterialMovementId {
+    return this._id;
+  }
+  get materialId(): string {
+    return this._materialId;
+  }
+  get delta(): number {
+    return this._delta;
+  }
+  get reason(): MaterialMovementReason {
+    return this._reason;
+  }
+  get jobId(): string | null {
+    return this._jobId;
+  }
+  get notes(): string | null {
+    return this._notes;
+  }
+  get createdBy(): string {
+    return this._createdBy;
+  }
+  get createdAt(): Date {
+    return this._createdAt;
+  }
 }

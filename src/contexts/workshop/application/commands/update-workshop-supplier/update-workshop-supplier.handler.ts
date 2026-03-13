@@ -14,9 +14,19 @@ export class UpdateWorkshopSupplierHandler implements ICommandHandler<UpdateWork
   ) {}
 
   async execute(command: UpdateWorkshopSupplierCommand): Promise<void> {
-    const supplier = await this.supplierRepository.findById(WorkshopSupplierId.create(command.id));
-    if (!supplier) throw new ResourceNotFoundException('WorkshopSupplier', command.id);
-    supplier.update(command.name, command.phone, command.email, command.address, command.notes, command.isActive);
+    const supplier = await this.supplierRepository.findById(
+      WorkshopSupplierId.create(command.id),
+    );
+    if (!supplier)
+      throw new ResourceNotFoundException('WorkshopSupplier', command.id);
+    supplier.update(
+      command.name,
+      command.phone,
+      command.email,
+      command.address,
+      command.notes,
+      command.isActive,
+    );
     await this.supplierRepository.save(supplier);
   }
 }

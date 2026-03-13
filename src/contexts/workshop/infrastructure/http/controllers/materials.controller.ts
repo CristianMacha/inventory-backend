@@ -1,10 +1,30 @@
 import {
-  Body, Controller, Delete, Get, HttpCode, HttpStatus,
-  Param, ParseUUIDPipe, Patch, Post, Query, UploadedFile, UseInterceptors,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
@@ -47,12 +67,20 @@ export class MaterialsController {
   @ApiOperation({ summary: 'Create a new material' })
   @ApiResponse({ status: 201, description: 'Material created successfully' })
   @ApiResponse({ status: 409, description: 'Material name already exists' })
-  async create(@Body() dto: CreateMaterialDto, @GetUser() user: AuthUserDto): Promise<void> {
+  async create(
+    @Body() dto: CreateMaterialDto,
+    @GetUser() user: AuthUserDto,
+  ): Promise<void> {
     await this.commandBus.execute(
       new CreateMaterialCommand(
-        dto.name, dto.unit, user.id,
-        dto.description, dto.minStock,
-        dto.unitPrice, dto.categoryId, dto.supplierId,
+        dto.name,
+        dto.unit,
+        user.id,
+        dto.description,
+        dto.minStock,
+        dto.unitPrice,
+        dto.categoryId,
+        dto.supplierId,
       ),
     );
   }
@@ -64,7 +92,9 @@ export class MaterialsController {
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiResponse({ status: 200, type: MaterialDto, isArray: true })
   async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
-    return this.queryBus.execute(new GetMaterialsQuery(normalizePaginationParams(page, limit)));
+    return this.queryBus.execute(
+      new GetMaterialsQuery(normalizePaginationParams(page, limit)),
+    );
   }
 
   @Get(':id')
@@ -73,7 +103,9 @@ export class MaterialsController {
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, type: MaterialDto })
   @ApiResponse({ status: 404, description: 'Material not found' })
-  async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<MaterialDto> {
+  async findOne(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<MaterialDto> {
     return this.queryBus.execute(new GetMaterialByIdQuery(id));
   }
 
@@ -91,8 +123,15 @@ export class MaterialsController {
   ): Promise<void> {
     await this.commandBus.execute(
       new UpdateMaterialCommand(
-        id, user.id, dto.name, dto.description, dto.unit,
-        dto.minStock, dto.unitPrice, dto.categoryId, dto.supplierId,
+        id,
+        user.id,
+        dto.name,
+        dto.description,
+        dto.unit,
+        dto.minStock,
+        dto.unitPrice,
+        dto.categoryId,
+        dto.supplierId,
       ),
     );
   }
@@ -118,7 +157,11 @@ export class MaterialsController {
       type: 'object',
       required: ['file'],
       properties: {
-        file: { type: 'string', format: 'binary', description: 'Image (JPEG, PNG, WebP — max 10MB)' },
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Image (JPEG, PNG, WebP — max 10MB)',
+        },
       },
     },
   })
@@ -128,11 +171,18 @@ export class MaterialsController {
   @ApiResponse({ status: 404, description: 'Material not found' })
   async uploadImage(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @UploadedFile(new FileValidationPipe({ allowedMimeTypes: IMAGE_MIME_TYPES, maxSizeBytes: MAX_10MB }))
+    @UploadedFile(
+      new FileValidationPipe({
+        allowedMimeTypes: IMAGE_MIME_TYPES,
+        maxSizeBytes: MAX_10MB,
+      }),
+    )
     file: Express.Multer.File,
     @GetUser() user: AuthUserDto,
   ) {
-    return this.commandBus.execute(new UploadMaterialImageCommand(id, file, user.id));
+    return this.commandBus.execute(
+      new UploadMaterialImageCommand(id, file, user.id),
+    );
   }
 
   @Delete(':id/image')
@@ -152,7 +202,9 @@ export class MaterialsController {
   @Post(':id/movements')
   @HttpCode(HttpStatus.CREATED)
   @RequirePermissions(Permissions.WORKSHOP_MOVEMENTS.CREATE)
-  @ApiOperation({ summary: 'Register a material movement (entry, exit or adjustment)' })
+  @ApiOperation({
+    summary: 'Register a material movement (entry, exit or adjustment)',
+  })
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 201, description: 'Movement registered' })
   @ApiResponse({ status: 404, description: 'Material not found' })
@@ -162,7 +214,14 @@ export class MaterialsController {
     @GetUser() user: AuthUserDto,
   ): Promise<void> {
     await this.commandBus.execute(
-      new RegisterMaterialMovementCommand(id, dto.delta, dto.reason, user.id, dto.jobId, dto.notes),
+      new RegisterMaterialMovementCommand(
+        id,
+        dto.delta,
+        dto.reason,
+        user.id,
+        dto.jobId,
+        dto.notes,
+      ),
     );
   }
 
@@ -178,15 +237,22 @@ export class MaterialsController {
     @Query('page') page?: number,
     @Query('limit') limit?: number,
   ) {
-    return this.queryBus.execute(new GetMaterialMovementsQuery(id, normalizePaginationParams(page, limit)));
+    return this.queryBus.execute(
+      new GetMaterialMovementsQuery(id, normalizePaginationParams(page, limit)),
+    );
   }
 
   @Get(':id/stock')
   @RequirePermissions(Permissions.WORKSHOP_MATERIALS.READ)
   @ApiOperation({ summary: 'Get current calculated stock for a material' })
   @ApiParam({ name: 'id', type: String })
-  @ApiResponse({ status: 200, schema: { properties: { currentStock: { type: 'number' } } } })
-  async getStock(@Param('id', new ParseUUIDPipe()) id: string): Promise<{ currentStock: number }> {
+  @ApiResponse({
+    status: 200,
+    schema: { properties: { currentStock: { type: 'number' } } },
+  })
+  async getStock(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<{ currentStock: number }> {
     return this.queryBus.execute(new GetMaterialStockQuery(id));
   }
 }

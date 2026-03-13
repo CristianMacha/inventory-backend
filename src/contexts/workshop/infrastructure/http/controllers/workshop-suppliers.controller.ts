@@ -1,9 +1,22 @@
 import {
-  Body, Controller, Get, HttpCode, HttpStatus,
-  Param, ParseUUIDPipe, Patch, Post,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
@@ -32,7 +45,13 @@ export class WorkshopSuppliersController {
   @ApiResponse({ status: 409, description: 'Supplier name already exists' })
   async create(@Body() dto: CreateWorkshopSupplierDto): Promise<void> {
     await this.commandBus.execute(
-      new CreateWorkshopSupplierCommand(dto.name, dto.phone, dto.email, dto.address, dto.notes),
+      new CreateWorkshopSupplierCommand(
+        dto.name,
+        dto.phone,
+        dto.email,
+        dto.address,
+        dto.notes,
+      ),
     );
   }
 
@@ -56,7 +75,15 @@ export class WorkshopSuppliersController {
     @Body() dto: UpdateWorkshopSupplierDto,
   ): Promise<void> {
     await this.commandBus.execute(
-      new UpdateWorkshopSupplierCommand(id, dto.name, dto.phone, dto.email, dto.address, dto.notes, dto.isActive),
+      new UpdateWorkshopSupplierCommand(
+        id,
+        dto.name,
+        dto.phone,
+        dto.email,
+        dto.address,
+        dto.notes,
+        dto.isActive,
+      ),
     );
   }
 }

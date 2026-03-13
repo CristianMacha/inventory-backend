@@ -20,10 +20,19 @@ export class RegisterMaterialMovementHandler implements ICommandHandler<Register
   async execute(command: RegisterMaterialMovementCommand): Promise<void> {
     const { materialId, delta, reason, createdBy, jobId, notes } = command;
 
-    const material = await this.materialRepository.findById(MaterialId.create(materialId));
+    const material = await this.materialRepository.findById(
+      MaterialId.create(materialId),
+    );
     if (!material) throw new ResourceNotFoundException('Material', materialId);
 
-    const movement = MaterialMovement.create(materialId, delta, reason, createdBy, jobId, notes);
+    const movement = MaterialMovement.create(
+      materialId,
+      delta,
+      reason,
+      createdBy,
+      jobId,
+      notes,
+    );
     await this.movementRepository.save(movement);
   }
 }

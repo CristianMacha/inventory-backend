@@ -19,11 +19,19 @@ export class GetMaterialMovementsHandler implements IQueryHandler<GetMaterialMov
     private readonly movementRepository: IMaterialMovementRepository,
   ) {}
 
-  async execute(query: GetMaterialMovementsQuery): Promise<PaginatedResult<MaterialMovementDto>> {
-    const material = await this.materialRepository.findById(MaterialId.create(query.materialId));
-    if (!material) throw new ResourceNotFoundException('Material', query.materialId);
+  async execute(
+    query: GetMaterialMovementsQuery,
+  ): Promise<PaginatedResult<MaterialMovementDto>> {
+    const material = await this.materialRepository.findById(
+      MaterialId.create(query.materialId),
+    );
+    if (!material)
+      throw new ResourceNotFoundException('Material', query.materialId);
 
-    const result = await this.movementRepository.findByMaterial(query.materialId, query.pagination);
+    const result = await this.movementRepository.findByMaterial(
+      query.materialId,
+      query.pagination,
+    );
     return { ...result, data: result.data.map(MaterialMovementMapper.toDto) };
   }
 }

@@ -15,7 +15,9 @@ export class CreateWorkshopCategoryHandler implements ICommandHandler<CreateWork
   async execute(command: CreateWorkshopCategoryCommand): Promise<void> {
     const existing = await this.categoryRepository.findByName(command.name);
     if (existing) {
-      throw new ConflictException(`Category with name "${command.name}" already exists`);
+      throw new ConflictException(
+        `Category with name "${command.name}" already exists`,
+      );
     }
     const category = WorkshopCategory.create(command.name, command.description);
     await this.categoryRepository.save(category);

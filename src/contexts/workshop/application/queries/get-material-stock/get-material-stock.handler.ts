@@ -16,11 +16,18 @@ export class GetMaterialStockHandler implements IQueryHandler<GetMaterialStockQu
     private readonly movementRepository: IMaterialMovementRepository,
   ) {}
 
-  async execute(query: GetMaterialStockQuery): Promise<{ currentStock: number }> {
-    const material = await this.materialRepository.findById(MaterialId.create(query.materialId));
-    if (!material) throw new ResourceNotFoundException('Material', query.materialId);
+  async execute(
+    query: GetMaterialStockQuery,
+  ): Promise<{ currentStock: number }> {
+    const material = await this.materialRepository.findById(
+      MaterialId.create(query.materialId),
+    );
+    if (!material)
+      throw new ResourceNotFoundException('Material', query.materialId);
 
-    const currentStock = await this.movementRepository.getStockForMaterial(query.materialId);
+    const currentStock = await this.movementRepository.getStockForMaterial(
+      query.materialId,
+    );
     return { currentStock };
   }
 }

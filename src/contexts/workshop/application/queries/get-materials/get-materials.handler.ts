@@ -17,11 +17,15 @@ export class GetMaterialsHandler implements IQueryHandler<GetMaterialsQuery> {
     private readonly movementRepository: IMaterialMovementRepository,
   ) {}
 
-  async execute(query: GetMaterialsQuery): Promise<PaginatedResult<MaterialDto>> {
+  async execute(
+    query: GetMaterialsQuery,
+  ): Promise<PaginatedResult<MaterialDto>> {
     const result = await this.materialRepository.findAll(query.pagination);
     const dtos = await Promise.all(
       result.data.map(async (material) => {
-        const currentStock = await this.movementRepository.getStockForMaterial(material.id.getValue());
+        const currentStock = await this.movementRepository.getStockForMaterial(
+          material.id.getValue(),
+        );
         return MaterialMapper.toDto(material, currentStock);
       }),
     );

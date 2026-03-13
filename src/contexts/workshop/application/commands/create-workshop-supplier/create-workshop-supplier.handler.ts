@@ -15,9 +15,17 @@ export class CreateWorkshopSupplierHandler implements ICommandHandler<CreateWork
   async execute(command: CreateWorkshopSupplierCommand): Promise<void> {
     const existing = await this.supplierRepository.findByName(command.name);
     if (existing) {
-      throw new ConflictException(`Supplier with name "${command.name}" already exists`);
+      throw new ConflictException(
+        `Supplier with name "${command.name}" already exists`,
+      );
     }
-    const supplier = WorkshopSupplier.create(command.name, command.phone, command.email, command.address, command.notes);
+    const supplier = WorkshopSupplier.create(
+      command.name,
+      command.phone,
+      command.email,
+      command.address,
+      command.notes,
+    );
     await this.supplierRepository.save(supplier);
   }
 }

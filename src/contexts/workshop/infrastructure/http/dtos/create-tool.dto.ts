@@ -1,5 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Min,
+} from 'class-validator';
 
 export class CreateToolDto {
   @ApiProperty({ example: 'Taladro de impacto' })
@@ -22,7 +29,7 @@ export class CreateToolDto {
   @IsOptional()
   readonly supplierId?: string;
 
-  @ApiPropertyOptional({ example: 150.00 })
+  @ApiPropertyOptional({ example: 150.0 })
   @IsNumber()
   @Min(0)
   @IsOptional()

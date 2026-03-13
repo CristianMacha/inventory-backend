@@ -19,11 +19,18 @@ export class GetToolMovementsHandler implements IQueryHandler<GetToolMovementsQu
     private readonly movementRepository: IToolMovementRepository,
   ) {}
 
-  async execute(query: GetToolMovementsQuery): Promise<PaginatedResult<ToolMovementDto>> {
-    const tool = await this.toolRepository.findById(ToolId.create(query.toolId));
+  async execute(
+    query: GetToolMovementsQuery,
+  ): Promise<PaginatedResult<ToolMovementDto>> {
+    const tool = await this.toolRepository.findById(
+      ToolId.create(query.toolId),
+    );
     if (!tool) throw new ResourceNotFoundException('Tool', query.toolId);
 
-    const result = await this.movementRepository.findByTool(query.toolId, query.pagination);
+    const result = await this.movementRepository.findByTool(
+      query.toolId,
+      query.pagination,
+    );
     return { ...result, data: result.data.map(ToolMovementMapper.toDto) };
   }
 }

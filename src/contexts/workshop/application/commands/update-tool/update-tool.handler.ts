@@ -14,12 +14,29 @@ export class UpdateToolHandler implements ICommandHandler<UpdateToolCommand> {
   ) {}
 
   async execute(command: UpdateToolCommand): Promise<void> {
-    const { id, updatedBy, name, description, status, categoryId, supplierId, purchasePrice } = command;
+    const {
+      id,
+      updatedBy,
+      name,
+      description,
+      status,
+      categoryId,
+      supplierId,
+      purchasePrice,
+    } = command;
 
     const tool = await this.toolRepository.findById(ToolId.create(id));
     if (!tool) throw new ResourceNotFoundException('Tool', id);
 
-    tool.update(updatedBy, name, description, status, categoryId, supplierId, purchasePrice);
+    tool.update(
+      updatedBy,
+      name,
+      description,
+      status,
+      categoryId,
+      supplierId,
+      purchasePrice,
+    );
     await this.toolRepository.save(tool);
   }
 }

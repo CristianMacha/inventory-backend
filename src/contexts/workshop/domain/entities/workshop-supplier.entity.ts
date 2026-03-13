@@ -73,7 +73,17 @@ export class WorkshopSupplier {
     createdAt: Date,
     updatedAt: Date,
   ): WorkshopSupplier {
-    return new WorkshopSupplier(id, name, phone, email, address, notes, isActive, createdAt, updatedAt);
+    return new WorkshopSupplier(
+      id,
+      name,
+      phone,
+      email,
+      address,
+      notes,
+      isActive,
+      createdAt,
+      updatedAt,
+    );
   }
 
   update(
@@ -84,7 +94,10 @@ export class WorkshopSupplier {
     notes?: string | null,
     isActive?: boolean,
   ): void {
-    if (name !== undefined) { WorkshopSupplier.validateName(name); this._name = name; }
+    if (name !== undefined) {
+      WorkshopSupplier.validateName(name);
+      this._name = name;
+    }
     if (phone !== undefined) this._phone = phone;
     if (email !== undefined) this._email = email;
     if (address !== undefined) this._address = address;
@@ -93,13 +106,31 @@ export class WorkshopSupplier {
     this._updatedAt = new Date();
   }
 
-  get id(): WorkshopSupplierId { return this._id; }
-  get name(): string { return this._name; }
-  get phone(): string | null { return this._phone; }
-  get email(): string | null { return this._email; }
-  get address(): string | null { return this._address; }
-  get notes(): string | null { return this._notes; }
-  get isActive(): boolean { return this._isActive; }
-  get createdAt(): Date { return this._createdAt; }
-  get updatedAt(): Date { return this._updatedAt; }
+  get id(): WorkshopSupplierId {
+    return this._id;
+  }
+  get name(): string {
+    return this._name;
+  }
+  get phone(): string | null {
+    return this._phone;
+  }
+  get email(): string | null {
+    return this._email;
+  }
+  get address(): string | null {
+    return this._address;
+  }
+  get notes(): string | null {
+    return this._notes;
+  }
+  get isActive(): boolean {
+    return this._isActive;
+  }
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
 }

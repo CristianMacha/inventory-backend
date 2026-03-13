@@ -14,8 +14,11 @@ export class UpdateWorkshopCategoryHandler implements ICommandHandler<UpdateWork
   ) {}
 
   async execute(command: UpdateWorkshopCategoryCommand): Promise<void> {
-    const category = await this.categoryRepository.findById(WorkshopCategoryId.create(command.id));
-    if (!category) throw new ResourceNotFoundException('WorkshopCategory', command.id);
+    const category = await this.categoryRepository.findById(
+      WorkshopCategoryId.create(command.id),
+    );
+    if (!category)
+      throw new ResourceNotFoundException('WorkshopCategory', command.id);
     category.update(command.name, command.description);
     await this.categoryRepository.save(category);
   }

@@ -61,15 +61,40 @@ export class ToolMovement {
     createdBy: string,
     createdAt: Date,
   ): ToolMovement {
-    return new ToolMovement(id, toolId, previousStatus, newStatus, jobId, notes, createdBy, createdAt);
+    return new ToolMovement(
+      id,
+      toolId,
+      previousStatus,
+      newStatus,
+      jobId,
+      notes,
+      createdBy,
+      createdAt,
+    );
   }
 
-  get id(): ToolMovementId { return this._id; }
-  get toolId(): string { return this._toolId; }
-  get previousStatus(): ToolStatus { return this._previousStatus; }
-  get newStatus(): ToolStatus { return this._newStatus; }
-  get jobId(): string | null { return this._jobId; }
-  get notes(): string | null { return this._notes; }
-  get createdBy(): string { return this._createdBy; }
-  get createdAt(): Date { return this._createdAt; }
+  get id(): ToolMovementId {
+    return this._id;
+  }
+  get toolId(): string {
+    return this._toolId;
+  }
+  get previousStatus(): ToolStatus {
+    return this._previousStatus;
+  }
+  get newStatus(): ToolStatus {
+    return this._newStatus;
+  }
+  get jobId(): string | null {
+    return this._jobId;
+  }
+  get notes(): string | null {
+    return this._notes;
+  }
+  get createdBy(): string {
+    return this._createdBy;
+  }
+  get createdAt(): Date {
+    return this._createdAt;
+  }
 }

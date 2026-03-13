@@ -19,9 +19,13 @@ export class GetMaterialByIdHandler implements IQueryHandler<GetMaterialByIdQuer
   ) {}
 
   async execute(query: GetMaterialByIdQuery): Promise<MaterialDto> {
-    const material = await this.materialRepository.findById(MaterialId.create(query.id));
+    const material = await this.materialRepository.findById(
+      MaterialId.create(query.id),
+    );
     if (!material) throw new ResourceNotFoundException('Material', query.id);
-    const currentStock = await this.movementRepository.getStockForMaterial(query.id);
+    const currentStock = await this.movementRepository.getStockForMaterial(
+      query.id,
+    );
     return MaterialMapper.toDto(material, currentStock);
   }
 }

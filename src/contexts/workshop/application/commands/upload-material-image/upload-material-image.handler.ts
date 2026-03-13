@@ -17,16 +17,22 @@ export class UploadMaterialImageHandler implements ICommandHandler<UploadMateria
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  async execute(command: UploadMaterialImageCommand): Promise<{ publicId: string; url: string }> {
+  async execute(
+    command: UploadMaterialImageCommand,
+  ): Promise<{ publicId: string; url: string }> {
     const materialId = MaterialId.create(command.materialId);
     const material = await this.materialRepository.findById(materialId);
-    if (!material) throw new ResourceNotFoundException('Material', command.materialId);
+    if (!material)
+      throw new ResourceNotFoundException('Material', command.materialId);
 
     if (material.imagePublicId) {
       await this.cloudinaryService.delete(material.imagePublicId);
     }
 
-    const { publicId, url } = await this.cloudinaryService.upload(command.file, 'workshop/materials');
+    const { publicId, url } = await this.cloudinaryService.upload(
+      command.file,
+      'workshop/materials',
+    );
     material.updateImagePublicId(publicId, command.userId);
     await this.materialRepository.save(material);
 

@@ -1,6 +1,9 @@
 import { ToolId } from '../value-objects/tool-id';
 import { ToolStatus } from '../enums/tool-status.enum';
-import { WorkshopItemNameEmptyException, InvalidPriceValueException } from '../errors/workshop.errors';
+import {
+  WorkshopItemNameEmptyException,
+  InvalidPriceValueException,
+} from '../errors/workshop.errors';
 
 export class Tool {
   private readonly _id: ToolId;
@@ -98,8 +101,18 @@ export class Tool {
     updatedAt: Date,
   ): Tool {
     return new Tool(
-      id, name, description, status, categoryId, supplierId,
-      imagePublicId, purchasePrice, createdBy, updatedBy, createdAt, updatedAt,
+      id,
+      name,
+      description,
+      status,
+      categoryId,
+      supplierId,
+      imagePublicId,
+      purchasePrice,
+      createdBy,
+      updatedBy,
+      createdAt,
+      updatedAt,
     );
   }
 
@@ -134,16 +147,40 @@ export class Tool {
     this._updatedAt = new Date();
   }
 
-  get id(): ToolId { return this._id; }
-  get name(): string { return this._name; }
-  get description(): string | null { return this._description; }
-  get status(): ToolStatus { return this._status; }
-  get categoryId(): string | null { return this._categoryId; }
-  get supplierId(): string | null { return this._supplierId; }
-  get imagePublicId(): string | null { return this._imagePublicId; }
-  get purchasePrice(): number | null { return this._purchasePrice; }
-  get createdBy(): string { return this._createdBy; }
-  get updatedBy(): string { return this._updatedBy; }
-  get createdAt(): Date { return this._createdAt; }
-  get updatedAt(): Date { return this._updatedAt; }
+  get id(): ToolId {
+    return this._id;
+  }
+  get name(): string {
+    return this._name;
+  }
+  get description(): string | null {
+    return this._description;
+  }
+  get status(): ToolStatus {
+    return this._status;
+  }
+  get categoryId(): string | null {
+    return this._categoryId;
+  }
+  get supplierId(): string | null {
+    return this._supplierId;
+  }
+  get imagePublicId(): string | null {
+    return this._imagePublicId;
+  }
+  get purchasePrice(): number | null {
+    return this._purchasePrice;
+  }
+  get createdBy(): string {
+    return this._createdBy;
+  }
+  get updatedBy(): string {
+    return this._updatedBy;
+  }
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
 }

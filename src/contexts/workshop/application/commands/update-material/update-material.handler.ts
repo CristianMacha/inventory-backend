@@ -14,12 +14,33 @@ export class UpdateMaterialHandler implements ICommandHandler<UpdateMaterialComm
   ) {}
 
   async execute(command: UpdateMaterialCommand): Promise<void> {
-    const { id, updatedBy, name, description, unit, minStock, unitPrice, categoryId, supplierId } = command;
+    const {
+      id,
+      updatedBy,
+      name,
+      description,
+      unit,
+      minStock,
+      unitPrice,
+      categoryId,
+      supplierId,
+    } = command;
 
-    const material = await this.materialRepository.findById(MaterialId.create(id));
+    const material = await this.materialRepository.findById(
+      MaterialId.create(id),
+    );
     if (!material) throw new ResourceNotFoundException('Material', id);
 
-    material.update(updatedBy, name, description, unit, minStock, unitPrice, categoryId, supplierId);
+    material.update(
+      updatedBy,
+      name,
+      description,
+      unit,
+      minStock,
+      unitPrice,
+      categoryId,
+      supplierId,
+    );
     await this.materialRepository.save(material);
   }
 }

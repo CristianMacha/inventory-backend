@@ -17,7 +17,9 @@ export class UploadToolImageHandler implements ICommandHandler<UploadToolImageCo
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  async execute(command: UploadToolImageCommand): Promise<{ publicId: string; url: string }> {
+  async execute(
+    command: UploadToolImageCommand,
+  ): Promise<{ publicId: string; url: string }> {
     const toolId = ToolId.create(command.toolId);
     const tool = await this.toolRepository.findById(toolId);
     if (!tool) throw new ResourceNotFoundException('Tool', command.toolId);
@@ -26,7 +28,10 @@ export class UploadToolImageHandler implements ICommandHandler<UploadToolImageCo
       await this.cloudinaryService.delete(tool.imagePublicId);
     }
 
-    const { publicId, url } = await this.cloudinaryService.upload(command.file, 'workshop/tools');
+    const { publicId, url } = await this.cloudinaryService.upload(
+      command.file,
+      'workshop/tools',
+    );
     tool.updateImagePublicId(publicId, command.userId);
     await this.toolRepository.save(tool);
 
