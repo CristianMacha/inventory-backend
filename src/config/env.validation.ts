@@ -1,7 +1,7 @@
 import * as Joi from 'joi';
 
 export const envValidation = Joi.object({
-  APP_PORT: Joi.number().required(),
+  PORT: Joi.number().required(),
   DATABASE_HOST: Joi.string().required(),
   DATABASE_PORT: Joi.number().required(),
   DATABASE_USERNAME: Joi.string().required(),
