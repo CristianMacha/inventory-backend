@@ -20,6 +20,6 @@ export class HealthController {
   @Public()
   @HealthCheck()
   check() {
-    return this.health.check([]);
+    return this.health.check([() => this.db.pingCheck('database')]);
   }
 }
