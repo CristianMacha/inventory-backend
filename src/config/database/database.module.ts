@@ -24,6 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
           migrations: [__dirname + '/../../migrations/*.{js,ts}'],
           migrationsRun: false,
           logging: process.env.NODE_ENV !== 'production',
+          ssl: { rejectUnauthorized: false },
         };
       },
     }),
