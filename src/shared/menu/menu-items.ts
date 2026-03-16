@@ -107,6 +107,13 @@ export const MENU_ITEMS: MenuItem[] = [
         path: '/workshop/suppliers',
         permission: Permissions.WORKSHOP_SUPPLIERS.LIST,
       },
+      {
+        id: 'fabrication-drawings',
+        label: 'Drawings',
+        icon: 'supplier',
+        path: 'fabrication/drawings',
+        permission: Permissions.WORKSHOP_SUPPLIERS.LIST,
+      },
     ],
   },
   {
