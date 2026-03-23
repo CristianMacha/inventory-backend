@@ -4,7 +4,7 @@ import { Inject } from '@nestjs/common';
 import { GetCatalogProductsQuery } from './get-catalog-products.query';
 import { IProductRepository } from '@contexts/inventory/domain/repositories/product.repository';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
-import type { CatalogProductOutputDto } from '@contexts/inventory/application/dtos/catalog-product-output.dto';
+import { CatalogProductOutputDto } from '@contexts/inventory/application/dtos/catalog-product-output.dto';
 import type { PaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
 
 @QueryHandler(GetCatalogProductsQuery)
@@ -30,11 +30,12 @@ export class GetCatalogProductsHandler implements IQueryHandler<GetCatalogProduc
 
     return {
       ...result,
-      data: result.data.map(({ product, brand, category, level, finish }) => ({
+      data: result.data.map(({ product, brand, category, level, finish, primaryImagePublicId }) => ({
         id: product.id.getValue(),
         name: product.name,
         slug: product.slug,
         description: product.description,
+        primaryImagePublicId: primaryImagePublicId ?? null,
         category,
         level,
         finish,

@@ -12,6 +12,8 @@ export interface ProductWithRelations {
   category: { id: string; name: string };
   level: { id: string; name: string };
   finish: { id: string; name: string };
+  primaryImagePublicId?: string | null;
+  images?: { publicId: string; isPrimary: boolean; sortOrder: number }[];
 }
 
 export interface CatalogFilters {

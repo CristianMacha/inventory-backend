@@ -13,6 +13,7 @@ import { CategoryEntity } from './category.entity';
 import { LevelEntity } from './level.entity';
 import { FinishEntity } from './finish.entity';
 import type { ProductSupplierEntity } from './product-supplier.entity';
+import type { ProductImageEntity } from './product-image.entity';
 
 @Entity({ name: 'products' })
 @Index('IDX_products_brandId', ['brandId'])
@@ -106,4 +107,7 @@ export class ProductEntity {
 
   @OneToMany('ProductSupplierEntity', 'product')
   productSuppliers: ProductSupplierEntity[];
+
+  @OneToMany('ProductImageEntity', 'product')
+  images: ProductImageEntity[];
 }

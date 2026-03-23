@@ -4,7 +4,7 @@ import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Public } from '@contexts/auth/infrastructure/decorators/public.decorator';
 import { GetCatalogProductsQuery } from '@contexts/inventory/application/queries/get-catalog-products/get-catalog-products.query';
-import type { CatalogProductOutputDto } from '@contexts/inventory/application/dtos/catalog-product-output.dto';
+import { CatalogProductOutputDto } from '@contexts/inventory/application/dtos/catalog-product-output.dto';
 import type { PaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
 
 @ApiTags('Catalog')
@@ -22,7 +22,12 @@ export class GetCatalogProductsController {
   @ApiQuery({ name: 'finishId', required: false })
   @ApiQuery({ name: 'brandId', required: false })
   @ApiQuery({ name: 'search', required: false })
-  @ApiResponse({ status: 200, description: 'Paginated catalog products.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated catalog products.',
+    type: CatalogProductOutputDto,
+    isArray: true,
+  })
   async run(
     @Query('page') page?: string,
     @Query('limit') limit?: string,

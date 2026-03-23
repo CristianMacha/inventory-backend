@@ -51,12 +51,22 @@ export class TypeOrmProductRepository implements IProductRepository {
   async findBySlugWithRelations(
     slug: string,
   ): Promise<ProductWithRelations | null> {
-    const entity = await this.typeOrmRepository.findOne({
-      where: { slug },
-      relations: ['brand', 'category', 'level', 'finish'],
-    });
+    const entity = await this.typeOrmRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.level', 'level')
+      .leftJoinAndSelect('product.finish', 'finish')
+      .leftJoinAndSelect('product.images', 'image')
+      .where('product.slug = :slug', { slug })
+      .getOne();
     if (!entity) return null;
-    return this.mapEntityToProductWithRelations(entity);
+    if (entity.images) {
+      entity.images.sort(
+        (a, b) => a.sortOrder - b.sortOrder || a.createdAt.getTime() - b.createdAt.getTime(),
+      );
+    }
+    return this.mapEntityToProductWithRelations(entity, true);
   }
 
   async findByName(name: string): Promise<Product | null> {
@@ -162,6 +172,12 @@ export class TypeOrmProductRepository implements IProductRepository {
       .leftJoinAndSelect('product.category', 'category')
       .leftJoinAndSelect('product.level', 'level')
       .leftJoinAndSelect('product.finish', 'finish')
+      .leftJoinAndSelect(
+        'product.images',
+        'image',
+        'image.isPrimary = :isPrimary',
+        { isPrimary: true },
+      )
       .where('product.isOnline = :isOnline', { isOnline: true })
       .andWhere('product.isActive = :isActive', { isActive: true });
 
@@ -216,7 +232,9 @@ export class TypeOrmProductRepository implements IProductRepository {
 
   private mapEntityToProductWithRelations(
     e: ProductEntity,
+    includeAllImages = false,
   ): ProductWithRelations {
+    const primaryImage = e.images?.find((img) => img.isPrimary) ?? e.images?.[0];
     return {
       product: ProductMapper.toDomain(e),
       brand: e.brand
@@ -233,6 +251,14 @@ export class TypeOrmProductRepository implements IProductRepository {
       finish: e.finish
         ? { id: e.finish.id, name: e.finish.name }
         : { id: e.finishId, name: '' },
+      primaryImagePublicId: primaryImage?.publicId ?? null,
+      ...(includeAllImages && {
+        images: (e.images ?? []).map((img) => ({
+          publicId: img.publicId,
+          isPrimary: img.isPrimary,
+          sortOrder: img.sortOrder,
+        })),
+      }),
     };
   }
 }

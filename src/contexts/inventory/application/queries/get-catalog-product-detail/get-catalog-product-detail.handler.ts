@@ -5,7 +5,7 @@ import { GetCatalogProductDetailQuery } from './get-catalog-product-detail.query
 import { IProductRepository } from '@contexts/inventory/domain/repositories/product.repository';
 import { IBundleRepository } from '@contexts/inventory/domain/repositories/bundle.repository';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
-import type { CatalogProductDetailOutputDto } from '@contexts/inventory/application/dtos/catalog-product-output.dto';
+import { CatalogProductDetailOutputDto } from '@contexts/inventory/application/dtos/catalog-product-output.dto';
 
 @QueryHandler(GetCatalogProductDetailQuery)
 export class GetCatalogProductDetailHandler implements IQueryHandler<GetCatalogProductDetailQuery> {
@@ -30,7 +30,7 @@ export class GetCatalogProductDetailHandler implements IQueryHandler<GetCatalogP
       throw new NotFoundException(`Product with slug ${query.slug} not found`);
     }
 
-    const { product, brand, category, level, finish } = productWithRelations;
+    const { product, brand, category, level, finish, primaryImagePublicId, images } = productWithRelations;
 
     const bundlesWithSlabs =
       await this.bundleRepository.findAvailableByProductId(
@@ -42,6 +42,8 @@ export class GetCatalogProductDetailHandler implements IQueryHandler<GetCatalogP
       name: product.name,
       slug: product.slug,
       description: product.description,
+      primaryImagePublicId: primaryImagePublicId ?? null,
+      images: images ?? [],
       category,
       level,
       finish,

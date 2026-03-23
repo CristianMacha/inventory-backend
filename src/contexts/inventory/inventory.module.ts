@@ -104,8 +104,10 @@ import { GetReturnableSlabsHandler } from './application/queries/get-returnable-
 import { GetProductsSelectHandler } from './application/queries/get-products-select/get-products-select.handler';
 import { GetCatalogProductsHandler } from './application/queries/get-catalog-products/get-catalog-products.handler';
 import { GetCatalogProductDetailHandler } from './application/queries/get-catalog-product-detail/get-catalog-product-detail.handler';
+import { GetCatalogFiltersHandler } from './application/queries/get-catalog-filters/get-catalog-filters.handler';
 import { GetCatalogProductsController } from './infrastructure/http/controllers/get-catalog-products.controller';
 import { GetCatalogProductDetailController } from './infrastructure/http/controllers/get-catalog-product-detail.controller';
+import { GetCatalogFiltersController } from './infrastructure/http/controllers/get-catalog-filters.controller';
 import { OnJobApprovedHandler } from './application/event-handlers/on-job-approved.handler';
 import { OnJobCompletedHandler } from './application/event-handlers/on-job-completed.handler';
 import { OnJobCancelledHandler } from './application/event-handlers/on-job-cancelled.handler';
@@ -158,6 +160,7 @@ const QueryHandlers = [
   GetBundlesSelectHandler,
   GetCatalogProductsHandler,
   GetCatalogProductDetailHandler,
+  GetCatalogFiltersHandler,
 ];
 
 const PersistenceProviders: Provider[] = [
@@ -255,6 +258,7 @@ const PersistenceProviders: Provider[] = [
     UploadBundleImageController,
     GetCatalogProductsController,
     GetCatalogProductDetailController,
+    GetCatalogFiltersController,
   ],
   providers: [
     ...CommandHandlers,
