@@ -27,6 +27,9 @@ export class ProductEntity {
   @Column({ type: 'varchar', length: 255, unique: true })
   name: string;
 
+  @Column({ type: 'varchar', length: 255, unique: true })
+  slug: string;
+
   @Column({ type: 'text', nullable: true })
   description: string;
 

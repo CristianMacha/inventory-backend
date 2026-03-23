@@ -1,3 +1,3 @@
 export class GetCatalogProductDetailQuery {
-  constructor(public readonly productId: string) {}
+  constructor(public readonly slug: string) {}
 }

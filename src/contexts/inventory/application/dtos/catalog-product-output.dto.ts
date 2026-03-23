@@ -17,6 +17,7 @@ export interface CatalogBundleOutputDto {
 export interface CatalogProductOutputDto {
   id: string;
   name: string;
+  slug: string;
   description: string;
   category: { id: string; name: string };
   level: { id: string; name: string };

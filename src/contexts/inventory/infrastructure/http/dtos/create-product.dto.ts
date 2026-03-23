@@ -1,5 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateProductDto {
   @ApiProperty({ example: 'Calacatta Gold' })
@@ -31,4 +37,9 @@ export class CreateProductDto {
   @IsUUID()
   @IsOptional()
   readonly brandId?: string;
+
+  @ApiPropertyOptional({ example: false })
+  @IsBoolean()
+  @IsOptional()
+  readonly isOnline?: boolean;
 }

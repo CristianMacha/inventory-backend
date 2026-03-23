@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -11,21 +11,21 @@ import type { CatalogProductDetailOutputDto } from '@contexts/inventory/applicat
 export class GetCatalogProductDetailController {
   constructor(private readonly queryBus: QueryBus) {}
 
-  @Get(':id')
+  @Get(':slug')
   @Public()
   @ApiOperation({
     summary:
       'Get public product detail with available bundles (no auth required)',
   })
-  @ApiParam({ name: 'id', description: 'Product UUID' })
+  @ApiParam({ name: 'slug', description: 'Product slug (e.g. calacatta-gold)' })
   @ApiResponse({
     status: 200,
     description: 'Product detail with bundles and available slabs.',
   })
   @ApiResponse({ status: 404, description: 'Product not found or not public.' })
   async run(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('slug') slug: string,
   ): Promise<CatalogProductDetailOutputDto> {
-    return this.queryBus.execute(new GetCatalogProductDetailQuery(id));
+    return this.queryBus.execute(new GetCatalogProductDetailQuery(slug));
   }
 }

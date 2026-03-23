@@ -7,5 +7,6 @@ export class CreateProductCommand {
     public readonly finishId: string,
     public readonly description?: string,
     public readonly brandId?: string,
+    public readonly isOnline?: boolean,
   ) {}
 }

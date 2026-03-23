@@ -11,6 +11,7 @@ export class ProductMapper {
     return Product.reconstitute(
       ProductId.create(entity.id),
       entity.name,
+      entity.slug,
       entity.description,
       entity.isActive,
       entity.isOnline,
@@ -29,6 +30,7 @@ export class ProductMapper {
     const entity = new ProductEntity();
     entity.id = domain.id.getValue();
     entity.name = domain.name;
+    entity.slug = domain.slug;
     entity.description = domain.description;
     entity.isActive = domain.isActive;
     entity.isOnline = domain.isOnline;

@@ -5,7 +5,6 @@ import { GetCatalogProductDetailQuery } from './get-catalog-product-detail.query
 import { IProductRepository } from '@contexts/inventory/domain/repositories/product.repository';
 import { IBundleRepository } from '@contexts/inventory/domain/repositories/bundle.repository';
 import { INVENTORY_TOKENS } from '@contexts/inventory/inventory.tokens';
-import { ProductId } from '@contexts/inventory/domain/value-objects/product-id';
 import type { CatalogProductDetailOutputDto } from '@contexts/inventory/application/dtos/catalog-product-output.dto';
 
 @QueryHandler(GetCatalogProductDetailQuery)
@@ -21,18 +20,14 @@ export class GetCatalogProductDetailHandler implements IQueryHandler<GetCatalogP
     query: GetCatalogProductDetailQuery,
   ): Promise<CatalogProductDetailOutputDto> {
     const productWithRelations =
-      await this.productRepository.findByIdWithRelations(
-        ProductId.create(query.productId),
-      );
+      await this.productRepository.findBySlugWithRelations(query.slug);
 
     if (
       !productWithRelations ||
       !productWithRelations.product.isOnline ||
       !productWithRelations.product.isActive
     ) {
-      throw new NotFoundException(
-        `Product with id ${query.productId} not found`,
-      );
+      throw new NotFoundException(`Product with slug ${query.slug} not found`);
     }
 
     const { product, brand, category, level, finish } = productWithRelations;
@@ -45,6 +40,7 @@ export class GetCatalogProductDetailHandler implements IQueryHandler<GetCatalogP
     return {
       id: product.id.getValue(),
       name: product.name,
+      slug: product.slug,
       description: product.description,
       category,
       level,

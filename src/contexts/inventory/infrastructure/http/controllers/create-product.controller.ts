@@ -40,6 +40,7 @@ export class CreateProductController {
         dto.finishId,
         dto.description,
         dto.brandId,
+        dto.isOnline,
       ),
     );
   }

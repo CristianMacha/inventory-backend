@@ -39,6 +39,7 @@ export class CreateProductHandler implements ICommandHandler<CreateProductComman
       finishId,
       brandId,
       createdBy,
+      isOnline,
     } = command;
 
     const existingProduct = await this.productRepository.findByName(name);
@@ -85,6 +86,10 @@ export class CreateProductHandler implements ICommandHandler<CreateProductComman
       createdBy,
       brandIdVO,
     );
+
+    if (isOnline !== undefined) {
+      product.setOnline(isOnline, createdBy);
+    }
 
     await this.productRepository.save(product);
     this.eventBus.publishAll(product.getUncommittedEvents());

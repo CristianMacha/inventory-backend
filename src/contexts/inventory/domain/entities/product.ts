@@ -10,6 +10,7 @@ import { ProductCreatedEvent } from '../events/product-created.event';
 export class Product extends AggregateRoot {
   private readonly _id: ProductId;
   private _name: string;
+  private _slug: string;
   private _description: string;
   private _isActive: boolean;
   private _isOnline: boolean;
@@ -25,6 +26,7 @@ export class Product extends AggregateRoot {
   private constructor(
     id: ProductId,
     name: string,
+    slug: string,
     description: string,
     isActive: boolean,
     isOnline: boolean,
@@ -40,6 +42,7 @@ export class Product extends AggregateRoot {
     super();
     this._id = id;
     this._name = name;
+    this._slug = slug;
     this._description = description;
     this._isActive = isActive;
     this._isOnline = isOnline;
@@ -51,6 +54,16 @@ export class Product extends AggregateRoot {
     this._updatedBy = updatedBy;
     this._createdAt = createdAt;
     this._updatedAt = updatedAt;
+  }
+
+  static generateSlug(name: string): string {
+    return name
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-');
   }
 
   private static validateName(name: string): void {
@@ -73,6 +86,7 @@ export class Product extends AggregateRoot {
     const product = new Product(
       ProductId.generate(),
       name,
+      Product.generateSlug(name),
       description,
       true,
       false,
@@ -100,6 +114,7 @@ export class Product extends AggregateRoot {
   public static reconstitute(
     id: ProductId,
     name: string,
+    slug: string,
     description: string,
     isActive: boolean,
     isOnline: boolean,
@@ -115,6 +130,7 @@ export class Product extends AggregateRoot {
     return new Product(
       id,
       name,
+      slug,
       description,
       isActive,
       isOnline,
@@ -132,6 +148,7 @@ export class Product extends AggregateRoot {
   public updateName(name: string, userId: string): void {
     Product.validateName(name);
     this._name = name;
+    this._slug = Product.generateSlug(name);
     this._updatedBy = userId;
     this._updatedAt = new Date();
   }
@@ -184,6 +201,10 @@ export class Product extends AggregateRoot {
 
   get name(): string {
     return this._name;
+  }
+
+  get slug(): string {
+    return this._slug;
   }
 
   get description(): string {

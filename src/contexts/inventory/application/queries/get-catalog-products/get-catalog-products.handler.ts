@@ -33,6 +33,7 @@ export class GetCatalogProductsHandler implements IQueryHandler<GetCatalogProduc
       data: result.data.map(({ product, brand, category, level, finish }) => ({
         id: product.id.getValue(),
         name: product.name,
+        slug: product.slug,
         description: product.description,
         category,
         level,

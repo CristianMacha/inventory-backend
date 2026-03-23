@@ -26,6 +26,7 @@ export interface IProductRepository {
   findAll(): Promise<Product[] | null>;
   findById(id: ProductId): Promise<Product | null>;
   findByIdWithRelations(id: ProductId): Promise<ProductWithRelations | null>;
+  findBySlugWithRelations(slug: string): Promise<ProductWithRelations | null>;
   findByName(name: string): Promise<Product | null>;
   findByBrandId(brandId: BrandId): Promise<Product[] | null>;
   findByCategoryId(categoryId: CategoryId): Promise<Product[] | null>;
