@@ -3,8 +3,19 @@ import { ProductSupplierId } from '../value-objects/product-supplier-id';
 import { ProductId } from '../value-objects/product-id';
 import { SupplierId } from '../value-objects/supplier-id';
 
+export interface ProductSupplierWithName {
+  id: string;
+  supplierId: string;
+  supplierName: string;
+  supplierAbbreviation: string | null;
+  isPrimary: boolean;
+}
+
 export interface IProductSupplierRepository {
   findByProductId(productId: ProductId): Promise<ProductSupplier[]>;
+  findByProductIdWithNames(
+    productId: ProductId,
+  ): Promise<ProductSupplierWithName[]>;
   findBySupplierId(supplierId: SupplierId): Promise<ProductSupplier[]>;
   findByProductIdAndSupplierId(
     productId: ProductId,

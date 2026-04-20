@@ -30,7 +30,15 @@ export class GetCatalogProductDetailHandler implements IQueryHandler<GetCatalogP
       throw new NotFoundException(`Product with slug ${query.slug} not found`);
     }
 
-    const { product, brand, category, level, finish, primaryImagePublicId, images } = productWithRelations;
+    const {
+      product,
+      brand,
+      category,
+      level,
+      finish,
+      primaryImagePublicId,
+      images,
+    } = productWithRelations;
 
     const bundlesWithSlabs =
       await this.bundleRepository.findAvailableByProductId(

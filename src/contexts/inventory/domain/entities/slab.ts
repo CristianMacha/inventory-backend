@@ -143,6 +143,22 @@ export class Slab {
     this._updatedAt = new Date();
   }
 
+  public reserve(userId: string): void {
+    this.updateStatus(SlabStatus.RESERVED, userId);
+  }
+
+  public sell(userId: string): void {
+    this.updateStatus(SlabStatus.SOLD, userId);
+  }
+
+  public markAsReturning(userId: string): void {
+    this.updateStatus(SlabStatus.RETURNING, userId);
+  }
+
+  public markAsReturned(userId: string): void {
+    this.updateStatus(SlabStatus.RETURNED, userId);
+  }
+
   public updateDimensions(dimensions: SlabDimensions, userId: string): void {
     this._dimensions = dimensions;
     this._updatedBy = userId;

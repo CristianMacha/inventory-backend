@@ -1,16 +1,32 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
-  ApiTags,
+  ApiBody,
   ApiOperation,
+  ApiParam,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 
 import { GetSlabsQuery } from '../../../application/queries/get-slabs/get-slabs.query';
 import { GetReturnableSlabsQuery } from '../../../application/queries/get-returnable-slabs/get-returnable-slabs.query';
 import { ISlabOutputDto } from '../../../application/dtos/slab-output.dto';
 import { SlabReturnableOutputDto } from '../../../application/dtos/slab-returnable-output.dto';
+import {
+  BulkCreateSlabsOutputDto,
+  BulkUpdateSlabStatusOutputDto,
+} from '../../../application/dtos/bulk-update-slab-status-output.dto';
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
 import {
@@ -19,7 +35,11 @@ import {
 } from '../dtos/get-slabs-query.dto';
 import { GetReturnableSlabsQueryDto } from '../dtos/get-returnable-slabs-query.dto';
 import { CreateRemnantSlabDto } from '../dtos/create-remnant-slab.dto';
+import { BulkCreateSlabsDto } from '../dtos/bulk-create-slabs.dto';
+import { BulkUpdateSlabStatusDto } from '../dtos/bulk-update-slab-status.dto';
 import { CreateRemnantSlabCommand } from '../../../application/commands/create-remnant-slab/create-remnant-slab.command';
+import { BulkCreateSlabsCommand } from '../../../application/commands/bulk-create-slabs/bulk-create-slabs.command';
+import { BulkUpdateSlabStatusCommand } from '../../../application/commands/bulk-update-slab-status/bulk-update-slab-status.command';
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
 import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 import type { PaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
@@ -74,6 +94,48 @@ export class GetSlabsController {
   ): Promise<SlabReturnableOutputDto[]> {
     return this.queryBus.execute(
       new GetReturnableSlabsQuery(query.purchaseInvoiceId, query.bundleId),
+    );
+  }
+
+  @Post('bulk')
+  @HttpCode(HttpStatus.CREATED)
+  @RequirePermissions(Permissions.SLABS.CREATE)
+  @ApiOperation({ summary: 'Create multiple slabs in a bundle at once' })
+  @ApiBody({ type: BulkCreateSlabsDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Slabs created successfully',
+    type: BulkCreateSlabsOutputDto,
+  })
+  @ApiResponse({ status: 404, description: 'Bundle not found' })
+  async bulkCreate(
+    @Body() dto: BulkCreateSlabsDto,
+    @GetUser() user: AuthUserDto,
+  ): Promise<BulkCreateSlabsOutputDto> {
+    return this.commandBus.execute(
+      new BulkCreateSlabsCommand(dto.bundleId, dto.slabs, user.id),
+    );
+  }
+
+  @Patch('bulk-status')
+  @HttpCode(HttpStatus.OK)
+  @RequirePermissions(Permissions.SLABS.UPDATE)
+  @ApiOperation({
+    summary: 'Update status of multiple slabs at once',
+    description:
+      'Attempts to update all provided slabs. Invalid transitions are reported in the `failed` array without aborting the operation.',
+  })
+  @ApiBody({ type: BulkUpdateSlabStatusDto })
+  @ApiResponse({
+    status: 200,
+    type: BulkUpdateSlabStatusOutputDto,
+  })
+  async bulkUpdateStatus(
+    @Body() dto: BulkUpdateSlabStatusDto,
+    @GetUser() user: AuthUserDto,
+  ): Promise<BulkUpdateSlabStatusOutputDto> {
+    return this.commandBus.execute(
+      new BulkUpdateSlabStatusCommand(dto.slabIds, dto.status, user.id),
     );
   }
 

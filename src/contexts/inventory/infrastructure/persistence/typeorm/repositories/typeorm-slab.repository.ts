@@ -7,6 +7,8 @@ import {
   SlabFilters,
   SlabJobInfo,
   ReturnableSlabWithBundle,
+  ProductStockSummary,
+  SlabStatusCounts,
 } from '@contexts/inventory/domain/repositories/slab.repository';
 import { Slab } from '@contexts/inventory/domain/entities/slab';
 import { SlabId } from '@contexts/inventory/domain/value-objects/slab-id';
@@ -145,5 +147,84 @@ export class TypeOrmSlabRepository implements ISlabRepository {
 
   async count(): Promise<number> {
     return this.repository.count();
+  }
+
+  async getStockSummaryByProduct(
+    productId?: string,
+  ): Promise<ProductStockSummary[]> {
+    const qb = this.repository
+      .createQueryBuilder('s')
+      .select('p.id', 'productId')
+      .addSelect('p.name', 'productName')
+      .addSelect('COUNT(DISTINCT b.id)', 'bundleCount')
+      .addSelect('COUNT(s.id)', 'totalSlabs')
+      .addSelect(
+        `SUM(CASE WHEN s.status = 'AVAILABLE' THEN 1 ELSE 0 END)`,
+        'availableCount',
+      )
+      .addSelect(
+        `SUM(CASE WHEN s.status = 'RESERVED' THEN 1 ELSE 0 END)`,
+        'reservedCount',
+      )
+      .addSelect(
+        `SUM(CASE WHEN s.status = 'SOLD' THEN 1 ELSE 0 END)`,
+        'soldCount',
+      )
+      .addSelect(
+        `SUM(CASE WHEN s.status = 'RETURNING' THEN 1 ELSE 0 END)`,
+        'returningCount',
+      )
+      .addSelect(
+        `SUM(CASE WHEN s.status = 'RETURNED' THEN 1 ELSE 0 END)`,
+        'returnedCount',
+      )
+      .addSelect(
+        `SUM(CASE WHEN s.status = 'AVAILABLE' THEN (s.widthCm * s.heightCm) / 10000 ELSE 0 END)`,
+        'availableAreaM2',
+      )
+      .addSelect(`SUM((s.widthCm * s.heightCm) / 10000)`, 'totalAreaM2')
+      .innerJoin('bundles', 'b', 'b.id = s.bundleId')
+      .innerJoin('products', 'p', 'p.id = b.productId')
+      .where('p.isActive = :isActive', { isActive: true })
+      .groupBy('p.id')
+      .addGroupBy('p.name')
+      .orderBy('p.name', 'ASC');
+
+    if (productId) {
+      qb.andWhere('p.id = :productId', { productId });
+    }
+
+    const rows = await qb.getRawMany<{
+      productId: string;
+      productName: string;
+      bundleCount: string;
+      totalSlabs: string;
+      availableCount: string;
+      reservedCount: string;
+      soldCount: string;
+      returningCount: string;
+      returnedCount: string;
+      availableAreaM2: string;
+      totalAreaM2: string;
+    }>();
+
+    return rows.map((row) => {
+      const slabsByStatus: SlabStatusCounts = {
+        available: parseInt(row.availableCount, 10),
+        reserved: parseInt(row.reservedCount, 10),
+        sold: parseInt(row.soldCount, 10),
+        returning: parseInt(row.returningCount, 10),
+        returned: parseInt(row.returnedCount, 10),
+      };
+      return {
+        productId: row.productId,
+        productName: row.productName,
+        bundleCount: parseInt(row.bundleCount, 10),
+        totalSlabs: parseInt(row.totalSlabs, 10),
+        slabsByStatus,
+        availableAreaM2: parseFloat(parseFloat(row.availableAreaM2).toFixed(2)),
+        totalAreaM2: parseFloat(parseFloat(row.totalAreaM2).toFixed(2)),
+      };
+    });
   }
 }

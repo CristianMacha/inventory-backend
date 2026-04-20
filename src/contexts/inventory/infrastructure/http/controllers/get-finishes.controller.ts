@@ -1,9 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
   ApiTags,
   ApiOperation,
+  ApiParam,
   ApiResponse,
 } from '@nestjs/swagger';
 
@@ -11,6 +12,7 @@ import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/req
 import { Permissions } from '@shared/authorization/permissions';
 import { GetFinishesQuery } from '../../../application/queries/get-finishes/get-finishes.query';
 import { GetActiveFinishesQuery } from '../../../application/queries/get-active-finishes/get-active-finishes.query';
+import { GetFinishByIdQuery } from '../../../application/queries/get-finish-by-id/get-finish-by-id.query';
 import { IFinishOutputDto } from '../../../application/dtos/finish-output.dto';
 
 @ApiBearerAuth()
@@ -47,5 +49,17 @@ export class GetFinishesController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async getActive(): Promise<IFinishOutputDto[]> {
     return this.queryBus.execute(new GetActiveFinishesQuery());
+  }
+
+  @Get(':id')
+  @RequirePermissions(Permissions.FINISHES.LIST)
+  @ApiOperation({ summary: 'Get finish by ID' })
+  @ApiParam({ name: 'id', type: String, description: 'Finish UUID' })
+  @ApiResponse({ status: 200, type: IFinishOutputDto })
+  @ApiResponse({ status: 404, description: 'Finish not found' })
+  async getById(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<IFinishOutputDto> {
+    return this.queryBus.execute(new GetFinishByIdQuery(id));
   }
 }

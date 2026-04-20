@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { IProductSupplierRepository } from '@contexts/inventory/domain/repositories/product-supplier.repository';
+import {
+  IProductSupplierRepository,
+  ProductSupplierWithName,
+} from '@contexts/inventory/domain/repositories/product-supplier.repository';
 import { ProductSupplier } from '@contexts/inventory/domain/entities/product-supplier';
 import { ProductSupplierId } from '@contexts/inventory/domain/value-objects/product-supplier-id';
 import { ProductId } from '@contexts/inventory/domain/value-objects/product-id';
@@ -61,6 +64,37 @@ export class TypeOrmProductSupplierRepository implements IProductSupplierReposit
 
   async delete(id: ProductSupplierId): Promise<void> {
     await this.repository.delete({ id: id.getValue() });
+  }
+
+  async findByProductIdWithNames(
+    productId: ProductId,
+  ): Promise<ProductSupplierWithName[]> {
+    const rows = await this.repository
+      .createQueryBuilder('ps')
+      .select('ps.id', 'id')
+      .addSelect('ps.supplierId', 'supplierId')
+      .addSelect('s.name', 'supplierName')
+      .addSelect('s.abbreviation', 'supplierAbbreviation')
+      .addSelect('ps.isPrimary', 'isPrimary')
+      .innerJoin('suppliers', 's', 's.id = ps.supplierId')
+      .where('ps.productId = :productId', { productId: productId.getValue() })
+      .orderBy('ps.isPrimary', 'DESC')
+      .addOrderBy('s.name', 'ASC')
+      .getRawMany<{
+        id: string;
+        supplierId: string;
+        supplierName: string;
+        supplierAbbreviation: string | null;
+        isPrimary: boolean;
+      }>();
+
+    return rows.map((row) => ({
+      id: row.id,
+      supplierId: row.supplierId,
+      supplierName: row.supplierName,
+      supplierAbbreviation: row.supplierAbbreviation,
+      isPrimary: row.isPrimary,
+    }));
   }
 
   private toDomain(entity: ProductSupplierEntity): ProductSupplier {

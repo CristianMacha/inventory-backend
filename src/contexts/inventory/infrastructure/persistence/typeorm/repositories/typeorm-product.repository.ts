@@ -63,7 +63,9 @@ export class TypeOrmProductRepository implements IProductRepository {
     if (!entity) return null;
     if (entity.images) {
       entity.images.sort(
-        (a, b) => a.sortOrder - b.sortOrder || a.createdAt.getTime() - b.createdAt.getTime(),
+        (a, b) =>
+          a.sortOrder - b.sortOrder ||
+          a.createdAt.getTime() - b.createdAt.getTime(),
       );
     }
     return this.mapEntityToProductWithRelations(entity, true);
@@ -234,7 +236,8 @@ export class TypeOrmProductRepository implements IProductRepository {
     e: ProductEntity,
     includeAllImages = false,
   ): ProductWithRelations {
-    const primaryImage = e.images?.find((img) => img.isPrimary) ?? e.images?.[0];
+    const primaryImage =
+      e.images?.find((img) => img.isPrimary) ?? e.images?.[0];
     return {
       product: ProductMapper.toDomain(e),
       brand: e.brand

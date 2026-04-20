@@ -1,9 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
   ApiTags,
   ApiOperation,
+  ApiParam,
   ApiResponse,
 } from '@nestjs/swagger';
 
@@ -11,6 +12,7 @@ import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/req
 import { Permissions } from '@shared/authorization/permissions';
 import { GetLevelsQuery } from '../../../application/queries/get-levels/get-levels.query';
 import { GetActiveLevelsQuery } from '../../../application/queries/get-active-levels/get-active-levels.query';
+import { GetLevelByIdQuery } from '../../../application/queries/get-level-by-id/get-level-by-id.query';
 import { ILevelOutputDto } from '../../../application/dtos/level-output.dto';
 
 @ApiBearerAuth()
@@ -47,5 +49,17 @@ export class GetLevelsController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async getActive(): Promise<ILevelOutputDto[]> {
     return this.queryBus.execute(new GetActiveLevelsQuery());
+  }
+
+  @Get(':id')
+  @RequirePermissions(Permissions.LEVELS.LIST)
+  @ApiOperation({ summary: 'Get level by ID' })
+  @ApiParam({ name: 'id', type: String, description: 'Level UUID' })
+  @ApiResponse({ status: 200, type: ILevelOutputDto })
+  @ApiResponse({ status: 404, description: 'Level not found' })
+  async getById(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<ILevelOutputDto> {
+    return this.queryBus.execute(new GetLevelByIdQuery(id));
   }
 }

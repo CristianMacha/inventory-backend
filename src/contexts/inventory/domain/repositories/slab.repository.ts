@@ -23,6 +23,24 @@ export interface SlabJobInfo {
   productName: string;
 }
 
+export interface SlabStatusCounts {
+  available: number;
+  reserved: number;
+  sold: number;
+  returning: number;
+  returned: number;
+}
+
+export interface ProductStockSummary {
+  productId: string;
+  productName: string;
+  bundleCount: number;
+  totalSlabs: number;
+  slabsByStatus: SlabStatusCounts;
+  availableAreaM2: number;
+  totalAreaM2: number;
+}
+
 export interface ISlabRepository {
   save(slab: Slab): Promise<void>;
   saveMany(slabs: Slab[]): Promise<void>;
@@ -40,4 +58,5 @@ export interface ISlabRepository {
     bundleId?: string;
   }): Promise<ReturnableSlabWithBundle[]>;
   count(): Promise<number>;
+  getStockSummaryByProduct(productId?: string): Promise<ProductStockSummary[]>;
 }

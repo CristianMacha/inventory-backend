@@ -16,6 +16,13 @@ export const MENU_ITEMS: MenuItem[] = [
     permission: Permissions.PRODUCTS.READ,
     children: [
       {
+        id: 'summary',
+        label: 'Summary',
+        icon: 'box',
+        path: '/summary',
+        permission: Permissions.SLABS.LIST,
+      },
+      {
         id: 'products',
         label: 'Products',
         icon: 'box',

@@ -108,6 +108,26 @@ import { GetCatalogFiltersHandler } from './application/queries/get-catalog-filt
 import { GetCatalogProductsController } from './infrastructure/http/controllers/get-catalog-products.controller';
 import { GetCatalogProductDetailController } from './infrastructure/http/controllers/get-catalog-product-detail.controller';
 import { GetCatalogFiltersController } from './infrastructure/http/controllers/get-catalog-filters.controller';
+import { GetInventorySummaryHandler } from './application/queries/get-inventory-summary/get-inventory-summary.handler';
+import { GetBrandByIdHandler } from './application/queries/get-brand-by-id/get-brand-by-id.handler';
+import { GetCategoryByIdHandler } from './application/queries/get-category-by-id/get-category-by-id.handler';
+import { GetLevelByIdHandler } from './application/queries/get-level-by-id/get-level-by-id.handler';
+import { GetFinishByIdHandler } from './application/queries/get-finish-by-id/get-finish-by-id.handler';
+import { GetSupplierByIdHandler } from './application/queries/get-supplier-by-id/get-supplier-by-id.handler';
+import { GetProductSuppliersHandler } from './application/queries/get-product-suppliers/get-product-suppliers.handler';
+import { AddProductSupplierHandler } from './application/commands/add-product-supplier/add-product-supplier.handler';
+import { RemoveProductSupplierHandler } from './application/commands/remove-product-supplier/remove-product-supplier.handler';
+import { SetPrimarySupplierHandler } from './application/commands/set-primary-supplier/set-primary-supplier.handler';
+import { ProductSuppliersController } from './infrastructure/http/controllers/product-suppliers.controller';
+import { GetInventorySummaryController } from './infrastructure/http/controllers/get-inventory-summary.controller';
+import { ReserveSlabHandler } from './application/commands/reserve-slab/reserve-slab.handler';
+import { SellSlabHandler } from './application/commands/sell-slab/sell-slab.handler';
+import { MarkSlabAsReturningHandler } from './application/commands/mark-slab-as-returning/mark-slab-as-returning.handler';
+import { BulkCreateSlabsHandler } from './application/commands/bulk-create-slabs/bulk-create-slabs.handler';
+import { BulkUpdateSlabStatusHandler } from './application/commands/bulk-update-slab-status/bulk-update-slab-status.handler';
+import { ReserveSlabController } from './infrastructure/http/controllers/reserve-slab.controller';
+import { SellSlabController } from './infrastructure/http/controllers/sell-slab.controller';
+import { MarkSlabAsReturningController } from './infrastructure/http/controllers/mark-slab-as-returning.controller';
 import { OnJobApprovedHandler } from './application/event-handlers/on-job-approved.handler';
 import { OnJobCompletedHandler } from './application/event-handlers/on-job-completed.handler';
 import { OnJobCancelledHandler } from './application/event-handlers/on-job-cancelled.handler';
@@ -136,6 +156,14 @@ const CommandHandlers = [
   UploadProductImageHandler,
   DeleteProductImageHandler,
   UploadBundleImageHandler,
+  ReserveSlabHandler,
+  SellSlabHandler,
+  MarkSlabAsReturningHandler,
+  BulkCreateSlabsHandler,
+  BulkUpdateSlabStatusHandler,
+  AddProductSupplierHandler,
+  RemoveProductSupplierHandler,
+  SetPrimarySupplierHandler,
 ];
 
 const QueryHandlers = [
@@ -161,6 +189,13 @@ const QueryHandlers = [
   GetCatalogProductsHandler,
   GetCatalogProductDetailHandler,
   GetCatalogFiltersHandler,
+  GetInventorySummaryHandler,
+  GetProductSuppliersHandler,
+  GetBrandByIdHandler,
+  GetCategoryByIdHandler,
+  GetLevelByIdHandler,
+  GetFinishByIdHandler,
+  GetSupplierByIdHandler,
 ];
 
 const PersistenceProviders: Provider[] = [
@@ -259,6 +294,11 @@ const PersistenceProviders: Provider[] = [
     GetCatalogProductsController,
     GetCatalogProductDetailController,
     GetCatalogFiltersController,
+    ReserveSlabController,
+    SellSlabController,
+    MarkSlabAsReturningController,
+    GetInventorySummaryController,
+    ProductSuppliersController,
   ],
   providers: [
     ...CommandHandlers,

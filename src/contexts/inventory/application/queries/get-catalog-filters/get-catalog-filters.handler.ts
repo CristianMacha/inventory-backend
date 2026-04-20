@@ -31,7 +31,10 @@ export class GetCatalogFiltersHandler implements IQueryHandler<GetCatalogFilters
     ]);
 
     return {
-      categories: categories.map((c) => ({ id: c.id.getValue(), name: c.name })),
+      categories: categories.map((c) => ({
+        id: c.id.getValue(),
+        name: c.name,
+      })),
       brands: brands.map((b) => ({ id: b.id.getValue(), name: b.name })),
       levels: levels.map((l) => ({ id: l.id.getValue(), name: l.name })),
       finishes: finishes.map((f) => ({ id: f.id.getValue(), name: f.name })),

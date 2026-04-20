@@ -30,17 +30,26 @@ export class GetCatalogProductsHandler implements IQueryHandler<GetCatalogProduc
 
     return {
       ...result,
-      data: result.data.map(({ product, brand, category, level, finish, primaryImagePublicId }) => ({
-        id: product.id.getValue(),
-        name: product.name,
-        slug: product.slug,
-        description: product.description,
-        primaryImagePublicId: primaryImagePublicId ?? null,
-        category,
-        level,
-        finish,
-        ...(brand && { brand }),
-      })),
+      data: result.data.map(
+        ({
+          product,
+          brand,
+          category,
+          level,
+          finish,
+          primaryImagePublicId,
+        }) => ({
+          id: product.id.getValue(),
+          name: product.name,
+          slug: product.slug,
+          description: product.description,
+          primaryImagePublicId: primaryImagePublicId ?? null,
+          category,
+          level,
+          finish,
+          ...(brand && { brand }),
+        }),
+      ),
     };
   }
 }

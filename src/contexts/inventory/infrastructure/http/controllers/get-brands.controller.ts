@@ -1,8 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -11,6 +12,7 @@ import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/req
 import { Permissions } from '@shared/authorization/permissions';
 import { GetBrandsQuery } from '@contexts/inventory/application/queries/get-brands/get-brands.query';
 import { GetActiveBrandsQuery } from '@contexts/inventory/application/queries/get-active-brands/get-active-brands.query';
+import { GetBrandByIdQuery } from '@contexts/inventory/application/queries/get-brand-by-id/get-brand-by-id.query';
 import { IBrandOutputDto } from '@contexts/inventory/application/dtos/brand-output.dto';
 
 @ApiBearerAuth()
@@ -47,5 +49,17 @@ export class GetBrandsController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async getActive(): Promise<IBrandOutputDto[]> {
     return await this.queryBus.execute(new GetActiveBrandsQuery());
+  }
+
+  @Get(':id')
+  @RequirePermissions(Permissions.BRANDS.READ)
+  @ApiOperation({ summary: 'Get brand by ID' })
+  @ApiParam({ name: 'id', type: String, description: 'Brand UUID' })
+  @ApiResponse({ status: 200, type: IBrandOutputDto })
+  @ApiResponse({ status: 404, description: 'Brand not found' })
+  async getById(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<IBrandOutputDto> {
+    return this.queryBus.execute(new GetBrandByIdQuery(id));
   }
 }
