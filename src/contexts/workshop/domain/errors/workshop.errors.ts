@@ -20,3 +20,17 @@ export class InvalidPriceValueException extends DomainException {
     this.name = 'InvalidPriceValueException';
   }
 }
+
+export class RequestAlreadyResolvedException extends DomainException {
+  constructor(id: string) {
+    super(`Request ${id} is already resolved and cannot be changed again`);
+    this.name = 'RequestAlreadyResolvedException';
+  }
+}
+
+export class InvalidRequestQuantityException extends DomainException {
+  constructor() {
+    super('Material requests must have a quantity greater than zero');
+    this.name = 'InvalidRequestQuantityException';
+  }
+}

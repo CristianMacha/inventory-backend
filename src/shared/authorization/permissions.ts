@@ -135,6 +135,11 @@ export const Permissions = {
     CREATE: 'workshop-movements.create',
     LIST: 'workshop-movements.list',
   },
+  WORKSHOP_REQUESTS: {
+    CREATE: 'workshop-requests.create',
+    LIST: 'workshop-requests.list',
+    MANAGE: 'workshop-requests.manage',
+  },
 } as const;
 
 export type PermissionType =

@@ -187,6 +187,20 @@ export const MENU_ITEMS: MenuItem[] = [
         path: '/workshop/suppliers',
         permission: Permissions.WORKSHOP_SUPPLIERS.LIST,
       },
+      {
+        id: 'workshop-requests',
+        label: 'Requests',
+        icon: 'assignment',
+        path: '/workshop/requests',
+        permission: Permissions.WORKSHOP_REQUESTS.LIST,
+      },
+      {
+        id: 'workshop-procurement',
+        label: 'Procurement Needs',
+        icon: 'shopping-cart',
+        path: '/workshop/procurement-needs',
+        permission: Permissions.WORKSHOP_REQUESTS.MANAGE,
+      },
     ],
   },
   {

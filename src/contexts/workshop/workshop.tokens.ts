@@ -5,4 +5,5 @@ export const WORKSHOP_TOKENS = {
   SUPPLIER_REPOSITORY: Symbol('WorkshopSupplierRepository'),
   MATERIAL_MOVEMENT_REPOSITORY: Symbol('WorkshopMaterialMovementRepository'),
   TOOL_MOVEMENT_REPOSITORY: Symbol('WorkshopToolMovementRepository'),
+  REQUEST_REPOSITORY: Symbol('WorkshopRequestRepository'),
 } as const;

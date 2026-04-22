@@ -36,6 +36,11 @@ export class TypeOrmMaterialRepository implements IMaterialRepository {
     );
   }
 
+  async findAllUnpaginated(): Promise<Material[]> {
+    const entities = await this.repository.find({ order: { name: 'ASC' } });
+    return entities.map((e) => MaterialPersistenceMapper.toDomain(e));
+  }
+
   async findById(id: MaterialId): Promise<Material | null> {
     const entity = await this.repository.findOne({
       where: { id: id.getValue() },

@@ -222,6 +222,20 @@ const PERMISSIONS = [
     name: Permissions.WORKSHOP_MOVEMENTS.LIST,
     description: 'List workshop movement history',
   },
+  // Workshop Requests
+  {
+    name: Permissions.WORKSHOP_REQUESTS.CREATE,
+    description: 'Create workshop requests for tools or materials',
+  },
+  {
+    name: Permissions.WORKSHOP_REQUESTS.LIST,
+    description: 'List all workshop requests',
+  },
+  {
+    name: Permissions.WORKSHOP_REQUESTS.MANAGE,
+    description:
+      'Approve or reject workshop requests and view procurement needs',
+  },
   // Settings
   { name: Permissions.SETTINGS.READ, description: 'Read settings' },
   // Profile

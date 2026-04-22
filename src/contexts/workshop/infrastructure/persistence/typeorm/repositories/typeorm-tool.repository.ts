@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { IToolRepository } from '../../../../domain/repositories/itool.repository';
 import { Tool } from '../../../../domain/entities/tool.entity';
 import { ToolId } from '../../../../domain/value-objects/tool-id';
+import { ToolStatus } from '../../../../domain/enums/tool-status.enum';
 import { ToolTypeormEntity } from '../entities/tool.typeorm.entity';
 import { ToolPersistenceMapper } from '../mappers/tool-persistence.mapper';
 import {
@@ -44,6 +45,14 @@ export class TypeOrmToolRepository implements IToolRepository {
   async findByName(name: string): Promise<Tool | null> {
     const entity = await this.repository.findOne({ where: { name } });
     return entity ? ToolPersistenceMapper.toDomain(entity) : null;
+  }
+
+  async findByStatus(status: ToolStatus): Promise<Tool[]> {
+    const entities = await this.repository.find({
+      where: { status },
+      order: { name: 'ASC' },
+    });
+    return entities.map((e) => ToolPersistenceMapper.toDomain(e));
   }
 
   async save(tool: Tool): Promise<void> {

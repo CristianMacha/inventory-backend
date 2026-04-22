@@ -11,6 +11,7 @@ import { WorkshopCategoryTypeormEntity } from './infrastructure/persistence/type
 import { WorkshopSupplierTypeormEntity } from './infrastructure/persistence/typeorm/entities/workshop-supplier.typeorm.entity';
 import { MaterialMovementTypeormEntity } from './infrastructure/persistence/typeorm/entities/material-movement.typeorm.entity';
 import { ToolMovementTypeormEntity } from './infrastructure/persistence/typeorm/entities/tool-movement.typeorm.entity';
+import { WorkshopRequestTypeormEntity } from './infrastructure/persistence/typeorm/entities/workshop-request.typeorm.entity';
 
 // Repositories
 import { TypeOrmToolRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-tool.repository';
@@ -19,6 +20,7 @@ import { TypeOrmWorkshopCategoryRepository } from './infrastructure/persistence/
 import { TypeOrmWorkshopSupplierRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-workshop-supplier.repository';
 import { TypeOrmMaterialMovementRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-material-movement.repository';
 import { TypeOrmToolMovementRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-tool-movement.repository';
+import { TypeOrmWorkshopRequestRepository } from './infrastructure/persistence/typeorm/repositories/typeorm-workshop-request.repository';
 
 // Command Handlers
 import { CreateToolHandler } from './application/commands/create-tool/create-tool.handler';
@@ -37,6 +39,9 @@ import { UploadMaterialImageHandler } from './application/commands/upload-materi
 import { DeleteMaterialImageHandler } from './application/commands/delete-material-image/delete-material-image.handler';
 import { RegisterMaterialMovementHandler } from './application/commands/register-material-movement/register-material-movement.handler';
 import { ChangeToolStatusHandler } from './application/commands/change-tool-status/change-tool-status.handler';
+import { CreateWorkshopRequestHandler } from './application/commands/create-workshop-request/create-workshop-request.handler';
+import { ApproveWorkshopRequestHandler } from './application/commands/approve-workshop-request/approve-workshop-request.handler';
+import { RejectWorkshopRequestHandler } from './application/commands/reject-workshop-request/reject-workshop-request.handler';
 
 // Query Handlers
 import { GetToolsHandler } from './application/queries/get-tools/get-tools.handler';
@@ -48,12 +53,15 @@ import { GetWorkshopSuppliersHandler } from './application/queries/get-workshop-
 import { GetMaterialMovementsHandler } from './application/queries/get-material-movements/get-material-movements.handler';
 import { GetMaterialStockHandler } from './application/queries/get-material-stock/get-material-stock.handler';
 import { GetToolMovementsHandler } from './application/queries/get-tool-movements/get-tool-movements.handler';
+import { GetWorkshopRequestsHandler } from './application/queries/get-workshop-requests/get-workshop-requests.handler';
+import { GetProcurementNeedsHandler } from './application/queries/get-procurement-needs/get-procurement-needs.handler';
 
 // Controllers
 import { ToolsController } from './infrastructure/http/controllers/tools.controller';
 import { MaterialsController } from './infrastructure/http/controllers/materials.controller';
 import { WorkshopCategoriesController } from './infrastructure/http/controllers/workshop-categories.controller';
 import { WorkshopSuppliersController } from './infrastructure/http/controllers/workshop-suppliers.controller';
+import { WorkshopRequestsController } from './infrastructure/http/controllers/workshop-requests.controller';
 
 const CommandHandlers = [
   CreateToolHandler,
@@ -72,6 +80,9 @@ const CommandHandlers = [
   DeleteMaterialImageHandler,
   RegisterMaterialMovementHandler,
   ChangeToolStatusHandler,
+  CreateWorkshopRequestHandler,
+  ApproveWorkshopRequestHandler,
+  RejectWorkshopRequestHandler,
 ];
 
 const QueryHandlers = [
@@ -84,6 +95,8 @@ const QueryHandlers = [
   GetMaterialMovementsHandler,
   GetMaterialStockHandler,
   GetToolMovementsHandler,
+  GetWorkshopRequestsHandler,
+  GetProcurementNeedsHandler,
 ];
 
 const PersistenceProviders: Provider[] = [
@@ -108,6 +121,10 @@ const PersistenceProviders: Provider[] = [
     provide: WORKSHOP_TOKENS.TOOL_MOVEMENT_REPOSITORY,
     useClass: TypeOrmToolMovementRepository,
   },
+  {
+    provide: WORKSHOP_TOKENS.REQUEST_REPOSITORY,
+    useClass: TypeOrmWorkshopRequestRepository,
+  },
 ];
 
 @Module({
@@ -120,6 +137,7 @@ const PersistenceProviders: Provider[] = [
       WorkshopSupplierTypeormEntity,
       MaterialMovementTypeormEntity,
       ToolMovementTypeormEntity,
+      WorkshopRequestTypeormEntity,
     ]),
   ],
   controllers: [
@@ -127,6 +145,7 @@ const PersistenceProviders: Provider[] = [
     MaterialsController,
     WorkshopCategoriesController,
     WorkshopSuppliersController,
+    WorkshopRequestsController,
   ],
   providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders],
   exports: [...PersistenceProviders],
