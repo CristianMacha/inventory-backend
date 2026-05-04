@@ -41,6 +41,22 @@ export class TypeOrmMaterialRepository implements IMaterialRepository {
     return entities.map((e) => MaterialPersistenceMapper.toDomain(e));
   }
 
+  async findForSelect(
+    search?: string,
+  ): Promise<{ id: string; name: string }[]> {
+    const qb = this.repository
+      .createQueryBuilder('material')
+      .select(['material.id', 'material.name'])
+      .orderBy('material.name', 'ASC');
+    if (search?.trim()) {
+      qb.andWhere('material.name LIKE :search', {
+        search: `%${search.trim()}%`,
+      });
+    }
+    const entities = await qb.getMany();
+    return entities.map((e) => ({ id: e.id, name: e.name }));
+  }
+
   async findById(id: MaterialId): Promise<Material | null> {
     const entity = await this.repository.findOne({
       where: { id: id.getValue() },

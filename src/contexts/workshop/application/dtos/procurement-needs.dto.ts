@@ -24,26 +24,19 @@ export class MaterialBelowMinStockDto {
   supplierId: string | null;
 }
 
-export class ApprovedRequestStockGapDto {
+export class UnfulfilledRequestDto {
   @ApiProperty()
   requestId: string;
 
   @ApiProperty()
-  materialId: string;
-
-  @ApiProperty()
-  materialName: string;
-
-  @ApiProperty()
-  unit: string;
-
-  @ApiProperty()
   requestedQuantity: number;
 
-  @ApiProperty()
-  currentStock: number;
+  @ApiProperty({
+    description: 'Stock available when this request was processed (FIFO)',
+  })
+  availableStock: number;
 
-  @ApiProperty({ description: 'requestedQuantity - currentStock' })
+  @ApiProperty()
   shortfall: number;
 
   @ApiProperty({ enum: RequestPriority })
@@ -53,7 +46,33 @@ export class ApprovedRequestStockGapDto {
   requestedBy: string;
 
   @ApiProperty()
+  requestedByName: string;
+
+  @ApiProperty()
   createdAt: string;
+}
+
+export class ApprovedRequestStockGapDto {
+  @ApiProperty()
+  materialId: string;
+
+  @ApiProperty()
+  materialName: string;
+
+  @ApiProperty()
+  unit: string;
+
+  @ApiProperty({ description: 'Current stock of the material' })
+  currentStock: number;
+
+  @ApiProperty({
+    description:
+      'Total shortfall across all unfulfilled requests for this material',
+  })
+  totalShortfall: number;
+
+  @ApiProperty({ type: () => UnfulfilledRequestDto, isArray: true })
+  unfulfilledRequests: UnfulfilledRequestDto[];
 }
 
 export class ToolInRepairDto {

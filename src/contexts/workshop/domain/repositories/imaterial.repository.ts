@@ -6,6 +6,7 @@ import { PaginationParams } from '@shared/domain/pagination/pagination-params.in
 export interface IMaterialRepository {
   findAll(pagination: PaginationParams): Promise<PaginatedResult<Material>>;
   findAllUnpaginated(): Promise<Material[]>;
+  findForSelect(search?: string): Promise<{ id: string; name: string }[]>;
   findById(id: MaterialId): Promise<Material | null>;
   findByName(name: string): Promise<Material | null>;
   save(material: Material): Promise<void>;

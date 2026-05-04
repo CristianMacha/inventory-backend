@@ -1,8 +1,9 @@
-import { Module, Provider } from '@nestjs/common';
+import { Module, Provider, forwardRef } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { WORKSHOP_TOKENS } from './workshop.tokens';
+import { UsersModule } from '@contexts/users/users.module';
 
 // TypeORM Entities
 import { ToolTypeormEntity } from './infrastructure/persistence/typeorm/entities/tool.typeorm.entity';
@@ -55,6 +56,8 @@ import { GetMaterialStockHandler } from './application/queries/get-material-stoc
 import { GetToolMovementsHandler } from './application/queries/get-tool-movements/get-tool-movements.handler';
 import { GetWorkshopRequestsHandler } from './application/queries/get-workshop-requests/get-workshop-requests.handler';
 import { GetProcurementNeedsHandler } from './application/queries/get-procurement-needs/get-procurement-needs.handler';
+import { GetToolsSelectHandler } from './application/queries/get-tools-select/get-tools-select.handler';
+import { GetMaterialsSelectHandler } from './application/queries/get-materials-select/get-materials-select.handler';
 
 // Controllers
 import { ToolsController } from './infrastructure/http/controllers/tools.controller';
@@ -97,6 +100,8 @@ const QueryHandlers = [
   GetToolMovementsHandler,
   GetWorkshopRequestsHandler,
   GetProcurementNeedsHandler,
+  GetToolsSelectHandler,
+  GetMaterialsSelectHandler,
 ];
 
 const PersistenceProviders: Provider[] = [
@@ -130,6 +135,7 @@ const PersistenceProviders: Provider[] = [
 @Module({
   imports: [
     CqrsModule,
+    forwardRef(() => UsersModule),
     TypeOrmModule.forFeature([
       ToolTypeormEntity,
       MaterialTypeormEntity,

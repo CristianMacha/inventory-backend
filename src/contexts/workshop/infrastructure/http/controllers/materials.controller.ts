@@ -40,10 +40,12 @@ import { GetMaterialsQuery } from '../../../application/queries/get-materials/ge
 import { GetMaterialByIdQuery } from '../../../application/queries/get-material-by-id/get-material-by-id.query';
 import { GetMaterialMovementsQuery } from '../../../application/queries/get-material-movements/get-material-movements.query';
 import { GetMaterialStockQuery } from '../../../application/queries/get-material-stock/get-material-stock.query';
+import { GetMaterialsSelectQuery } from '../../../application/queries/get-materials-select/get-materials-select.query';
 import { CreateMaterialDto } from '../dtos/create-material.dto';
 import { UpdateMaterialDto } from '../dtos/update-material.dto';
 import { RegisterMaterialMovementDto } from '../dtos/register-material-movement.dto';
 import { MaterialDto } from '../../../application/dtos/material.dto';
+import { MaterialSelectDto } from '../../../application/dtos/material-select.dto';
 import { MaterialMovementDto } from '../../../application/dtos/material-movement.dto';
 import { UploadMaterialImageCommand } from '../../../application/commands/upload-material-image/upload-material-image.command';
 import { DeleteMaterialImageCommand } from '../../../application/commands/delete-material-image/delete-material-image.command';
@@ -99,6 +101,19 @@ export class MaterialsController {
     return this.queryBus.execute(
       new GetMaterialsQuery(normalizePaginationParams(page, limit)),
     );
+  }
+
+  @Get('select')
+  @RequirePermissions(Permissions.WORKSHOP_MATERIALS.LIST)
+  @ApiOperation({
+    summary: 'Get materials for select/autocomplete (id + name)',
+  })
+  @ApiQuery({ name: 'search', required: false, type: String })
+  @ApiResponse({ status: 200, type: MaterialSelectDto, isArray: true })
+  async getForSelect(
+    @Query('search') search?: string,
+  ): Promise<MaterialSelectDto[]> {
+    return this.queryBus.execute(new GetMaterialsSelectQuery(search));
   }
 
   @Get(':id')

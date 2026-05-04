@@ -55,6 +55,20 @@ export class TypeOrmToolRepository implements IToolRepository {
     return entities.map((e) => ToolPersistenceMapper.toDomain(e));
   }
 
+  async findForSelect(
+    search?: string,
+  ): Promise<{ id: string; name: string }[]> {
+    const qb = this.repository
+      .createQueryBuilder('tool')
+      .select(['tool.id', 'tool.name'])
+      .orderBy('tool.name', 'ASC');
+    if (search?.trim()) {
+      qb.andWhere('tool.name LIKE :search', { search: `%${search.trim()}%` });
+    }
+    const entities = await qb.getMany();
+    return entities.map((e) => ({ id: e.id, name: e.name }));
+  }
+
   async save(tool: Tool): Promise<void> {
     await this.repository.save(ToolPersistenceMapper.toPersistence(tool));
   }

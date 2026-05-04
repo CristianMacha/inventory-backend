@@ -39,10 +39,12 @@ import { ChangeToolStatusCommand } from '../../../application/commands/change-to
 import { GetToolsQuery } from '../../../application/queries/get-tools/get-tools.query';
 import { GetToolByIdQuery } from '../../../application/queries/get-tool-by-id/get-tool-by-id.query';
 import { GetToolMovementsQuery } from '../../../application/queries/get-tool-movements/get-tool-movements.query';
+import { GetToolsSelectQuery } from '../../../application/queries/get-tools-select/get-tools-select.query';
 import { CreateToolDto } from '../dtos/create-tool.dto';
 import { UpdateToolDto } from '../dtos/update-tool.dto';
 import { ChangeToolStatusDto } from '../dtos/change-tool-status.dto';
 import { ToolDto } from '../../../application/dtos/tool.dto';
+import { ToolSelectDto } from '../../../application/dtos/tool-select.dto';
 import { ToolMovementDto } from '../../../application/dtos/tool-movement.dto';
 import { UploadToolImageCommand } from '../../../application/commands/upload-tool-image/upload-tool-image.command';
 import { DeleteToolImageCommand } from '../../../application/commands/delete-tool-image/delete-tool-image.command';
@@ -96,6 +98,17 @@ export class ToolsController {
     return this.queryBus.execute(
       new GetToolsQuery(normalizePaginationParams(page, limit)),
     );
+  }
+
+  @Get('select')
+  @RequirePermissions(Permissions.WORKSHOP_TOOLS.LIST)
+  @ApiOperation({ summary: 'Get tools for select/autocomplete (id + name)' })
+  @ApiQuery({ name: 'search', required: false, type: String })
+  @ApiResponse({ status: 200, type: ToolSelectDto, isArray: true })
+  async getForSelect(
+    @Query('search') search?: string,
+  ): Promise<ToolSelectDto[]> {
+    return this.queryBus.execute(new GetToolsSelectQuery(search));
   }
 
   @Get(':id')

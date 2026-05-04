@@ -64,6 +64,7 @@ export class TypeOrmWorkshopRequestRepository implements IWorkshopRequestReposit
         status: RequestStatus.APPROVED,
         requestType: RequestType.MATERIAL,
       },
+      order: { createdAt: 'ASC' },
     });
     return entities.map((e) => WorkshopRequestPersistenceMapper.toDomain(e));
   }

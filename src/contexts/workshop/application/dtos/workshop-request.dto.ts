@@ -31,8 +31,14 @@ export class WorkshopRequestDto {
   @ApiProperty()
   requestedBy: string;
 
+  @ApiProperty()
+  requestedByName: string;
+
   @ApiPropertyOptional()
   resolvedBy: string | null;
+
+  @ApiPropertyOptional()
+  resolvedByName: string | null;
 
   @ApiPropertyOptional()
   resolvedAt: string | null;

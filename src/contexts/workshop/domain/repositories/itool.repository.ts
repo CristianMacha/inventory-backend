@@ -9,6 +9,7 @@ export interface IToolRepository {
   findById(id: ToolId): Promise<Tool | null>;
   findByName(name: string): Promise<Tool | null>;
   findByStatus(status: ToolStatus): Promise<Tool[]>;
+  findForSelect(search?: string): Promise<{ id: string; name: string }[]>;
   save(tool: Tool): Promise<void>;
   delete(id: ToolId): Promise<void>;
 }

@@ -188,6 +188,13 @@ export const MENU_ITEMS: MenuItem[] = [
         permission: Permissions.WORKSHOP_SUPPLIERS.LIST,
       },
       {
+        id: 'workshop-my-requests',
+        label: 'My Requests',
+        icon: 'assignment-ind',
+        path: '/workshop/my-requests',
+        permission: Permissions.WORKSHOP_REQUESTS.CREATE,
+      },
+      {
         id: 'workshop-requests',
         label: 'Requests',
         icon: 'assignment',
