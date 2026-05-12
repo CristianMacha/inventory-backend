@@ -28,6 +28,7 @@ import { normalizePaginationParams } from '@shared/domain/pagination/pagination-
 import { CreateWorkshopRequestCommand } from '../../../application/commands/create-workshop-request/create-workshop-request.command';
 import { ApproveWorkshopRequestCommand } from '../../../application/commands/approve-workshop-request/approve-workshop-request.command';
 import { RejectWorkshopRequestCommand } from '../../../application/commands/reject-workshop-request/reject-workshop-request.command';
+import { DeliverWorkshopRequestCommand } from '../../../application/commands/deliver-workshop-request/deliver-workshop-request.command';
 import { GetWorkshopRequestsQuery } from '../../../application/queries/get-workshop-requests/get-workshop-requests.query';
 import { GetProcurementNeedsQuery } from '../../../application/queries/get-procurement-needs/get-procurement-needs.query';
 import { CreateWorkshopRequestDto } from '../dtos/create-workshop-request.dto';
@@ -130,14 +131,25 @@ export class WorkshopRequestsController {
   @RequirePermissions(Permissions.WORKSHOP_REQUESTS.MANAGE)
   @ApiOperation({ summary: 'Approve a workshop request' })
   @ApiParam({ name: 'id', type: String })
+  @ApiQuery({
+    name: 'approvedQuantity',
+    required: false,
+    type: Number,
+    description: 'Override requested quantity (materials only)',
+  })
   @ApiResponse({ status: 200, description: 'Request approved successfully' })
   @ApiResponse({ status: 404, description: 'Request not found' })
   async approve(
     @Param('id', new ParseUUIDPipe()) id: string,
     @GetUser() user: AuthUserDto,
+    @Query('approvedQuantity') approvedQuantity?: number,
   ): Promise<void> {
     await this.commandBus.execute(
-      new ApproveWorkshopRequestCommand(id, user.id),
+      new ApproveWorkshopRequestCommand(
+        id,
+        user.id,
+        approvedQuantity ? Number(approvedQuantity) : undefined,
+      ),
     );
   }
 
@@ -155,6 +167,29 @@ export class WorkshopRequestsController {
   ): Promise<void> {
     await this.commandBus.execute(
       new RejectWorkshopRequestCommand(id, user.id, dto.rejectionReason),
+    );
+  }
+
+  @Post(':id/deliver')
+  @HttpCode(HttpStatus.OK)
+  @RequirePermissions(Permissions.WORKSHOP_REQUESTS.MANAGE)
+  @ApiOperation({
+    summary:
+      'Mark request as delivered — registers material movement (exit) or sets tool to IN_USE',
+  })
+  @ApiParam({ name: 'id', type: String })
+  @ApiResponse({ status: 200, description: 'Request delivered successfully' })
+  @ApiResponse({ status: 404, description: 'Request not found' })
+  @ApiResponse({
+    status: 409,
+    description: 'Request is not in APPROVED status or insufficient stock',
+  })
+  async deliver(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @GetUser() user: AuthUserDto,
+  ): Promise<void> {
+    await this.commandBus.execute(
+      new DeliverWorkshopRequestCommand(id, user.id),
     );
   }
 }

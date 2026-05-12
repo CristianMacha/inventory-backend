@@ -22,7 +22,7 @@ export class ApproveWorkshopRequestHandler implements ICommandHandler<ApproveWor
     if (!request)
       throw new ResourceNotFoundException('WorkshopRequest', requestId);
 
-    request.approve(resolvedBy);
+    request.approve(resolvedBy, command.approvedQuantity);
     await this.requestRepository.save(request);
   }
 }

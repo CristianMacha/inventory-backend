@@ -13,8 +13,14 @@ export class WorkshopRequestDto {
   @ApiProperty()
   itemId: string;
 
+  @ApiProperty()
+  itemName: string;
+
   @ApiPropertyOptional()
   quantity: number | null;
+
+  @ApiPropertyOptional()
+  approvedQuantity: number | null;
 
   @ApiPropertyOptional()
   jobId: string | null;

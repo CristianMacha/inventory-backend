@@ -17,6 +17,7 @@ export class WorkshopRequestPersistenceMapper {
       entity.resolvedBy,
       entity.resolvedAt,
       entity.rejectionReason,
+      entity.approvedQuantity !== null ? Number(entity.approvedQuantity) : null,
       entity.createdAt,
       entity.updatedAt,
     );
@@ -28,6 +29,7 @@ export class WorkshopRequestPersistenceMapper {
     entity.requestType = domain.requestType;
     entity.itemId = domain.itemId;
     entity.quantity = domain.quantity;
+    entity.approvedQuantity = domain.approvedQuantity;
     entity.jobId = domain.jobId;
     entity.priority = domain.priority;
     entity.notes = domain.notes;

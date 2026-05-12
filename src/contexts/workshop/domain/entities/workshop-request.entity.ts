@@ -5,6 +5,7 @@ import { RequestPriority } from '../enums/request-priority.enum';
 import {
   RequestAlreadyResolvedException,
   InvalidRequestQuantityException,
+  RequestNotApprovedException,
 } from '../errors/workshop.errors';
 
 export class WorkshopRequest {
@@ -20,6 +21,7 @@ export class WorkshopRequest {
   private _resolvedBy: string | null;
   private _resolvedAt: Date | null;
   private _rejectionReason: string | null;
+  private _approvedQuantity: number | null;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
@@ -36,6 +38,7 @@ export class WorkshopRequest {
     resolvedBy: string | null,
     resolvedAt: Date | null,
     rejectionReason: string | null,
+    approvedQuantity: number | null,
     createdAt: Date,
     updatedAt: Date,
   ) {
@@ -51,6 +54,7 @@ export class WorkshopRequest {
     this._resolvedBy = resolvedBy;
     this._resolvedAt = resolvedAt;
     this._rejectionReason = rejectionReason;
+    this._approvedQuantity = approvedQuantity;
     this._createdAt = createdAt;
     this._updatedAt = updatedAt;
   }
@@ -84,6 +88,7 @@ export class WorkshopRequest {
       null,
       null,
       null,
+      null,
       now,
       now,
     );
@@ -102,6 +107,7 @@ export class WorkshopRequest {
     resolvedBy: string | null,
     resolvedAt: Date | null,
     rejectionReason: string | null,
+    approvedQuantity: number | null,
     createdAt: Date,
     updatedAt: Date,
   ): WorkshopRequest {
@@ -118,17 +124,38 @@ export class WorkshopRequest {
       resolvedBy,
       resolvedAt,
       rejectionReason,
+      approvedQuantity,
       createdAt,
       updatedAt,
     );
   }
 
-  approve(resolvedBy: string): void {
+  approve(resolvedBy: string, approvedQuantity?: number): void {
     if (this._status !== RequestStatus.PENDING) {
       throw new RequestAlreadyResolvedException(this._id.getValue());
     }
+    if (
+      this._requestType === RequestType.MATERIAL &&
+      approvedQuantity !== undefined
+    ) {
+      if (approvedQuantity <= 0) throw new InvalidRequestQuantityException();
+    }
     this._status = RequestStatus.APPROVED;
     this._resolvedBy = resolvedBy;
+    this._resolvedAt = new Date();
+    this._approvedQuantity =
+      this._requestType === RequestType.MATERIAL
+        ? (approvedQuantity ?? this._quantity)
+        : null;
+    this._updatedAt = new Date();
+  }
+
+  deliver(deliveredBy: string): void {
+    if (this._status !== RequestStatus.APPROVED) {
+      throw new RequestNotApprovedException(this._id.getValue());
+    }
+    this._status = RequestStatus.DELIVERED;
+    this._resolvedBy = deliveredBy;
     this._resolvedAt = new Date();
     this._updatedAt = new Date();
   }
@@ -179,6 +206,9 @@ export class WorkshopRequest {
   }
   get rejectionReason(): string | null {
     return this._rejectionReason;
+  }
+  get approvedQuantity(): number | null {
+    return this._approvedQuantity;
   }
   get createdAt(): Date {
     return this._createdAt;

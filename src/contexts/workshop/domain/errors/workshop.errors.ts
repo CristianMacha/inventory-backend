@@ -1,3 +1,4 @@
+import { HttpStatus } from '@nestjs/common';
 import { DomainException } from '@shared/domain/domain.exception';
 
 export class WorkshopItemNameEmptyException extends DomainException {
@@ -32,5 +33,22 @@ export class InvalidRequestQuantityException extends DomainException {
   constructor() {
     super('Material requests must have a quantity greater than zero');
     this.name = 'InvalidRequestQuantityException';
+  }
+}
+
+export class RequestNotApprovedException extends DomainException {
+  constructor(id: string) {
+    super(`Request ${id} must be in APPROVED status to be delivered`);
+    this.name = 'RequestNotApprovedException';
+  }
+}
+
+export class InsufficientMaterialStockException extends DomainException {
+  constructor(available: number, required: number) {
+    super(
+      `Insufficient stock: available ${available}, required ${required}`,
+      HttpStatus.CONFLICT,
+    );
+    this.name = 'InsufficientMaterialStockException';
   }
 }

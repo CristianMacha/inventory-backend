@@ -5,12 +5,15 @@ export class WorkshopRequestMapper {
   static toDto(
     request: WorkshopRequest,
     userNames: Map<string, string>,
+    itemNames: Map<string, string>,
   ): WorkshopRequestDto {
     const dto = new WorkshopRequestDto();
     dto.id = request.id.getValue();
     dto.requestType = request.requestType;
     dto.itemId = request.itemId;
+    dto.itemName = itemNames.get(request.itemId) ?? request.itemId;
     dto.quantity = request.quantity;
+    dto.approvedQuantity = request.approvedQuantity;
     dto.jobId = request.jobId;
     dto.priority = request.priority;
     dto.notes = request.notes;

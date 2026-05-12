@@ -32,6 +32,12 @@ export class UnfulfilledRequestDto {
   requestedQuantity: number;
 
   @ApiProperty({
+    description:
+      'Quantity approved by admin (may differ from requestedQuantity)',
+  })
+  approvedQuantity: number;
+
+  @ApiProperty({
     description: 'Stock available when this request was processed (FIFO)',
   })
   availableStock: number;
@@ -70,6 +76,18 @@ export class ApprovedRequestStockGapDto {
       'Total shortfall across all unfulfilled requests for this material',
   })
   totalShortfall: number;
+
+  @ApiProperty({
+    description: 'Quantity already on active purchase orders (DRAFT or SENT)',
+    default: 0,
+  })
+  onOrderQuantity: number;
+
+  @ApiProperty({
+    description:
+      'Remaining quantity still needed after subtracting onOrderQuantity',
+  })
+  netShortfall: number;
 
   @ApiProperty({ type: () => UnfulfilledRequestDto, isArray: true })
   unfulfilledRequests: UnfulfilledRequestDto[];

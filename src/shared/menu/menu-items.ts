@@ -208,6 +208,13 @@ export const MENU_ITEMS: MenuItem[] = [
         path: '/workshop/procurement-needs',
         permission: Permissions.WORKSHOP_REQUESTS.MANAGE,
       },
+      {
+        id: 'workshop-purchase-orders',
+        label: 'Purchase Orders',
+        icon: 'local-shipping',
+        path: '/workshop/purchase-orders',
+        permission: Permissions.WORKSHOP_REQUESTS.MANAGE,
+      },
     ],
   },
   {

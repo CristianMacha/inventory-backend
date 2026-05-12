@@ -5,6 +5,7 @@ import { IMaterialRepository } from '../../../domain/repositories/imaterial.repo
 import { IMaterialMovementRepository } from '../../../domain/repositories/imaterial-movement.repository';
 import { IToolRepository } from '../../../domain/repositories/itool.repository';
 import { IWorkshopRequestRepository } from '../../../domain/repositories/iworkshop-request.repository';
+import { IWorkshopPurchaseOrderRepository } from '../../../domain/repositories/iworkshop-purchase-order.repository';
 import { IUserRepository } from '@contexts/users/domain/repositories/user.repository';
 import { UserId } from '@contexts/users/domain/value-objects/user-id';
 import { ToolStatus } from '../../../domain/enums/tool-status.enum';
@@ -29,6 +30,8 @@ export class GetProcurementNeedsHandler implements IQueryHandler<GetProcurementN
     private readonly toolRepository: IToolRepository,
     @Inject(WORKSHOP_TOKENS.REQUEST_REPOSITORY)
     private readonly requestRepository: IWorkshopRequestRepository,
+    @Inject(WORKSHOP_TOKENS.PURCHASE_ORDER_REPOSITORY)
+    private readonly purchaseOrderRepository: IWorkshopPurchaseOrderRepository,
     @Inject(USERS_TOKENS.USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
   ) {}
@@ -36,11 +39,13 @@ export class GetProcurementNeedsHandler implements IQueryHandler<GetProcurementN
   async execute(
     _query: GetProcurementNeedsQuery,
   ): Promise<ProcurementNeedsDto> {
-    const [materials, approvedRequests, toolsInRepair] = await Promise.all([
-      this.materialRepository.findAllUnpaginated(),
-      this.requestRepository.findApprovedMaterialRequests(),
-      this.toolRepository.findByStatus(ToolStatus.IN_REPAIR),
-    ]);
+    const [materials, approvedRequests, toolsInRepair, onOrderMap] =
+      await Promise.all([
+        this.materialRepository.findAllUnpaginated(),
+        this.requestRepository.findApprovedMaterialRequests(),
+        this.toolRepository.findByStatus(ToolStatus.IN_REPAIR),
+        this.purchaseOrderRepository.findActivePurchaseQuantityByMaterial(),
+      ]);
 
     const stockMap = new Map<string, number>();
     await Promise.all(
@@ -81,16 +86,16 @@ export class GetProcurementNeedsHandler implements IQueryHandler<GetProcurementN
     >();
 
     for (const req of approvedRequests) {
-      const requestedQty = req.quantity ?? 0;
+      const effectiveQty = req.approvedQuantity ?? req.quantity ?? 0;
       const available = remainingStockMap.get(req.itemId) ?? 0;
 
-      if (available < requestedQty) {
+      if (available < effectiveQty) {
         const existing = unfulfilledByMaterial.get(req.itemId) ?? [];
-        existing.push({ req, shortfall: requestedQty - available, available });
+        existing.push({ req, shortfall: effectiveQty - available, available });
         unfulfilledByMaterial.set(req.itemId, existing);
         remainingStockMap.set(req.itemId, 0);
       } else {
-        remainingStockMap.set(req.itemId, available - requestedQty);
+        remainingStockMap.set(req.itemId, available - effectiveQty);
       }
     }
 
@@ -111,10 +116,15 @@ export class GetProcurementNeedsHandler implements IQueryHandler<GetProcurementN
       [];
     for (const [materialId, entries] of unfulfilledByMaterial) {
       const material = materialMap.get(materialId);
+      const totalShortfall = entries.reduce((sum, r) => sum + r.shortfall, 0);
+      const onOrderQuantity = onOrderMap.get(materialId) ?? 0;
+      const netShortfall = Math.max(0, totalShortfall - onOrderQuantity);
+
       const unfulfilledRequests: UnfulfilledRequestDto[] = entries.map(
         ({ req, shortfall, available }) => ({
           requestId: req.id.getValue(),
           requestedQuantity: req.quantity ?? 0,
+          approvedQuantity: req.approvedQuantity ?? req.quantity ?? 0,
           availableStock: available,
           shortfall,
           priority: req.priority,
@@ -124,17 +134,19 @@ export class GetProcurementNeedsHandler implements IQueryHandler<GetProcurementN
         }),
       );
 
-      approvedRequestsWithInsufficientStock.push({
-        materialId,
-        materialName: material?.name ?? materialId,
-        unit: material?.unit ?? '',
-        currentStock: stockMap.get(materialId) ?? 0,
-        totalShortfall: unfulfilledRequests.reduce(
-          (sum, r) => sum + r.shortfall,
-          0,
-        ),
-        unfulfilledRequests,
-      });
+      // Only include if there's still a net shortfall after accounting for active orders
+      if (netShortfall > 0) {
+        approvedRequestsWithInsufficientStock.push({
+          materialId,
+          materialName: material?.name ?? materialId,
+          unit: material?.unit ?? '',
+          currentStock: stockMap.get(materialId) ?? 0,
+          totalShortfall,
+          onOrderQuantity,
+          netShortfall,
+          unfulfilledRequests,
+        });
+      }
     }
 
     const toolsInRepairDto: ToolInRepairDto[] = toolsInRepair.map((tool) => ({

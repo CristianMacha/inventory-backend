@@ -20,6 +20,9 @@ export class WorkshopRequestTypeormEntity {
   @Column({ type: 'decimal', precision: 12, scale: 3, nullable: true })
   quantity: number | null;
 
+  @Column({ type: 'decimal', precision: 12, scale: 3, nullable: true })
+  approvedQuantity: number | null;
+
   @Column({ type: 'uuid', nullable: true })
   jobId: string | null;
 

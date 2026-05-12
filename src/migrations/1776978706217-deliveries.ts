@@ -1,0 +1,815 @@
+import { MigrationInterface, QueryRunner } from 'typeorm';
+
+export class Deliveries1776978706217 implements MigrationInterface {
+  name = 'Deliveries1776978706217';
+
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_suppliers\` CHANGE \`phone\` \`phone\` varchar(50) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_suppliers\` CHANGE \`email\` \`email\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_suppliers\` CHANGE \`address\` \`address\` varchar(500) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_suppliers\` CHANGE \`notes\` \`notes\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_suppliers\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_suppliers\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`quantity\` \`quantity\` decimal(12,3) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`jobId\` \`jobId\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`notes\` \`notes\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`status\` \`status\` enum ('pending', 'approved', 'rejected', 'delivered') NOT NULL DEFAULT 'pending'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`resolvedBy\` \`resolvedBy\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`resolvedAt\` \`resolvedAt\` timestamp NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`rejectionReason\` \`rejectionReason\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_purchase_orders\` CHANGE \`notes\` \`notes\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_purchase_orders\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_purchase_orders\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_categories\` CHANGE \`description\` \`description\` varchar(500) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_categories\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_categories\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` DROP FOREIGN KEY \`FK_addec2f70ef5c3908d4e7d2caf6\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` DROP FOREIGN KEY \`FK_6375baf710b8bfa5920a1662257\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`description\` \`description\` varchar(500) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`categoryId\` \`categoryId\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`supplierId\` \`supplierId\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`imagePublicId\` \`imagePublicId\` varchar(1000) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`purchasePrice\` \`purchasePrice\` decimal(10,2) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tool_movements\` CHANGE \`jobId\` \`jobId\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tool_movements\` CHANGE \`notes\` \`notes\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tool_movements\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` DROP FOREIGN KEY \`FK_2dbb405918240ef960c185417d0\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` DROP FOREIGN KEY \`FK_7b8fcb4046f61f82773e8aeaf4c\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`description\` \`description\` varchar(500) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`unitPrice\` \`unitPrice\` decimal(10,2) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`categoryId\` \`categoryId\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`supplierId\` \`supplierId\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`imagePublicId\` \`imagePublicId\` varchar(1000) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_material_movements\` CHANGE \`jobId\` \`jobId\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_material_movements\` CHANGE \`notes\` \`notes\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_material_movements\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`permissions\` CHANGE \`description\` \`description\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`permissions\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`roles\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `DROP INDEX \`IDX_users_provider_externalId\` ON \`users\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`users\` CHANGE \`password\` \`password\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`users\` CHANGE \`external_id\` \`external_id\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`users\` CHANGE \`provider\` \`provider\` varchar(50) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`users\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`users\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`users\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`supplier_returns\` CHANGE \`notes\` \`notes\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`supplier_returns\` CHANGE \`documentPath\` \`documentPath\` varchar(500) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`supplier_returns\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`supplier_returns\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`supplier_returns\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`supplier_return_items\` CHANGE \`description\` \`description\` varchar(500) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoices\` CHANGE \`dueDate\` \`dueDate\` date NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoices\` CHANGE \`notes\` \`notes\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoices\` CHANGE \`documentPath\` \`documentPath\` varchar(500) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoices\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoices\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoices\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoice_items\` CHANGE \`description\` \`description\` varchar(500) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`clientPhone\` \`clientPhone\` varchar(50) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`clientEmail\` \`clientEmail\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`clientAddress\` \`clientAddress\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`scheduledDate\` \`scheduledDate\` date NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`completedDate\` \`completedDate\` timestamp NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`notes\` \`notes\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`job_items\` CHANGE \`description\` \`description\` varchar(500) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`suppliers\` CHANGE \`abbreviation\` \`abbreviation\` varchar(50) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`suppliers\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`suppliers\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`suppliers\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`slabs\` CHANGE \`parentSlabId\` \`parentSlabId\` varchar(36) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`slabs\` CHANGE \`description\` \`description\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`slabs\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`slabs\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`slabs\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`brands\` CHANGE \`description\` \`description\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`brands\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`brands\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`brands\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`categories\` CHANGE \`abbreviation\` \`abbreviation\` varchar(50) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`categories\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`categories\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`categories\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`levels\` CHANGE \`description\` \`description\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`levels\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`levels\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`levels\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`finishes\` CHANGE \`abbreviation\` \`abbreviation\` varchar(50) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`finishes\` CHANGE \`description\` \`description\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`finishes\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`finishes\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`finishes\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` DROP FOREIGN KEY \`FK_ea86d0c514c4ecbb5694cbf57df\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` CHANGE \`description\` \`description\` text NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` CHANGE \`brandId\` \`brandId\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`product_suppliers\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`product_images\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`purchaseInvoiceId\` \`purchaseInvoiceId\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`imagePublicId\` \`imagePublicId\` varchar(500) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`lotNumber\` \`lotNumber\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`thicknessCm\` \`thicknessCm\` decimal(10,2) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`invoice_payments\` CHANGE \`reference\` \`reference\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`invoice_payments\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`job_payments\` CHANGE \`reference\` \`reference\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`job_payments\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`general_payments\` CHANGE \`description\` \`description\` varchar(500) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`general_payments\` CHANGE \`reference\` \`reference\` varchar(255) NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`general_payments\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX \`IDX_users_provider_externalId\` ON \`users\` (\`provider\`, \`external_id\`)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` ADD CONSTRAINT \`FK_addec2f70ef5c3908d4e7d2caf6\` FOREIGN KEY (\`categoryId\`) REFERENCES \`workshop_categories\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` ADD CONSTRAINT \`FK_6375baf710b8bfa5920a1662257\` FOREIGN KEY (\`supplierId\`) REFERENCES \`workshop_suppliers\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` ADD CONSTRAINT \`FK_2dbb405918240ef960c185417d0\` FOREIGN KEY (\`categoryId\`) REFERENCES \`workshop_categories\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` ADD CONSTRAINT \`FK_7b8fcb4046f61f82773e8aeaf4c\` FOREIGN KEY (\`supplierId\`) REFERENCES \`workshop_suppliers\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` ADD CONSTRAINT \`FK_ea86d0c514c4ecbb5694cbf57df\` FOREIGN KEY (\`brandId\`) REFERENCES \`brands\`(\`id\`) ON DELETE SET NULL ON UPDATE NO ACTION`,
+    );
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `ALTER TABLE \`products\` DROP FOREIGN KEY \`FK_ea86d0c514c4ecbb5694cbf57df\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` DROP FOREIGN KEY \`FK_7b8fcb4046f61f82773e8aeaf4c\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` DROP FOREIGN KEY \`FK_2dbb405918240ef960c185417d0\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` DROP FOREIGN KEY \`FK_6375baf710b8bfa5920a1662257\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` DROP FOREIGN KEY \`FK_addec2f70ef5c3908d4e7d2caf6\``,
+    );
+    await queryRunner.query(
+      `DROP INDEX \`IDX_users_provider_externalId\` ON \`users\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`general_payments\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`general_payments\` CHANGE \`reference\` \`reference\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`general_payments\` CHANGE \`description\` \`description\` varchar(500) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`job_payments\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`job_payments\` CHANGE \`reference\` \`reference\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`invoice_payments\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`invoice_payments\` CHANGE \`reference\` \`reference\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`thicknessCm\` \`thicknessCm\` decimal(10,2) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`lotNumber\` \`lotNumber\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`imagePublicId\` \`imagePublicId\` varchar(500) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`bundles\` CHANGE \`purchaseInvoiceId\` \`purchaseInvoiceId\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`product_images\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`product_suppliers\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` CHANGE \`brandId\` \`brandId\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` CHANGE \`description\` \`description\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`products\` ADD CONSTRAINT \`FK_ea86d0c514c4ecbb5694cbf57df\` FOREIGN KEY (\`brandId\`) REFERENCES \`brands\`(\`id\`) ON DELETE SET NULL ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`finishes\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`finishes\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`finishes\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`finishes\` CHANGE \`description\` \`description\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`finishes\` CHANGE \`abbreviation\` \`abbreviation\` varchar(50) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`levels\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`levels\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`levels\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`levels\` CHANGE \`description\` \`description\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`categories\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`categories\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`categories\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`categories\` CHANGE \`abbreviation\` \`abbreviation\` varchar(50) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`brands\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`brands\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT ''0000-00-00 00:00:00''`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`brands\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`brands\` CHANGE \`description\` \`description\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`slabs\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`slabs\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`slabs\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`slabs\` CHANGE \`description\` \`description\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`slabs\` CHANGE \`parentSlabId\` \`parentSlabId\` varchar(36) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`suppliers\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`suppliers\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`suppliers\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`suppliers\` CHANGE \`abbreviation\` \`abbreviation\` varchar(50) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`job_items\` CHANGE \`description\` \`description\` varchar(500) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`notes\` \`notes\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`completedDate\` \`completedDate\` timestamp NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`scheduledDate\` \`scheduledDate\` date NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`clientAddress\` \`clientAddress\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`clientEmail\` \`clientEmail\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`jobs\` CHANGE \`clientPhone\` \`clientPhone\` varchar(50) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoice_items\` CHANGE \`description\` \`description\` varchar(500) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoices\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoices\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoices\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoices\` CHANGE \`documentPath\` \`documentPath\` varchar(500) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoices\` CHANGE \`notes\` \`notes\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`purchase_invoices\` CHANGE \`dueDate\` \`dueDate\` date NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`supplier_return_items\` CHANGE \`description\` \`description\` varchar(500) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`supplier_returns\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`supplier_returns\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`supplier_returns\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`supplier_returns\` CHANGE \`documentPath\` \`documentPath\` varchar(500) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`supplier_returns\` CHANGE \`notes\` \`notes\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`users\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`users\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`users\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`users\` CHANGE \`provider\` \`provider\` varchar(50) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`users\` CHANGE \`external_id\` \`external_id\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`users\` CHANGE \`password\` \`password\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX \`IDX_users_provider_externalId\` ON \`users\` (\`provider\`, \`external_id\`)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`roles\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`permissions\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`permissions\` CHANGE \`description\` \`description\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_material_movements\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_material_movements\` CHANGE \`notes\` \`notes\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_material_movements\` CHANGE \`jobId\` \`jobId\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`imagePublicId\` \`imagePublicId\` varchar(1000) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`supplierId\` \`supplierId\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`categoryId\` \`categoryId\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`unitPrice\` \`unitPrice\` decimal(10,2) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` CHANGE \`description\` \`description\` varchar(500) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` ADD CONSTRAINT \`FK_7b8fcb4046f61f82773e8aeaf4c\` FOREIGN KEY (\`supplierId\`) REFERENCES \`workshop_suppliers\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_materials\` ADD CONSTRAINT \`FK_2dbb405918240ef960c185417d0\` FOREIGN KEY (\`categoryId\`) REFERENCES \`workshop_categories\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tool_movements\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tool_movements\` CHANGE \`notes\` \`notes\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tool_movements\` CHANGE \`jobId\` \`jobId\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`deleted_at\` \`deleted_at\` datetime(6) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`purchasePrice\` \`purchasePrice\` decimal(10,2) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`imagePublicId\` \`imagePublicId\` varchar(1000) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`supplierId\` \`supplierId\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`categoryId\` \`categoryId\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` CHANGE \`description\` \`description\` varchar(500) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` ADD CONSTRAINT \`FK_6375baf710b8bfa5920a1662257\` FOREIGN KEY (\`supplierId\`) REFERENCES \`workshop_suppliers\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_tools\` ADD CONSTRAINT \`FK_addec2f70ef5c3908d4e7d2caf6\` FOREIGN KEY (\`categoryId\`) REFERENCES \`workshop_categories\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_categories\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_categories\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_categories\` CHANGE \`description\` \`description\` varchar(500) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_purchase_orders\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_purchase_orders\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_purchase_orders\` CHANGE \`notes\` \`notes\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`rejectionReason\` \`rejectionReason\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`resolvedAt\` \`resolvedAt\` timestamp NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`resolvedBy\` \`resolvedBy\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`status\` \`status\` enum ('pending', 'approved', 'rejected') NOT NULL DEFAULT ''pending''`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`notes\` \`notes\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`jobId\` \`jobId\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_requests\` CHANGE \`quantity\` \`quantity\` decimal(12,3) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_suppliers\` CHANGE \`updatedAt\` \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_suppliers\` CHANGE \`createdAt\` \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_suppliers\` CHANGE \`notes\` \`notes\` text NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_suppliers\` CHANGE \`address\` \`address\` varchar(500) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_suppliers\` CHANGE \`email\` \`email\` varchar(255) NULL DEFAULT 'NULL'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`workshop_suppliers\` CHANGE \`phone\` \`phone\` varchar(50) NULL DEFAULT 'NULL'`,
+    );
+  }
+}
