@@ -8,6 +8,16 @@
   "engines": {
     "node": "22.16.0"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "bcrypt",
+      "@swc/core",
+      "@nestjs/core",
+      "protobufjs",
+      "@scarf/scarf",
+      "@firebase/util"
+    ]
+  },
   "scripts": {
     "build": "nest build && tsc-alias",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -118,15 +128,5 @@
       "^@config/(.*)$": "<rootDir>/config/$1",
       "^uuid$": "<rootDir>/../test/mocks/uuid.ts"
     }
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "bcrypt",
-      "@swc/core",
-      "@nestjs/core",
-      "protobufjs",
-      "@scarf/scarf",
-      "@firebase/util"
-    ]
   }
 }
