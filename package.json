@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "engines": {
-    "node": "20.19.5"
+    "node": "22.16.0"
   },
   "scripts": {
     "build": "nest build && tsc-alias",

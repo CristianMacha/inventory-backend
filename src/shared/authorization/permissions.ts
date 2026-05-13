@@ -140,6 +140,19 @@ export const Permissions = {
     LIST: 'workshop-requests.list',
     MANAGE: 'workshop-requests.manage',
   },
+  ORGANIZATIONS: {
+    CREATE: 'organizations.create',
+    READ: 'organizations.read',
+  },
+  FILES: {
+    CREATE_FOLDER: 'files.create_folder',
+    UPLOAD: 'files.upload',
+    READ: 'files.read',
+    SEARCH: 'files.search',
+    TAG: 'files.tag',
+    DELETE: 'files.delete',
+    MOVE: 'files.move',
+  },
 } as const;
 
 export type PermissionType =

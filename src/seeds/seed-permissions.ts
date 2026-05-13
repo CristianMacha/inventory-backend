@@ -236,6 +236,44 @@ const PERMISSIONS = [
     description:
       'Approve or reject workshop requests and view procurement needs',
   },
+  // Organizations
+  {
+    name: Permissions.ORGANIZATIONS.CREATE,
+    description: 'Create new organizations',
+  },
+  {
+    name: Permissions.ORGANIZATIONS.READ,
+    description: 'List organizations',
+  },
+  // Files
+  {
+    name: Permissions.FILES.CREATE_FOLDER,
+    description: 'Create folders in the file manager',
+  },
+  {
+    name: Permissions.FILES.UPLOAD,
+    description: 'Upload files to a folder',
+  },
+  {
+    name: Permissions.FILES.READ,
+    description: 'Browse folder contents',
+  },
+  {
+    name: Permissions.FILES.SEARCH,
+    description: 'Search files by tag, name, or type',
+  },
+  {
+    name: Permissions.FILES.TAG,
+    description: 'Add or remove tags on files',
+  },
+  {
+    name: Permissions.FILES.DELETE,
+    description: 'Delete files and folders',
+  },
+  {
+    name: Permissions.FILES.MOVE,
+    description: 'Move files between folders',
+  },
   // Settings
   { name: Permissions.SETTINGS.READ, description: 'Read settings' },
   // Profile

@@ -240,6 +240,28 @@ export const MENU_ITEMS: MenuItem[] = [
     ],
   },
   {
+    id: 'files',
+    label: 'Files',
+    icon: 'folder',
+    permission: Permissions.FILES.READ,
+    children: [
+      {
+        id: 'file-manager',
+        label: 'File Manager',
+        icon: 'folder-open',
+        path: '/files',
+        permission: Permissions.FILES.READ,
+      },
+      {
+        id: 'file-search',
+        label: 'Search Files',
+        icon: 'search',
+        path: '/files/search',
+        permission: Permissions.FILES.SEARCH,
+      },
+    ],
+  },
+  {
     id: 'settings',
     label: 'Settings',
     icon: 'settings',

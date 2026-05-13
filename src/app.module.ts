@@ -17,6 +17,8 @@ import { PurchasingModule } from '@contexts/purchasing/purchasing.module';
 import { ProjectsModule } from '@contexts/projects/projects.module';
 import { AccountingModule } from '@contexts/accounting/accounting.module';
 import { WorkshopModule } from '@contexts/workshop/workshop.module';
+import { OrganizationsModule } from '@contexts/organizations/organizations.module';
+import { FilesModule } from '@contexts/files/files.module';
 import { JwtAuthGuard } from '@contexts/auth/infrastructure/guards/jwt-auth.guard';
 import { PermissionsGuard } from '@contexts/auth/infrastructure/guards/permissions.guard';
 import { HealthModule } from '@shared/infrastructure/health/health.module';
@@ -54,6 +56,8 @@ import { StorageModule } from '@shared/storage/storage.module';
     ProjectsModule,
     AccountingModule,
     WorkshopModule,
+    OrganizationsModule,
+    FilesModule,
     DashboardModule,
     HealthModule,
   ],
