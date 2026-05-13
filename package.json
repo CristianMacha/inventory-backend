@@ -6,17 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "engines": {
+    "pnpm": "10.4.0",
     "node": "22.16.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "bcrypt",
-      "@swc/core",
-      "@nestjs/core",
-      "protobufjs",
-      "@scarf/scarf",
-      "@firebase/util"
-    ]
   },
   "scripts": {
     "build": "nest build && tsc-alias",
