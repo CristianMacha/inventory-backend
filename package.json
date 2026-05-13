@@ -118,5 +118,15 @@
       "^@config/(.*)$": "<rootDir>/config/$1",
       "^uuid$": "<rootDir>/../test/mocks/uuid.ts"
     }
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "bcrypt",
+      "@swc/core",
+      "@nestjs/core",
+      "protobufjs",
+      "@scarf/scarf",
+      "@firebase/util"
+    ]
   }
 }
