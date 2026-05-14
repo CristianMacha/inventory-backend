@@ -19,6 +19,7 @@ import { RemoveTagsHandler } from './application/commands/remove-tags/remove-tag
 import { MoveFileHandler } from './application/commands/move-file/move-file.handler';
 import { DeleteFileHandler } from './application/commands/delete-file/delete-file.handler';
 import { DeleteFolderHandler } from './application/commands/delete-folder/delete-folder.handler';
+import { RenameFolderHandler } from './application/commands/rename-folder/rename-folder.handler';
 
 import { GetFolderContentsHandler } from './application/queries/get-folder-contents/get-folder-contents.handler';
 import { GetRootFoldersHandler } from './application/queries/get-root-folders/get-root-folders.handler';
@@ -35,6 +36,7 @@ import { DeleteFileController } from './infrastructure/http/controllers/delete-f
 import { DeleteFolderController } from './infrastructure/http/controllers/delete-folder.controller';
 import { GetFileUrlController } from './infrastructure/http/controllers/get-file-url.controller';
 import { GetRootFoldersController } from './infrastructure/http/controllers/get-root-folders.controller';
+import { RenameFolderController } from './infrastructure/http/controllers/rename-folder.controller';
 
 const CommandHandlers = [
   CreateFolderHandler,
@@ -44,6 +46,7 @@ const CommandHandlers = [
   MoveFileHandler,
   DeleteFileHandler,
   DeleteFolderHandler,
+  RenameFolderHandler,
 ];
 
 const QueryHandlers = [
@@ -81,6 +84,7 @@ const PersistenceProviders: Provider[] = [
     DeleteFolderController,
     GetFileUrlController,
     GetRootFoldersController,
+    RenameFolderController,
   ],
   providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders],
 })
