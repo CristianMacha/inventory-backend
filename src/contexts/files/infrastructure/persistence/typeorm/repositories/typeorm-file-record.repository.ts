@@ -9,6 +9,7 @@ import {
 import { FileRecord } from '@contexts/files/domain/entities/file-record';
 import { FileId } from '@contexts/files/domain/value-objects/file-id';
 import { FileRecordEntity } from '../entities/file-record.entity';
+import { FileTagEntity } from '../entities/file-tag.entity';
 import { FileRecordPersistenceMapper } from '../mappers/file-record.mapper';
 import {
   buildPaginatedResult,
@@ -21,6 +22,8 @@ export class TypeOrmFileRecordRepository implements IFileRecordRepository {
   constructor(
     @InjectRepository(FileRecordEntity)
     private readonly repo: Repository<FileRecordEntity>,
+    @InjectRepository(FileTagEntity)
+    private readonly tagRepo: Repository<FileTagEntity>,
   ) {}
 
   async findById(id: FileId): Promise<FileRecord | null> {
@@ -41,7 +44,7 @@ export class TypeOrmFileRecordRepository implements IFileRecordRepository {
       take: limit,
     });
     return buildPaginatedResult(
-      entities.map(FileRecordPersistenceMapper.toDomain),
+      entities.map((entity) => FileRecordPersistenceMapper.toDomain(entity)),
       total,
       page,
       limit,
@@ -84,7 +87,7 @@ export class TypeOrmFileRecordRepository implements IFileRecordRepository {
 
     const [entities, total] = await qb.getManyAndCount();
     return buildPaginatedResult(
-      entities.map(FileRecordPersistenceMapper.toDomain),
+      entities.map((entity) => FileRecordPersistenceMapper.toDomain(entity)),
       total,
       page,
       limit,
@@ -99,7 +102,12 @@ export class TypeOrmFileRecordRepository implements IFileRecordRepository {
   }
 
   async save(file: FileRecord): Promise<void> {
-    await this.repo.save(FileRecordPersistenceMapper.toPersistence(file));
+    const { tags, ...entity } = FileRecordPersistenceMapper.toPersistence(file);
+    await this.repo.upsert(entity, ['id']);
+    await this.tagRepo.delete({ fileId: file.id.getValue() });
+    if (tags.length > 0) {
+      await this.tagRepo.insert(tags);
+    }
   }
 
   async delete(id: FileId): Promise<void> {

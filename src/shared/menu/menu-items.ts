@@ -256,7 +256,7 @@ export const MENU_ITEMS: MenuItem[] = [
         id: 'file-search',
         label: 'Search Files',
         icon: 'search',
-        path: '/files/search',
+        path: '/files-search',
         permission: Permissions.FILES.SEARCH,
       },
     ],

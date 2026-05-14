@@ -44,9 +44,6 @@ export class FileRecordEntity {
   @Column({ type: 'timestamp' })
   updatedAt: Date;
 
-  @OneToMany(() => FileTagEntity, (tag) => tag.file, {
-    cascade: true,
-    eager: true,
-  })
+  @OneToMany(() => FileTagEntity, (tag) => tag.file, { eager: true })
   tags: FileTagEntity[];
 }
