@@ -83,4 +83,8 @@ export class FirebaseStorageService {
   async delete(filePath: string): Promise<void> {
     await this.bucket.file(filePath).delete({ ignoreNotFound: true });
   }
+
+  getReadStream(filePath: string): NodeJS.ReadableStream {
+    return this.bucket.file(filePath).createReadStream();
+  }
 }

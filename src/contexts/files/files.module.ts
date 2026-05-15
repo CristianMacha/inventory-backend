@@ -20,6 +20,9 @@ import { MoveFileHandler } from './application/commands/move-file/move-file.hand
 import { DeleteFileHandler } from './application/commands/delete-file/delete-file.handler';
 import { DeleteFolderHandler } from './application/commands/delete-folder/delete-folder.handler';
 import { RenameFolderHandler } from './application/commands/rename-folder/rename-folder.handler';
+import { MoveFolderHandler } from './application/commands/move-folder/move-folder.handler';
+import { RenameFileHandler } from './application/commands/rename-file/rename-file.handler';
+import { BulkMoveFilesHandler } from './application/commands/bulk-move-files/bulk-move-files.handler';
 
 import { GetFolderContentsHandler } from './application/queries/get-folder-contents/get-folder-contents.handler';
 import { GetRootFoldersHandler } from './application/queries/get-root-folders/get-root-folders.handler';
@@ -37,6 +40,16 @@ import { DeleteFolderController } from './infrastructure/http/controllers/delete
 import { GetFileUrlController } from './infrastructure/http/controllers/get-file-url.controller';
 import { GetRootFoldersController } from './infrastructure/http/controllers/get-root-folders.controller';
 import { RenameFolderController } from './infrastructure/http/controllers/rename-folder.controller';
+import { MoveFolderController } from './infrastructure/http/controllers/move-folder.controller';
+import { RenameFileController } from './infrastructure/http/controllers/rename-file.controller';
+import { GetFileController } from './infrastructure/http/controllers/get-file.controller';
+import { GetFileHandler } from './application/queries/get-file/get-file.handler';
+import { GetFolderHandler } from './application/queries/get-folder/get-folder.handler';
+import { SearchFoldersHandler } from './application/queries/search-folders/search-folders.handler';
+import { GetFolderController } from './infrastructure/http/controllers/get-folder.controller';
+import { SearchFoldersController } from './infrastructure/http/controllers/search-folders.controller';
+import { BulkMoveFilesController } from './infrastructure/http/controllers/bulk-move-files.controller';
+import { DownloadFileController } from './infrastructure/http/controllers/download-file.controller';
 
 const CommandHandlers = [
   CreateFolderHandler,
@@ -47,6 +60,9 @@ const CommandHandlers = [
   DeleteFileHandler,
   DeleteFolderHandler,
   RenameFolderHandler,
+  MoveFolderHandler,
+  RenameFileHandler,
+  BulkMoveFilesHandler,
 ];
 
 const QueryHandlers = [
@@ -54,6 +70,9 @@ const QueryHandlers = [
   GetRootFoldersHandler,
   SearchFilesHandler,
   GetFileUrlHandler,
+  GetFileHandler,
+  GetFolderHandler,
+  SearchFoldersHandler,
 ];
 
 const PersistenceProviders: Provider[] = [
@@ -85,6 +104,13 @@ const PersistenceProviders: Provider[] = [
     GetFileUrlController,
     GetRootFoldersController,
     RenameFolderController,
+    MoveFolderController,
+    RenameFileController,
+    GetFileController,
+    GetFolderController,
+    SearchFoldersController,
+    BulkMoveFilesController,
+    DownloadFileController,
   ],
   providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders],
 })

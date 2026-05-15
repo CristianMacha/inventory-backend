@@ -98,6 +98,14 @@ export class FileRecord {
     );
   }
 
+  rename(name: string): void {
+    if (!name || name.trim().length === 0) {
+      throw new Error('File name cannot be empty');
+    }
+    this._name = name.trim();
+    this._updatedAt = new Date();
+  }
+
   addTags(tags: string[]): void {
     const normalized = tags.map((t) => t.trim().toLowerCase()).filter(Boolean);
     const merged = Array.from(new Set([...this._tags, ...normalized]));

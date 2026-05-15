@@ -3,7 +3,7 @@ import { FolderId } from '../value-objects/folder-id';
 export class Folder {
   private readonly _id: FolderId;
   private _name: string;
-  private readonly _parentId: FolderId | null;
+  private _parentId: FolderId | null;
   private readonly _organizationId: string;
   private readonly _createdByUserId: string;
   private readonly _createdAt: Date;
@@ -73,6 +73,11 @@ export class Folder {
       throw new Error('Folder name cannot be empty');
     }
     this._name = name.trim();
+    this._updatedAt = new Date();
+  }
+
+  moveToParent(parentId: FolderId | null): void {
+    this._parentId = parentId;
     this._updatedAt = new Date();
   }
 

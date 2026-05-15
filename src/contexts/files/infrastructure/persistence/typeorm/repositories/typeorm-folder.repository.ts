@@ -36,6 +36,16 @@ export class TypeOrmFolderRepository implements IFolderRepository {
     return entities.map(FolderPersistenceMapper.toDomain);
   }
 
+  async searchByName(organizationId: string, name: string): Promise<Folder[]> {
+    const entities = await this.repo
+      .createQueryBuilder('f')
+      .where('f.organizationId = :organizationId', { organizationId })
+      .andWhere('f.name LIKE :name', { name: `%${name}%` })
+      .orderBy('f.name', 'ASC')
+      .getMany();
+    return entities.map(FolderPersistenceMapper.toDomain);
+  }
+
   async findChildren(
     parentId: FolderId,
     organizationId: string,
