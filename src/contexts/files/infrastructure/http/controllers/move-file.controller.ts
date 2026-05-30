@@ -14,16 +14,19 @@ import {
   ParseUUIDPipe,
   Patch,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
 import { MoveFileDto } from '../dtos/move-file.dto';
 import { MoveFileCommand } from '@contexts/files/application/commands/move-file/move-file.command';
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files')
 export class MoveFileController {
   constructor(private readonly commandBus: CommandBus) {}
@@ -54,7 +57,7 @@ export class MoveFileController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.move permission.',
+    description: 'Forbidden. Requires files.move permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,

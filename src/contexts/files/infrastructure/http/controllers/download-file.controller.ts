@@ -10,28 +10,29 @@ import {
   Controller,
   Get,
   Inject,
-  NotFoundException,
   Param,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
 import { Response } from 'express';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
-import { IFileRecordRepository } from '@contexts/files/domain/repositories/file-record.repository';
-import { FileId } from '@contexts/files/domain/value-objects/file-id';
-import { FILES_TOKENS } from '@contexts/files/files.tokens';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
+import { GetFileDownloadMetaQuery } from '@contexts/files/application/queries/get-file-download-meta/get-file-download-meta.query';
+import { FileDownloadMeta } from '@contexts/files/application/queries/get-file-download-meta/get-file-download-meta.handler';
 import { FirebaseStorageService } from '@shared/storage/firebase/firebase-storage.service';
 import { STORAGE_TOKENS } from '@shared/storage/storage.tokens';
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files')
 export class DownloadFileController {
   constructor(
-    @Inject(FILES_TOKENS.FILE_RECORD_REPOSITORY)
-    private readonly fileRecordRepository: IFileRecordRepository,
+    private readonly queryBus: QueryBus,
     @Inject(STORAGE_TOKENS.FIREBASE_STORAGE_SERVICE)
     private readonly storageService: FirebaseStorageService,
   ) {}
@@ -49,24 +50,24 @@ export class DownloadFileController {
     required: true,
     description: 'Organization UUID',
   })
-  @ApiResponse({ status: 200, description: 'File stream.' })
+  @ApiResponse({ status: 200, description: 'File stream (binary). Headers: Content-Type, Content-Disposition: attachment, Content-Length.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.read permission.',
+    description:
+      'Forbidden. Requires files.read permission or the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({ status: 404, description: 'File not found.' })
+  @ApiResponse({ status: 500, description: 'Storage read error. The file record exists but the storage object could not be streamed.' })
   async run(
     @Param('fileId') fileId: string,
     @Query('organizationId') organizationId: string,
     @Res() res: Response,
   ): Promise<void> {
-    const file = await this.fileRecordRepository.findById(
-      FileId.create(fileId),
-    );
-    if (!file || file.organizationId !== organizationId) {
-      throw new NotFoundException(`File ${fileId} not found`);
-    }
+    const file = await this.queryBus.execute<
+      GetFileDownloadMetaQuery,
+      FileDownloadMeta
+    >(new GetFileDownloadMetaQuery(fileId, organizationId));
 
     res.setHeader('Content-Type', file.mimeType);
     res.setHeader(
@@ -76,6 +77,13 @@ export class DownloadFileController {
     res.setHeader('Content-Length', file.sizeBytes);
 
     const stream = this.storageService.getReadStream(file.storageKey);
+    stream.on('error', () => {
+      if (!res.headersSent) {
+        res.status(500).json({ message: 'Failed to read file from storage' });
+      } else {
+        res.destroy();
+      }
+    });
     stream.pipe(res);
   }
 }

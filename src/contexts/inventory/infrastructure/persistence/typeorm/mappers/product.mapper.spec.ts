@@ -69,6 +69,7 @@ describe('ProductMapper', () => {
       const domain = Product.reconstitute(
         productId,
         'Calacatta Gold',
+        'calacatta-gold',
         'Premium marble',
         true,
         false,
@@ -98,6 +99,7 @@ describe('ProductMapper', () => {
       const domain = Product.reconstitute(
         productId,
         'No Brand',
+        'no-brand',
         '',
         true,
         false,

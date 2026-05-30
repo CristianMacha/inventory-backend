@@ -5,16 +5,18 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
 import { SearchFoldersQuery } from '@contexts/files/application/queries/search-folders/search-folders.query';
 import { FolderDto } from '@contexts/files/application/dtos/folder.dto';
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files/folders')
 export class SearchFoldersController {
   constructor(private readonly queryBus: QueryBus) {}
@@ -44,12 +46,15 @@ export class SearchFoldersController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.search permission.',
+    description: 'Forbidden. Requires files.search permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   async run(
     @Query('organizationId') organizationId: string,
     @Query('name') name: string,
   ): Promise<FolderDto[]> {
+    if (!name || name.trim().length === 0) {
+      return [];
+    }
     return this.queryBus.execute(new SearchFoldersQuery(organizationId, name));
   }
 }

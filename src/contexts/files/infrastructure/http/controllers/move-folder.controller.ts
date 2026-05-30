@@ -6,16 +6,18 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Body, Controller, Param, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Query, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
 import { MoveFolderDto } from '../dtos/move-folder.dto';
 import { MoveFolderCommand } from '@contexts/files/application/commands/move-folder/move-folder.command';
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files/folders')
 export class MoveFolderController {
   constructor(private readonly commandBus: CommandBus) {}
@@ -36,12 +38,14 @@ export class MoveFolderController {
   @ApiResponse({ status: 200, description: 'Folder moved successfully.' })
   @ApiResponse({
     status: 400,
-    description: 'Invalid input or circular reference.',
+    description:
+      'Invalid input. Possible reasons: `targetParentId` is not a valid UUID; moving the folder into itself (`"A folder cannot be moved into itself"`); moving the folder into one of its own descendants (`"Moving this folder would create a circular reference"`).',
   })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.move permission.',
+    description:
+      'Forbidden. Requires files.move permission or the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,

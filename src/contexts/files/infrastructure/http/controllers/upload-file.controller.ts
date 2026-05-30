@@ -15,6 +15,7 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -24,6 +25,7 @@ import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/req
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
 import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 import { Permissions } from '@shared/authorization/permissions';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
 import { FileValidationPipe } from '@shared/storage/pipes/file-validation.pipe';
 import { UploadFileCommand } from '@contexts/files/application/commands/upload-file/upload-file.command';
 
@@ -43,6 +45,7 @@ const ALLOWED_MIME_TYPES = [
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files/folders')
 export class UploadFileController {
   constructor(private readonly commandBus: CommandBus) {}
@@ -95,7 +98,7 @@ export class UploadFileController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.upload permission.',
+    description: 'Forbidden. Requires files.upload permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,

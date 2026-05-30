@@ -5,11 +5,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
 import { SearchFilesQuery } from '@contexts/files/application/queries/search-files/search-files.query';
 import { PaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
 import { FileRecordDto } from '@contexts/files/application/dtos/file-record.dto';
@@ -17,6 +18,7 @@ import { PaginatedFileSearchResultDto } from '@contexts/files/application/dtos/p
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files')
 export class SearchFilesController {
   constructor(private readonly queryBus: QueryBus) {}
@@ -80,7 +82,7 @@ export class SearchFilesController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.search permission.',
+    description: 'Forbidden. Requires files.search permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   async run(
     @Query('organizationId') organizationId: string,

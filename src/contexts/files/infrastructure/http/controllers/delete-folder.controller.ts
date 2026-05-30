@@ -12,15 +12,18 @@ import {
   Param,
   ParseUUIDPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
 import { DeleteFolderCommand } from '@contexts/files/application/commands/delete-folder/delete-folder.command';
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files/folders')
 export class DeleteFolderController {
   constructor(private readonly commandBus: CommandBus) {}
@@ -49,7 +52,7 @@ export class DeleteFolderController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.delete permission.',
+    description: 'Forbidden. Requires files.delete permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,

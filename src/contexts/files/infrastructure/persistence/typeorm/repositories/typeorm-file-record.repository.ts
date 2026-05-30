@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 import {
   FileSearchParams,
@@ -22,8 +22,8 @@ export class TypeOrmFileRecordRepository implements IFileRecordRepository {
   constructor(
     @InjectRepository(FileRecordEntity)
     private readonly repo: Repository<FileRecordEntity>,
-    @InjectRepository(FileTagEntity)
-    private readonly tagRepo: Repository<FileTagEntity>,
+    @InjectDataSource()
+    private readonly dataSource: DataSource,
   ) {}
 
   async findById(id: FileId): Promise<FileRecord | null> {
@@ -103,11 +103,13 @@ export class TypeOrmFileRecordRepository implements IFileRecordRepository {
 
   async save(file: FileRecord): Promise<void> {
     const { tags, ...entity } = FileRecordPersistenceMapper.toPersistence(file);
-    await this.repo.upsert(entity, ['id']);
-    await this.tagRepo.delete({ fileId: file.id.getValue() });
-    if (tags.length > 0) {
-      await this.tagRepo.insert(tags);
-    }
+    await this.dataSource.transaction(async (em) => {
+      await em.upsert(FileRecordEntity, entity, ['id']);
+      await em.delete(FileTagEntity, { fileId: file.id.getValue() });
+      if (tags.length > 0) {
+        await em.insert(FileTagEntity, tags);
+      }
+    });
   }
 
   async delete(id: FileId): Promise<void> {

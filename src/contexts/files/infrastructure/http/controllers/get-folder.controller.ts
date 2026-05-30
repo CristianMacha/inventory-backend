@@ -6,16 +6,18 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
 import { GetFolderQuery } from '@contexts/files/application/queries/get-folder/get-folder.query';
 import { FolderDto } from '@contexts/files/application/dtos/folder.dto';
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files/folders')
 export class GetFolderController {
   constructor(private readonly queryBus: QueryBus) {}
@@ -33,7 +35,7 @@ export class GetFolderController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.read permission.',
+    description: 'Forbidden. Requires files.read permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({ status: 404, description: 'Folder not found.' })
   async run(

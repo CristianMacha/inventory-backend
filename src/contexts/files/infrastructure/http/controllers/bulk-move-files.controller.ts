@@ -5,16 +5,18 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Body, Controller, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Patch, Query, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
 import { BulkMoveFilesDto } from '../dtos/bulk-move-files.dto';
 import { BulkMoveFilesCommand } from '@contexts/files/application/commands/bulk-move-files/bulk-move-files.command';
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files')
 export class BulkMoveFilesController {
   constructor(private readonly commandBus: CommandBus) {}
@@ -40,7 +42,7 @@ export class BulkMoveFilesController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.move permission.',
+    description: 'Forbidden. Requires files.move permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,

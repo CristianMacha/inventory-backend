@@ -15,17 +15,20 @@ import {
   ParseUUIDPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
 import { AddTagsDto } from '../dtos/add-tags.dto';
 import { AddTagsCommand } from '@contexts/files/application/commands/add-tags/add-tags.command';
 import { RemoveTagsCommand } from '@contexts/files/application/commands/remove-tags/remove-tags.command';
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files')
 export class FileTagsController {
   constructor(private readonly commandBus: CommandBus) {}
@@ -59,7 +62,7 @@ export class FileTagsController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.tag permission.',
+    description: 'Forbidden. Requires files.tag permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,
@@ -104,7 +107,7 @@ export class FileTagsController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.tag permission.',
+    description: 'Forbidden. Requires files.tag permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,

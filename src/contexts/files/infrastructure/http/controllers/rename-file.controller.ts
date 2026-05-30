@@ -6,16 +6,18 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Body, Controller, Param, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Query, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
 import { RenameFileDto } from '../dtos/rename-file.dto';
 import { RenameFileCommand } from '@contexts/files/application/commands/rename-file/rename-file.command';
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files')
 export class RenameFileController {
   constructor(private readonly commandBus: CommandBus) {}
@@ -30,9 +32,16 @@ export class RenameFileController {
     description: 'Organization UUID',
   })
   @ApiResponse({ status: 200, description: 'File renamed successfully.' })
-  @ApiResponse({ status: 400, description: 'Invalid input.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input. `name` is required and must not exceed 255 characters.',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({
+    status: 403,
+    description:
+      'Forbidden. Requires files.move permission or the organizationId does not belong to the authenticated user.',
+  })
   @ApiResponse({ status: 404, description: 'File not found.' })
   async run(
     @Param('fileId') fileId: string,

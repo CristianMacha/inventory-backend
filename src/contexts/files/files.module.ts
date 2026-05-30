@@ -46,10 +46,12 @@ import { GetFileController } from './infrastructure/http/controllers/get-file.co
 import { GetFileHandler } from './application/queries/get-file/get-file.handler';
 import { GetFolderHandler } from './application/queries/get-folder/get-folder.handler';
 import { SearchFoldersHandler } from './application/queries/search-folders/search-folders.handler';
+import { GetFileDownloadMetaHandler } from './application/queries/get-file-download-meta/get-file-download-meta.handler';
 import { GetFolderController } from './infrastructure/http/controllers/get-folder.controller';
 import { SearchFoldersController } from './infrastructure/http/controllers/search-folders.controller';
 import { BulkMoveFilesController } from './infrastructure/http/controllers/bulk-move-files.controller';
 import { DownloadFileController } from './infrastructure/http/controllers/download-file.controller';
+import { OrgAccessGuard } from './infrastructure/guards/org-access.guard';
 
 const CommandHandlers = [
   CreateFolderHandler,
@@ -73,6 +75,7 @@ const QueryHandlers = [
   GetFileHandler,
   GetFolderHandler,
   SearchFoldersHandler,
+  GetFileDownloadMetaHandler,
 ];
 
 const PersistenceProviders: Provider[] = [
@@ -112,6 +115,6 @@ const PersistenceProviders: Provider[] = [
     BulkMoveFilesController,
     DownloadFileController,
   ],
-  providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders],
+  providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders, OrgAccessGuard],
 })
 export class FilesModule {}

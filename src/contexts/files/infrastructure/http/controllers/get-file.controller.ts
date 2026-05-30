@@ -6,16 +6,18 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { Permissions } from '@shared/authorization/permissions';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
 import { GetFileQuery } from '@contexts/files/application/queries/get-file/get-file.query';
 import { FileRecordDto } from '@contexts/files/application/dtos/file-record.dto';
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files')
 export class GetFileController {
   constructor(private readonly queryBus: QueryBus) {}
@@ -37,7 +39,7 @@ export class GetFileController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.read permission.',
+    description: 'Forbidden. Requires files.read permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({ status: 404, description: 'File not found.' })
   async run(

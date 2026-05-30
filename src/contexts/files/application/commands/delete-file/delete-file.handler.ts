@@ -33,8 +33,6 @@ export class DeleteFileHandler implements ICommandHandler<DeleteFileCommand> {
       throw new FileNotFoundException(fileId);
     }
 
-    await this.storageService.delete(file.storageKey);
-
     const org = await this.organizationRepository.findById(
       OrganizationId.create(organizationId),
     );
@@ -44,5 +42,6 @@ export class DeleteFileHandler implements ICommandHandler<DeleteFileCommand> {
     }
 
     await this.fileRecordRepository.delete(FileId.create(fileId));
+    await this.storageService.delete(file.storageKey);
   }
 }

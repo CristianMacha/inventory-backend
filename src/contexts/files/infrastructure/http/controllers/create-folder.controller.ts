@@ -4,18 +4,20 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
 import { GetUser } from '@contexts/auth/infrastructure/decorators/get-user.decorator';
 import { AuthUserDto } from '@contexts/users/application/dtos/user-types.dto';
 import { Permissions } from '@shared/authorization/permissions';
+import { OrgAccessGuard } from '@contexts/files/infrastructure/guards/org-access.guard';
 import { CreateFolderDto } from '../dtos/create-folder.dto';
 import { CreateFolderCommand } from '@contexts/files/application/commands/create-folder/create-folder.command';
 
 @ApiBearerAuth()
 @ApiTags('Files')
+@UseGuards(OrgAccessGuard)
 @Controller('files/folders')
 export class CreateFolderController {
   constructor(private readonly commandBus: CommandBus) {}
@@ -39,7 +41,7 @@ export class CreateFolderController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.create_folder permission.',
+    description: 'Forbidden. Requires files.create_folder permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,
