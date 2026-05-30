@@ -46,7 +46,8 @@ export class SearchFoldersController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.search permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
+    description:
+      'Forbidden. Requires files.search permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   async run(
     @Query('organizationId') organizationId: string,

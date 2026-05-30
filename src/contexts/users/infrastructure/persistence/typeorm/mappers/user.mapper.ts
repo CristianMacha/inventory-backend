@@ -12,6 +12,7 @@ export class UserMapper {
     entity.password = user.password;
     entity.externalId = user.externalId;
     entity.provider = user.provider;
+    entity.organizationId = user.organizationId;
     if (user.roles) {
       entity.roles = user.roles.map((role) => RoleMapper.toPersistence(role));
     }
@@ -32,6 +33,7 @@ export class UserMapper {
       roles,
       entity.externalId ?? null,
       entity.provider === 'firebase' ? 'firebase' : null,
+      entity.organizationId ?? null,
     );
   }
 }

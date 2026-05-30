@@ -62,7 +62,8 @@ export class FileTagsController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.tag permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
+    description:
+      'Forbidden. Requires files.tag permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,
@@ -107,7 +108,8 @@ export class FileTagsController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.tag permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
+    description:
+      'Forbidden. Requires files.tag permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,

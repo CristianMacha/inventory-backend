@@ -51,7 +51,6 @@ import { GetFolderController } from './infrastructure/http/controllers/get-folde
 import { SearchFoldersController } from './infrastructure/http/controllers/search-folders.controller';
 import { BulkMoveFilesController } from './infrastructure/http/controllers/bulk-move-files.controller';
 import { DownloadFileController } from './infrastructure/http/controllers/download-file.controller';
-import { OrgAccessGuard } from './infrastructure/guards/org-access.guard';
 
 const CommandHandlers = [
   CreateFolderHandler,
@@ -115,6 +114,6 @@ const PersistenceProviders: Provider[] = [
     BulkMoveFilesController,
     DownloadFileController,
   ],
-  providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders, OrgAccessGuard],
+  providers: [...CommandHandlers, ...QueryHandlers, ...PersistenceProviders],
 })
 export class FilesModule {}

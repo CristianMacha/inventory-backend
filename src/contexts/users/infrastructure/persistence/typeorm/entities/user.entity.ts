@@ -32,6 +32,9 @@ export class UserEntity {
   @Column({ type: 'varchar', length: 50, nullable: true })
   provider: string | null;
 
+  @Column({ type: 'uuid', name: 'organization_id', nullable: true })
+  organizationId: string | null;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 

@@ -39,7 +39,8 @@ export class GetFileController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.read permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
+    description:
+      'Forbidden. Requires files.read permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({ status: 404, description: 'File not found.' })
   async run(

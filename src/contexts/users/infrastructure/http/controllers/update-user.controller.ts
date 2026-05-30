@@ -51,7 +51,12 @@ export class UpdateUserController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdateUserDto,
   ) {
-    const command = new UpdateUserCommand(id, dto.name, dto.roleNames);
+    const command = new UpdateUserCommand(
+      id,
+      dto.name,
+      dto.roleNames,
+      dto.organizationId,
+    );
     await this.commandBus.execute(command);
 
     return {

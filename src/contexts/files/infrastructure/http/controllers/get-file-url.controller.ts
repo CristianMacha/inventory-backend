@@ -6,7 +6,14 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Controller, Get, Param, ParseUUIDPipe, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
@@ -49,7 +56,8 @@ export class GetFileUrlController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.read permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
+    description:
+      'Forbidden. Requires files.read permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,

@@ -45,7 +45,8 @@ export class DeleteFolderHandler implements ICommandHandler<DeleteFolderCommand>
       const isFkViolation =
         err instanceof Error &&
         'code' in err &&
-        ((err as Record<string, unknown>)['code'] === 'ER_ROW_IS_REFERENCED_2' ||
+        ((err as Record<string, unknown>)['code'] ===
+          'ER_ROW_IS_REFERENCED_2' ||
           (err as Record<string, unknown>)['code'] === 'SQLITE_CONSTRAINT');
       if (isFkViolation) {
         throw new FolderNotEmptyException(folderId);

@@ -19,7 +19,7 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
   ) {}
 
   async execute(command: UpdateUserCommand): Promise<void> {
-    const { id, name, roleNames } = command;
+    const { id, name, roleNames, organizationId } = command;
     const user = await this.userRepository.findById(UserId.create(id));
     if (!user) {
       throw new UserNotFoundException(id);
@@ -39,6 +39,10 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
         roles.push(role);
       }
       user.updateRoles(roles);
+    }
+
+    if (organizationId !== undefined) {
+      user.updateOrganization(organizationId);
     }
 
     await this.userRepository.save(user);

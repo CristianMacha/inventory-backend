@@ -15,9 +15,7 @@ export interface FileDownloadMeta {
 }
 
 @QueryHandler(GetFileDownloadMetaQuery)
-export class GetFileDownloadMetaHandler
-  implements IQueryHandler<GetFileDownloadMetaQuery>
-{
+export class GetFileDownloadMetaHandler implements IQueryHandler<GetFileDownloadMetaQuery> {
   constructor(
     @Inject(FILES_TOKENS.FILE_RECORD_REPOSITORY)
     private readonly fileRecordRepository: IFileRecordRepository,

@@ -127,6 +127,7 @@ export class AuthService {
       user.email,
       roleNames,
       permissions,
+      user.organizationId,
     );
 
     const accessToken = this.authResponseService.generateAccessToken(userDto);

@@ -13,6 +13,7 @@ export class AuthResponseService {
       name: user.name,
       roles: user.roles,
       permissions: user.permissions,
+      organizationId: user.organizationId ?? null,
     };
     return this.jwtService.sign(payload);
   }

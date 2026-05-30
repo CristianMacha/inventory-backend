@@ -20,6 +20,7 @@ export class User {
   private _roles: Role[];
   private readonly _externalId: string | null;
   private readonly _provider: typeof FIREBASE_PROVIDER | null;
+  private _organizationId: string | null;
 
   private constructor(
     id: UserId,
@@ -29,6 +30,7 @@ export class User {
     roles: Role[] = [],
     externalId: string | null = null,
     provider: typeof FIREBASE_PROVIDER | null = null,
+    organizationId: string | null = null,
   ) {
     this._id = id;
     this._name = name;
@@ -37,6 +39,7 @@ export class User {
     this._roles = roles;
     this._externalId = externalId;
     this._provider = provider;
+    this._organizationId = organizationId;
   }
 
   private static validateName(name: string): void {
@@ -51,15 +54,26 @@ export class User {
     password: string,
     hasher: IHasher,
     roles: Role[] = [],
+    organizationId: string | null = null,
   ): Promise<User> {
     User.validateName(name);
     const hashedPassword = await hasher.hash(password);
-    return new User(UserId.generate(), name, email, hashedPassword, roles);
+    return new User(
+      UserId.generate(),
+      name,
+      email,
+      hashedPassword,
+      roles,
+      null,
+      null,
+      organizationId,
+    );
   }
 
   static createFromProvider(
     identity: ProviderIdentity,
     roles: Role[] = [],
+    organizationId: string | null = null,
   ): User {
     const name = identity.name ?? identity.email ?? identity.sub;
     const email = identity.email ?? `${identity.sub}@firebase.local`;
@@ -71,6 +85,7 @@ export class User {
       roles,
       identity.sub,
       FIREBASE_PROVIDER,
+      organizationId,
     );
   }
 
@@ -82,8 +97,18 @@ export class User {
     roles: Role[],
     externalId: string | null,
     provider: typeof FIREBASE_PROVIDER | null,
+    organizationId: string | null = null,
   ): User {
-    return new User(id, name, email, password, roles, externalId, provider);
+    return new User(
+      id,
+      name,
+      email,
+      password,
+      roles,
+      externalId,
+      provider,
+      organizationId,
+    );
   }
 
   async comparePassword(password: string, hasher: IHasher): Promise<boolean> {
@@ -103,6 +128,10 @@ export class User {
 
   public updateRoles(roles: Role[]): void {
     this._roles = roles;
+  }
+
+  public updateOrganization(organizationId: string | null): void {
+    this._organizationId = organizationId;
   }
 
   public hasPermission(permissionName: string): boolean {
@@ -135,5 +164,9 @@ export class User {
 
   get provider(): typeof FIREBASE_PROVIDER | null {
     return this._provider;
+  }
+
+  get organizationId(): string | null {
+    return this._organizationId;
   }
 }

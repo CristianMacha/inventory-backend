@@ -57,7 +57,8 @@ export class MoveFileController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.move permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
+    description:
+      'Forbidden. Requires files.move permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,

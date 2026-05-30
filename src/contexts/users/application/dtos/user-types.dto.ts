@@ -14,5 +14,6 @@ export class AuthUserDto {
     public readonly email: string,
     public readonly roles: string[],
     public readonly permissions: string[],
+    public readonly organizationId: string | null = null,
   ) {}
 }

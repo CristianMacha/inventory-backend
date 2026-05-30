@@ -52,7 +52,8 @@ export class DeleteFolderController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Requires files.delete permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
+    description:
+      'Forbidden. Requires files.delete permission. Also returns 403 if the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({
     status: 404,

@@ -6,7 +6,14 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Body, Controller, Param, Patch, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  Patch,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { RequirePermissions } from '@contexts/auth/infrastructure/decorators/require-permissions.decorator';
@@ -34,7 +41,8 @@ export class RenameFolderController {
   @ApiResponse({ status: 200, description: 'Folder renamed successfully.' })
   @ApiResponse({
     status: 400,
-    description: 'Invalid input. `name` is required and must not exceed 255 characters.',
+    description:
+      'Invalid input. `name` is required and must not exceed 255 characters.',
   })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({

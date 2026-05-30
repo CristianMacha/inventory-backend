@@ -50,7 +50,11 @@ export class DownloadFileController {
     required: true,
     description: 'Organization UUID',
   })
-  @ApiResponse({ status: 200, description: 'File stream (binary). Headers: Content-Type, Content-Disposition: attachment, Content-Length.' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'File stream (binary). Headers: Content-Type, Content-Disposition: attachment, Content-Length.',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({
     status: 403,
@@ -58,7 +62,11 @@ export class DownloadFileController {
       'Forbidden. Requires files.read permission or the organizationId does not belong to the authenticated user.',
   })
   @ApiResponse({ status: 404, description: 'File not found.' })
-  @ApiResponse({ status: 500, description: 'Storage read error. The file record exists but the storage object could not be streamed.' })
+  @ApiResponse({
+    status: 500,
+    description:
+      'Storage read error. The file record exists but the storage object could not be streamed.',
+  })
   async run(
     @Param('fileId') fileId: string,
     @Query('organizationId') organizationId: string,
