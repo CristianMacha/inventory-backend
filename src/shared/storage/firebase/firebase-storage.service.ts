@@ -12,10 +12,17 @@ export class FirebaseStorageService {
     ReturnType<typeof admin.storage>['bucket']
   >;
 
+  private readonly baseFolder: string;
+
   constructor(private readonly configService: ConfigService) {
     const bucketName = this.configService.get<string>(
       'FIREBASE_STORAGE_BUCKET',
     )!;
+
+    this.baseFolder = this.configService.get<string>(
+      'FIREBASE_STORAGE_BASE_FOLDER',
+    )!;
+
     const app = this.getOrInitApp();
     this.bucket = app.storage().bucket(bucketName);
   }
@@ -56,7 +63,9 @@ export class FirebaseStorageService {
     folder: string,
   ): Promise<StorageResult> {
     const fileName = `${uuidv4()}-${file.originalname}`;
-    const filePath = `${folder}/${fileName}`;
+    const filePath = [this.baseFolder, folder, fileName]
+      .filter(Boolean)
+      .join('/');
     const blob = this.bucket.file(filePath);
 
     await new Promise<void>((resolve, reject) => {

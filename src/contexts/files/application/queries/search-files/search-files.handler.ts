@@ -34,7 +34,7 @@ export class SearchFilesHandler implements IQueryHandler<SearchFilesQuery> {
 
     return {
       ...result,
-      data: result.data.map(FileRecordMapper.toDto),
+      data: result.data.map((file) => FileRecordMapper.toDto(file)),
     };
   }
 }

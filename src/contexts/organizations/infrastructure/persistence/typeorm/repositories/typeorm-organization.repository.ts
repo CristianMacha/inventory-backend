@@ -22,7 +22,9 @@ export class TypeOrmOrganizationRepository implements IOrganizationRepository {
 
   async findAll(): Promise<Organization[]> {
     const entities = await this.repo.find({ order: { name: 'ASC' } });
-    return entities.map(OrganizationPersistenceMapper.toDomain);
+    return entities.map((entity) =>
+      OrganizationPersistenceMapper.toDomain(entity),
+    );
   }
 
   async save(organization: Organization): Promise<void> {

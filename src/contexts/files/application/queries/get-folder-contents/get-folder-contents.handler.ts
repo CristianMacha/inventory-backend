@@ -10,7 +10,6 @@ import { FolderContentsDto } from '@contexts/files/application/dtos/folder-conte
 import { FolderMapper } from '@contexts/files/application/mappers/folder.mapper';
 import { FileRecordMapper } from '@contexts/files/application/mappers/file-record.mapper';
 import { FILES_TOKENS } from '@contexts/files/files.tokens';
-import { buildPaginatedResult } from '@shared/domain/pagination/paginated-result.interface';
 import { normalizePaginationParams } from '@shared/domain/pagination/pagination-params.interface';
 
 @QueryHandler(GetFolderContentsQuery)
@@ -44,10 +43,10 @@ export class GetFolderContentsHandler implements IQueryHandler<GetFolderContents
 
     return {
       folder: FolderMapper.toDto(folder),
-      subfolders: subfolders.map(FolderMapper.toDto),
+      subfolders: subfolders.map((subfolder) => FolderMapper.toDto(subfolder)),
       files: {
         ...paginatedFiles,
-        data: paginatedFiles.data.map(FileRecordMapper.toDto),
+        data: paginatedFiles.data.map((file) => FileRecordMapper.toDto(file)),
       },
     };
   }

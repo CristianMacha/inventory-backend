@@ -49,7 +49,9 @@ export class TypeOrmWorkshopPurchaseOrderRepository implements IWorkshopPurchase
 
     const [entities, total] = await qb.getManyAndCount();
     return buildPaginatedResult(
-      entities.map(WorkshopPurchaseOrderPersistenceMapper.toDomain),
+      entities.map((entity) =>
+        WorkshopPurchaseOrderPersistenceMapper.toDomain(entity),
+      ),
       total,
       page,
       limit,

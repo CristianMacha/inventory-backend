@@ -8,7 +8,6 @@ import { FolderId } from '@contexts/files/domain/value-objects/folder-id';
 import { FolderNotFoundException } from '@contexts/files/domain/errors/folder-not-found.exception';
 import { FolderNotEmptyException } from '@contexts/files/domain/errors/folder-not-empty.exception';
 import { FILES_TOKENS } from '@contexts/files/files.tokens';
-import { normalizePaginationParams } from '@shared/domain/pagination/pagination-params.interface';
 
 @CommandHandler(DeleteFolderCommand)
 export class DeleteFolderHandler implements ICommandHandler<DeleteFolderCommand> {

@@ -25,7 +25,7 @@ export class TypeOrmFolderRepository implements IFolderRepository {
       where: { organizationId, parentId: IsNull() },
       order: { name: 'ASC' },
     });
-    return entities.map(FolderPersistenceMapper.toDomain);
+    return entities.map((entity) => FolderPersistenceMapper.toDomain(entity));
   }
 
   async findByOrganization(organizationId: string): Promise<Folder[]> {
@@ -33,7 +33,7 @@ export class TypeOrmFolderRepository implements IFolderRepository {
       where: { organizationId },
       order: { name: 'ASC' },
     });
-    return entities.map(FolderPersistenceMapper.toDomain);
+    return entities.map((entity) => FolderPersistenceMapper.toDomain(entity));
   }
 
   async searchByName(organizationId: string, name: string): Promise<Folder[]> {
@@ -43,7 +43,7 @@ export class TypeOrmFolderRepository implements IFolderRepository {
       .andWhere('f.name LIKE :name', { name: `%${name}%` })
       .orderBy('f.name', 'ASC')
       .getMany();
-    return entities.map(FolderPersistenceMapper.toDomain);
+    return entities.map((entity) => FolderPersistenceMapper.toDomain(entity));
   }
 
   async findChildren(
@@ -54,7 +54,7 @@ export class TypeOrmFolderRepository implements IFolderRepository {
       where: { parentId: parentId.getValue(), organizationId },
       order: { name: 'ASC' },
     });
-    return entities.map(FolderPersistenceMapper.toDomain);
+    return entities.map((entity) => FolderPersistenceMapper.toDomain(entity));
   }
 
   async hasChildren(folderId: FolderId): Promise<boolean> {

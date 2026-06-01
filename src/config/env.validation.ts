@@ -22,4 +22,6 @@ export const envValidation = Joi.object({
   CLOUDINARY_API_KEY: Joi.string().required(),
   CLOUDINARY_API_SECRET: Joi.string().required(),
   FIREBASE_STORAGE_BUCKET: Joi.string().required(),
+  FIREBASE_STORAGE_BASE_FOLDER: Joi.string().allow('').optional(),
+  CLOUDINARY_STORAGE_BASE_FOLDER: Joi.string().allow('').optional(),
 });

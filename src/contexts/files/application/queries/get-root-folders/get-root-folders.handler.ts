@@ -18,6 +18,6 @@ export class GetRootFoldersHandler implements IQueryHandler<GetRootFoldersQuery>
     const folders = await this.folderRepository.findRootFolders(
       query.organizationId,
     );
-    return folders.map(FolderMapper.toDto);
+    return folders.map((folder) => FolderMapper.toDto(folder));
   }
 }

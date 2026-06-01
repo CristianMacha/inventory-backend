@@ -77,7 +77,7 @@ export class WorkshopPurchaseOrder {
     );
   }
 
-  send(userId: string): void {
+  send(_userId: string): void {
     if (this._status === PurchaseOrderStatus.CANCELLED) {
       throw new PurchaseOrderAlreadyCancelledException();
     }
@@ -85,7 +85,7 @@ export class WorkshopPurchaseOrder {
     this._updatedAt = new Date();
   }
 
-  receive(userId: string): void {
+  receive(_userId: string): void {
     if (this._status === PurchaseOrderStatus.CANCELLED) {
       throw new PurchaseOrderAlreadyCancelledException();
     }
@@ -96,7 +96,7 @@ export class WorkshopPurchaseOrder {
     this._updatedAt = new Date();
   }
 
-  cancel(userId: string): void {
+  cancel(_userId: string): void {
     if (this._status === PurchaseOrderStatus.CANCELLED) {
       throw new PurchaseOrderAlreadyCancelledException();
     }

@@ -16,6 +16,6 @@ export class GetOrganizationsHandler implements IQueryHandler<GetOrganizationsQu
 
   async execute(): Promise<OrganizationDto[]> {
     const orgs = await this.organizationRepository.findAll();
-    return orgs.map(OrganizationMapper.toDto);
+    return orgs.map((org) => OrganizationMapper.toDto(org));
   }
 }

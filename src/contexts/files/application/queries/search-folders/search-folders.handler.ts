@@ -19,6 +19,6 @@ export class SearchFoldersHandler implements IQueryHandler<SearchFoldersQuery> {
       query.organizationId,
       query.name,
     );
-    return folders.map(FolderMapper.toDto);
+    return folders.map((folder) => FolderMapper.toDto(folder));
   }
 }
