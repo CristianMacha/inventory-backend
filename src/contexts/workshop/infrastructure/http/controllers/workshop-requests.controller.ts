@@ -142,14 +142,12 @@ export class WorkshopRequestsController {
   async approve(
     @Param('id', new ParseUUIDPipe()) id: string,
     @GetUser() user: AuthUserDto,
-    @Query('approvedQuantity') approvedQuantity?: number,
+    @Query('approvedQuantity') approvedQuantity?: string,
   ): Promise<void> {
+    const parsed =
+      approvedQuantity !== undefined ? Number(approvedQuantity) : undefined;
     await this.commandBus.execute(
-      new ApproveWorkshopRequestCommand(
-        id,
-        user.id,
-        approvedQuantity ? Number(approvedQuantity) : undefined,
-      ),
+      new ApproveWorkshopRequestCommand(id, user.id, parsed),
     );
   }
 

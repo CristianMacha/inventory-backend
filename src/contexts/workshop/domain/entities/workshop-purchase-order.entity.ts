@@ -15,6 +15,12 @@ export class PurchaseOrderAlreadyReceivedException extends DomainException {
   }
 }
 
+export class PurchaseOrderInvalidStatusTransitionException extends DomainException {
+  constructor(from: string, to: string) {
+    super(`Cannot transition purchase order from ${from} to ${to}`);
+  }
+}
+
 export class EmptyPurchaseOrderItemsException extends DomainException {
   constructor() {
     super('Purchase order must have at least one item');
@@ -78,8 +84,11 @@ export class WorkshopPurchaseOrder {
   }
 
   send(_userId: string): void {
-    if (this._status === PurchaseOrderStatus.CANCELLED) {
-      throw new PurchaseOrderAlreadyCancelledException();
+    if (this._status !== PurchaseOrderStatus.DRAFT) {
+      throw new PurchaseOrderInvalidStatusTransitionException(
+        this._status,
+        PurchaseOrderStatus.SENT,
+      );
     }
     this._status = PurchaseOrderStatus.SENT;
     this._updatedAt = new Date();
@@ -99,6 +108,9 @@ export class WorkshopPurchaseOrder {
   cancel(_userId: string): void {
     if (this._status === PurchaseOrderStatus.CANCELLED) {
       throw new PurchaseOrderAlreadyCancelledException();
+    }
+    if (this._status === PurchaseOrderStatus.RECEIVED) {
+      throw new PurchaseOrderAlreadyReceivedException();
     }
     this._status = PurchaseOrderStatus.CANCELLED;
     this._updatedAt = new Date();
