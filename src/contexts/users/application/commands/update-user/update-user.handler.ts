@@ -1,5 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BadRequestException, Inject } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Inject,
+} from '@nestjs/common';
 
 import { UpdateUserCommand } from './update-user.command';
 import { Role } from '@contexts/users/domain/entities/role';
@@ -19,10 +23,18 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
   ) {}
 
   async execute(command: UpdateUserCommand): Promise<void> {
-    const { id, name, roleNames, organizationId } = command;
+    const { id, currentUserId, name, roleNames, organizationId } = command;
     const user = await this.userRepository.findById(UserId.create(id));
     if (!user) {
       throw new UserNotFoundException(id);
+    }
+
+    if (roleNames && currentUserId === id) {
+      throw new ForbiddenException('You cannot update your own roles');
+    }
+
+    if (organizationId !== undefined && currentUserId === id) {
+      throw new ForbiddenException('You cannot update your own organization');
     }
 
     if (name) {

@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { FILES_TOKENS } from './files.tokens';
 import { OrganizationsModule } from '@contexts/organizations/organizations.module';
+import { UsersModule } from '@contexts/users/users.module';
 
 import { FolderEntity } from './infrastructure/persistence/typeorm/entities/folder.entity';
 import { FileRecordEntity } from './infrastructure/persistence/typeorm/entities/file-record.entity';
@@ -93,6 +94,7 @@ const PersistenceProviders: Provider[] = [
     CqrsModule,
     TypeOrmModule.forFeature([FolderEntity, FileRecordEntity, FileTagEntity]),
     OrganizationsModule,
+    UsersModule,
   ],
   controllers: [
     CreateFolderController,
